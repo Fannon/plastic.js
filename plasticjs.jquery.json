@@ -1,0 +1,28 @@
+{
+  "name": "plasticjs",
+  "title": "plastic.js",
+  "description": "plastic.js is a JavaScript library that lets you make your data visible!",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Fannon/plastic.js",
+  "author": {
+    "name": "Simon Heimler",
+    "url": "https://github.com/Fannon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fannon/plastic.js"
+  },
+  "bugs": "",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0"
+  },
+  "keywords": [
+    "jquery-plugin"
+  ]
+}
