@@ -1,6 +1,8 @@
-'use strict';
+/* global module, require */
 
 module.exports = function (grunt) {
+    'use strict';
+
     // Load all grunt tasks
     require('load-grunt-tasks')(grunt);
     // Show elapsed time at the end
@@ -49,12 +51,12 @@ module.exports = function (grunt) {
             options: {
                 reporter: require('jshint-stylish')
             },
-//            gruntfile: {
-//                options: {
-//                    jshintrc: '.jshintrc'
-//                },
-//                src: 'Gruntfile.js'
-//            },
+            gruntfile: {
+                options: {
+                    jshintrc: '.jshintrc'
+                },
+                src: 'Gruntfile.js'
+            },
             src: {
                 options: {
                     jshintrc: 'src/.jshintrc'
