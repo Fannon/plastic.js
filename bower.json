@@ -1,7 +1,10 @@
 {
   "name": "plasticjs",
   "version": "0.0.1",
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "d3": "~3.4.5"
+  },
   "devDependencies": {
     "qunit": "~1.12.0",
     "jquery": "~2.1.0",
