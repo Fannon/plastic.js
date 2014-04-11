@@ -28,7 +28,7 @@ var plastic = (function () {
     }
 
     $(document).ready(function() {
-       console.log('plastic.js version ' + plastic.version);
+       console.log('plastic.js version::: ' + plastic.version);
     });
 
     // Reveal public pointers to

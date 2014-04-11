@@ -1,4 +1,4 @@
-/*! plastic - v0.0.1 - 2014-04-10
+/*! plastic - v0.0.1 - 2014-04-11
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 var plastic = (function () {
@@ -22,7 +22,7 @@ var plastic = (function () {
     }
 
     $(document).ready(function() {
-       console.log('plastic.js version ' + plastic.version);
+       console.log('plastic.js version::: ' + plastic.version);
     });
 
     // Reveal public pointers to
@@ -61,19 +61,8 @@ plastic.options = {
 
 plastic.display.table = (function () {
 
-    var privateCounter = 0;
-
-    function privateFunction() {
-        privateCounter++;
-    }
-
-    function publicFunction() {
-        console.log('TEST');
-        privateFunction();
-    }
-
     return {
-        start: publicFunction
+        test: 'test'
     };
 
 })();

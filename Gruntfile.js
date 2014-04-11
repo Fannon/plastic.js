@@ -34,11 +34,11 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: [
-                    'src/<%= pkg.name %>.js',
+                    'src/main.js',
                     'src/options.js',
                     'src/display/**/*.js'
                 ],
-                dest: 'dist/<%= pkg.name %>.js'
+                dest: 'dist/plastic.js'
             }
         },
 
@@ -110,9 +110,6 @@ module.exports = function (grunt) {
                 }, {
                     src: ['bower_components/jquery/dist/jquery.min.js'],
                     dest: 'demo/lib/jquery.min.js'
-                }, {
-                    src: ['dist/plastic.js'],
-                    dest: 'demo/lib/plastic.js'
                 }]
             }
         },
@@ -125,11 +122,21 @@ module.exports = function (grunt) {
             },
             src: {
                 files: 'src/**/*.*',
-                tasks: ['jshint:src', 'qunit']
+                tasks: ['jshint:src', 'concat', 'qunit']
+            },
+            srcConcat: {
+                files: 'src/**/*.*',
+                tasks: ['concat']
             },
             test: {
                 files: 'test/**/*.*',
                 tasks: ['jshint:test', 'qunit']
+            },
+            livereload: {
+                files: ['dist/**/*.js'],
+                options: {
+                    livereload: true
+                }
             }
         },
 
@@ -137,7 +144,9 @@ module.exports = function (grunt) {
         connect: {
             server: {
                 options: {
-                    port: 9000
+                    port: 9000,
+                    base: '',
+                    livereload: true
                 }
             }
         },
@@ -178,9 +187,13 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['env:unitTest', 'mochaTest', 'alldone']);
-
     grunt.registerTask('default', [
+        'connect',
+        'watch:srcConcat',
+        'watch:livereload'
+    ]);
+
+    grunt.registerTask('livetesting', [
         'connect',
         'watch'
     ]);
@@ -194,8 +207,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'test',
-        'content:clean', 'clean',
-        'content:concat', 'concat',
+//        'content:clean', 'clean',
+//        'content:concat', 'concat',
         'content:uglify', 'uglify',
         'content:sizediff', 'sizediff',
         'content:copy', 'copy:demo',
