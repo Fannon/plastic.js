@@ -140,8 +140,7 @@ module.exports = function (grunt) {
             livereload: {
                 files: ['dist/**/*.js', 'demo/**/*.html'],
                 options: {
-                    livereload: true,
-                    port: 35729
+                    livereload: true
                 }
             }
         },
@@ -151,7 +150,6 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     port: 9000,
-                    base: '',
                     livereload: true
                 }
             }
@@ -195,8 +193,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'connect',
-        'watch:srcConcat',
-        'watch:livereload'
+        'watch:srcConcat'
+//        'watch:livereload'
     ]);
 
     grunt.registerTask('livetesting', [
