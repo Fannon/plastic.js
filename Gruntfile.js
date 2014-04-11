@@ -36,7 +36,9 @@ module.exports = function (grunt) {
                 src: [
                     'src/main.js',
                     'src/options.js',
-                    'src/display/**/*.js'
+                    'src/dataParser/**/*.js',
+                    'src/display/**/*.js',
+                    'src/helper/**/*.js'
                 ],
                 dest: 'dist/plastic.js'
             }
@@ -110,6 +112,9 @@ module.exports = function (grunt) {
                 }, {
                     src: ['bower_components/jquery/dist/jquery.min.js'],
                     dest: 'demo/lib/jquery.min.js'
+                }, {
+                    src: ['bower_components/foundation/css/foundation.min.css'],
+                    dest: 'demo/lib/foundation.min.css'
                 }]
             }
         },
@@ -133,9 +138,10 @@ module.exports = function (grunt) {
                 tasks: ['jshint:test', 'qunit']
             },
             livereload: {
-                files: ['dist/**/*.js'],
+                files: ['dist/**/*.js', 'demo/**/*.html'],
                 options: {
-                    livereload: true
+                    livereload: true,
+                    port: 35729
                 }
             }
         },

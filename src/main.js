@@ -1,31 +1,27 @@
 /*
- * plastic.js
- *
+ * <plastic>
  *
  * Copyright (c) 2014 Simon Heimler
  * Licensed under the MIT license.
  */
 
-
 var plastic = (function () {
 
-    var privateCounter = 0;
+    $(document).ready(function() {
 
-    function privateFunction() {
-        privateCounter++;
+        // Get all <plastic> elements on the page and store them as jQuery DOM Objects
+        plastic.$elements = $('plastic');
+
+        // Iterate all <plastic>
+        plastic.$elements.each(function() {
+            getPlasticData($(this));
+        });
+    });
+
+    function getPlasticData() {
+        // TODO
     }
 
-    function publicFunction() {
-        publicIncrement();
-    }
-
-    function publicIncrement() {
-        privateFunction();
-    }
-
-    function publicGetCount(){
-        return privateCounter;
-    }
 
     $(document).ready(function() {
        console.log('plastic.js version::: ' + plastic.version);
@@ -38,17 +34,19 @@ var plastic = (function () {
 
         version: '0.0.1', // semver
 
+        $elements: [],
+
+        elements: [],
+
         /** Display Modules Namespace */
         display: {},
 
         /** Helper Functions Namespace */
         helper: {},
 
-        // Make functions public
+        /** Data Parser Namespace */
+        dataParser: {}
 
-        start: publicFunction,
-        increment: publicIncrement,
-        count: publicGetCount
     };
 
 })();

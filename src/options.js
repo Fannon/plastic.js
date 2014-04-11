@@ -7,5 +7,5 @@
  * @type {{}}
  */
 plastic.options = {
-    test: 2
+    test: 1
 };

@@ -1,0 +1,22 @@
+body {
+    background: #EEE;
+}
+
+.container {
+    background: #FFF;
+    margin: 0 auto;
+    padding: 15px;
+    width: 800px;
+}
+
+h2 {
+    text-align: center;
+}
+
+plastic {
+    border: 1px solid #CCC;
+    display: block;
+}
+code {
+    font-weight: normal;
+}
