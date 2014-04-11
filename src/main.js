@@ -73,7 +73,7 @@ var plastic = (function () {
                 if (dataString && dataString !== '') {
                     elData.data = JSON.parse(dataString);
                 } else {
-                    console.log('Empty Element!')
+                    console.log('Empty Element!');
                 }
             } else {
                 console.log('No Data Object');
@@ -91,7 +91,7 @@ var plastic = (function () {
             if (optionsString && optionsString !== '') {
                 elData.options = JSON.parse(optionsString);
             } else {
-                console.log('Empty Element!')
+                console.log('Empty Element!');
             }
         } else {
             console.log('No Options Object');

@@ -27,11 +27,11 @@
         strictEqual(plastic.version, '0.0.1', 'Current Version');
     });
 
-    module('plastic.display');
+//    module('plastic.display');
 
-    test('Table Display module', function () {
-        ok(plastic.display.table, "has a tableDisplay Module");
-    });
+//    test('Table Display module', function () {
+//        ok(plastic.display.table, "has a tableDisplay Module");
+//    });
 
 
 }(jQuery, plastic));

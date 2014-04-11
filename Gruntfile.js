@@ -205,14 +205,14 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'content:connect', 'connect',
         'content:concat', 'concat',
-        'content:jshint', 'jshint',
-        'content:test', 'qunit'
+        'content:jshint', 'jshint'
+//        'content:test', 'qunit'
     ]);
 
     grunt.registerTask('build', [
         'test',
-//        'content:clean', 'clean',
-//        'content:concat', 'concat',
+        'content:clean', 'clean',
+        'content:concat', 'concat',
         'content:uglify', 'uglify',
         'content:sizediff', 'sizediff',
         'content:copy', 'copy:demo',
