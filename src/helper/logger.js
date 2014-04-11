@@ -15,5 +15,5 @@
  */
 plastic.helper.log = function (type, msg) {
     // TODO
-    console.log('msg');
+    console.log(type + ' :: ' + msg);
 };
