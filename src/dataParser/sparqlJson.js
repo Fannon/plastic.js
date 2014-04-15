@@ -14,7 +14,9 @@ plastic.dataParser.available['sparql-json'] = 'sparqlJson';
  */
 plastic.dataParser.sparqlJson = function(data) {
 
+
     console.info('PARSING DATA VIA: SPARQL JSON');
+    console.dir(data);
 
     var processedData = [];
 

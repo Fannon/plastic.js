@@ -2,6 +2,10 @@ body {
     background: #FFF;
 }
 
+a:hover {
+    text-decoration: none;
+}
+
 .container {
     background: #FFF;
     margin: 0 auto;
@@ -11,10 +15,34 @@ body {
 
 #header {
     text-align: center;
-    background: #eee;
+    background: none;
     border-radius: 3px;
     padding: 5px;
     margin-bottom: 20px;
+    color: #777;
+}
+
+
+h3, h4, h5 {
+    border-radius: 5px;
+    display: block;
+    padding: 8px 16px;
+    margin-top: 16px;
+}
+
+h3 {
+    font-size: 1.4em;
+    background: #DDD;
+}
+
+h4 {
+    font-size: 1.2em;
+    background: #EEE;
+}
+
+h5 {
+    font-size: 1.1em;
+    background: #E7E7E7;
 }
 
 plastic {
@@ -27,4 +55,14 @@ code {
 
 pre {
     border: none;
+}
+
+
+footer {
+    font-size: 0.85em;
+    color: #777;
+    text-align: center;
+    margin-top: 20px;
+    padding: 3px;
+    border-top: 1px dotted #CCC;
 }

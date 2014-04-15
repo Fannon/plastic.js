@@ -56,8 +56,20 @@ var plastic = (function () {
             var request = $.ajax(elData.dataUrl)
 
                 .done(function(data) {
-                    console.log('getJSON from URL');
-                    elData.rawData = data;
+
+                    // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
+                    console.log('Getting Data from URL via AJAX');
+
+                    try {
+                        if (data !== null && typeof data === 'object') {
+                            elData.rawData = data;
+                        } else {
+                            elData.rawData = $.parseJSON(data);
+                        }
+                    } catch(e) {
+                        console.error(e);
+                    }
+
                     console.log('Received asynchronous data.');
                     parseData(elData);
                 })
@@ -76,8 +88,9 @@ var plastic = (function () {
 
             if (dataObject.length > 0) {
                 var dataString = dataObject[0].text;
+                console.log(dataString);
                 if (dataString && dataString !== '') {
-                    elData.rawData = JSON.parse(dataString);
+                    elData.rawData = $.parseJSON(dataString);
                 } else {
                     console.log('Empty Element!');
                 }

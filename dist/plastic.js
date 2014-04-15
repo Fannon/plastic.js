@@ -3,6 +3,9 @@
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 var plastic = (function () {
 
+    /**
+     * Bootstrap plastic.js
+     */
     $(document).ready(function() {
 
         console.log('plastic.js version: ' + plastic.version);
@@ -12,8 +15,10 @@ var plastic = (function () {
 
         // Iterate all <plastic>
         plastic.$elements.each(function() {
+            prepareVisualisation($(this));
             getPlasticData($(this));
         });
+
     });
 
     /**
@@ -23,12 +28,12 @@ var plastic = (function () {
      *
      * @param el
      */
-    function getPlasticData(el) {
+    var getPlasticData = function(el) {
 
         var elData = {};
         var async = false;
 
-        console.log('main.getPlasticData(el)');
+        console.info('main.getPlasticData(el)');
 
 
         //////////////////////////////////////////
@@ -47,15 +52,28 @@ var plastic = (function () {
             var request = $.ajax(elData.dataUrl)
 
                 .done(function(data) {
-                    console.log('getJSON from URL');
-                    elData.data = data;
+
+                    // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
+                    console.log('Getting Data from URL via AJAX');
+
+                    try {
+                        if (data !== null && typeof data === 'object') {
+                            elData.rawData = data;
+                        } else {
+                            elData.rawData = $.parseJSON(data);
+                        }
+                    } catch(e) {
+                        console.error(e);
+                    }
+
+                    console.log('Received asynchronous data.');
+                    parseData(elData);
                 })
                 .fail(function() {
                     console.error( "error" );
                 })
                 .always(function() {
-                    console.log('##### Asynchronous MetaData: ');
-                    console.dir(elData);
+
                 });
 
 
@@ -66,8 +84,9 @@ var plastic = (function () {
 
             if (dataObject.length > 0) {
                 var dataString = dataObject[0].text;
+                console.log(dataString);
                 if (dataString && dataString !== '') {
-                    elData.data = JSON.parse(dataString);
+                    elData.rawData = $.parseJSON(dataString);
                 } else {
                     console.log('Empty Element!');
                 }
@@ -93,37 +112,90 @@ var plastic = (function () {
             console.log('No Options Object');
         }
 
-        //////////////////////////////////////////
-        // OPTIONS                              //
-        //////////////////////////////////////////
-
         elData.height = el.height();
         elData.width = el.width();
 
         if (!async) {
-            console.log('##### Synchronous MetaData: ');
-            console.dir(elData);
+            console.log('Received Synchronous Data');
+            parseData(elData);
         }
 
-    }
+    };
+
+    /**
+     * Helper Function that calls the proper ParseData Module
+     *
+     * @param elData
+     */
+    var parseData = function(elData) {
+        console.info('PARSING DATA');
+        console.dir(elData);
+        var parser = plastic.dataParser.available[elData.options.dataFormat];
+
+        elData.data = plastic.dataParser[parser](elData.rawData);
+
+        drawData(elData);
+    };
+
+    /**
+     * Helper Function that calls the proper Display Module
+     *
+     * @param elData
+     */
+    var drawData = function(elData) {
+        var displayModule = plastic.display.available[elData.options.display];
+        plastic.display[displayModule](elData);
+    };
+
+    /**
+     * Inserts a drawing Canvas which has exactly the same size as the plastic Element
+     *
+     * TODO: If no size is given, or given by the options -> Consider this
+     *
+     * @param el
+     */
+    var prepareVisualisation = function(el) {
+        console.info('PREPARING VISUALISATION');
+
+        el.append('<div id="vis"></div>');
+        $('#vis')
+            .height(el.height())
+            .width(el.width())
+            .css('overflow', 'scroll')
+            .css('padding', '5px')
+        ;
+
+    };
 
 
-
-    // Reveal public pointers to private functions and properties
+    /**
+     * Reveal public pointers to private functions and properties
+     */
     return {
 
         version: '0.0.2', // semver
 
         $elements: [],
 
-        /** Display Modules Namespace */
-        display: {},
-
-        /** Helper Functions Namespace */
-        helper: {},
+        /** Data Parser Namespace */
+        dataParser: {
+            available: {}
+        },
 
         /** Data Parser Namespace */
-        dataParser: {}
+        queryParser: {
+            available: {}
+        },
+
+        /** Display Modules Namespace */
+        display: {
+            available: {}
+        },
+
+        /** Helper Functions Namespace */
+        helper: {}
+
+
 
     };
 
@@ -142,30 +214,99 @@ plastic.options = {
 
 /* global plastic */
 
-plastic.dataParser.sparqlJson = (function () {
+// Register Parser
+plastic.dataParser.available['sparql-json'] = 'sparqlJson';
 
-    var a = 1;
+/**
+ * Parses tabular data from SPARQL Endpoints
+ *
+ * @param data
+ * @returns Array
+ */
+plastic.dataParser.sparqlJson = function(data) {
 
-    return {
-        a: a,
-        test: 'test'
-    };
 
-})();
+    console.info('PARSING DATA VIA: SPARQL JSON');
+    console.dir(data);
+
+    var processedData = [];
+
+    for (var i = 0; i < data.results.bindings.length; i++) {
+
+        processedData[i] = {};
+
+        var row = data.results.bindings[i];
+
+        for (var o in row) {
+            processedData[i][o] = row[o].value;
+        }
+    }
+
+    console.dir(processedData);
+
+    return processedData;
+
+};
+
+plastic.display.available['table'] = 'table';
 
 /**
  * Table Display Module
  */
-plastic.display.table = (function () {
+plastic.display.table = function (elData) {
 
-    var a = 1;
+    console.info('DISPLAY MODULE: TABLE');
+    console.dir(elData);
 
-    return {
-        a: a,
-        test: 'test'
-    };
+    var data = elData.data;
+    var vis = d3.select("#vis");
 
-})();
+    var table = vis.append("table");
+    var thead = table.append("thead");
+    var tbody = table.append("tbody");
+
+    // Get Columns from Data
+    var columns = [];
+    for (var o in data[0]) {
+        if (data[0].hasOwnProperty(o)) {
+            columns.push(o);
+        }
+    }
+
+    // Create Header Row (TH)
+    thead.append("tr")
+        .selectAll("th")
+        .data(columns)
+        .enter()
+        .append("th")
+        .text(function(column) {
+            return column;
+        });
+
+    // Create a row for each object in the data
+    var rows = tbody.selectAll("tr")
+        .data(data)
+        .enter()
+        .append("tr");
+
+    // Create a cell in each row for each column
+    var cells = rows.selectAll("td")
+        .data(function(row) {
+            return columns.map(function(column) {
+                return {
+                    column: column,
+                    value: row[column]
+                };
+            });
+        })
+        .enter()
+        .append("td")
+        .html(function(d) {
+            return d.value;
+        });
+    return table;
+
+};
 
 /* global plastic */
 
@@ -182,4 +323,16 @@ plastic.display.table = (function () {
 plastic.helper.log = function (type, msg) {
     // TODO
     console.log(type + ' :: ' + msg);
+};
+
+/* global plastic */
+
+/**
+ * This is a SPARQL Query Parser
+ * It turns the Query into an API URL
+ *
+ * TODO: Not implemented yet.
+ */
+plastic.queryParser.sparql = function() {
+
 };
