@@ -1,4 +1,4 @@
-/*! plastic - v0.0.1 - 2014-04-11
+/*! plastic - v0.0.1 - 2014-04-15
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 var plastic = (function () {
@@ -112,7 +112,7 @@ var plastic = (function () {
     // Reveal public pointers to private functions and properties
     return {
 
-        version: '0.0.1', // semver
+        version: '0.0.2', // semver
 
         $elements: [],
 

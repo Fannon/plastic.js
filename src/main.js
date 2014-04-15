@@ -116,7 +116,7 @@ var plastic = (function () {
     // Reveal public pointers to private functions and properties
     return {
 
-        version: '0.0.1', // semver
+        version: '0.0.2', // semver
 
         $elements: [],
 

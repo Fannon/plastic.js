@@ -1,5 +1,5 @@
 body {
-    background: #EEE;
+    background: #FFF;
 }
 
 .container {
@@ -9,8 +9,12 @@ body {
     width: 800px;
 }
 
-h2 {
+#header {
     text-align: center;
+    background: #eee;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 20px;
 }
 
 plastic {
@@ -19,4 +23,8 @@ plastic {
 }
 code {
     font-weight: normal;
+}
+
+pre {
+    border: none;
 }

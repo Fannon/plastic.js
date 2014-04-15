@@ -56,14 +56,14 @@ module.exports = function (grunt) {
         },
 
         /** QUnit Unit Testing */
-        qunit: {
-            all: {
-                options: {
-                    timeout: 5000,
-                    urls: ['http://localhost:9000/test/index.html']
-                }
-            }
-        },
+//        qunit: {
+//            all: {
+//                options: {
+//                    timeout: 5000,
+//                    urls: ['http://localhost:9000/test/index.html']
+//                }
+//            }
+//        },
 
         /** JavaScript Linting */
         jshint: {
@@ -84,9 +84,9 @@ module.exports = function (grunt) {
             },
             test: {
                 options: {
-                    jshintrc: 'test/.jshintrc'
+                    jshintrc: 'demo/spec/.jshintrc'
                 },
-                src: ['test/**/*.js']
+                src: ['demo/spec/**/*.js']
             }
         },
 
@@ -127,21 +127,27 @@ module.exports = function (grunt) {
             },
             src: {
                 files: 'src/**/*.*',
-                tasks: ['jshint:src', 'concat', 'qunit']
+                tasks: ['jshint:src', 'concat']
             },
-            srcConcat: {
-                files: 'src/**/*.*',
-                tasks: ['concat']
-            },
-            test: {
-                files: 'test/**/*.*',
-                tasks: ['jshint:test', 'qunit']
-            },
+//            demo: {
+//                files: 'demo/**/*.*',
+//                tasks: ['jshint:src']
+//            },
+//            test: {
+//                files: 'test/**/*.*',
+//                tasks: ['jshint:test', 'qunit']
+//            },
             livereload: {
-                files: ['dist/**/*.js', 'demo/**/*.html'],
+                files: ['dist/**/*.js', 'demo/**/*.*'],
                 options: {
                     livereload: true
                 }
+            }
+        },
+
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
             }
         },
 
@@ -192,12 +198,6 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', [
-        'connect',
-        'watch:srcConcat'
-//        'watch:livereload'
-    ]);
-
-    grunt.registerTask('livetesting', [
         'connect',
         'watch'
     ]);

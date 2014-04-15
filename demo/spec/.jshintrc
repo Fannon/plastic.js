@@ -14,7 +14,8 @@
     "predef": [
         "plastic",
         "jQuery",
-        "QUnit",
+        "isomatic",
+        "jasmine",
         "module",
         "test",
         "asyncTest",
@@ -28,6 +29,15 @@
         "notDeepEqual",
         "strictEqual",
         "notStrictEqual",
-        "throws"
+        "throws",
+        "beforeEach",
+        "afterEach",
+        "describe",
+        "describe",
+        "expect",
+        "it",
+        "spyOn",
+        "xdescribe",
+        "xit"
     ]
 }
