@@ -304,6 +304,10 @@ plastic.display.table = function (elData) {
         .html(function(d) {
             return d.value;
         });
+
+    // Twitter Bootstrap Classes
+    $('table').addClass('table table-condensed');
+
     return table;
 
 };
