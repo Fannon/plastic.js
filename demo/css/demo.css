@@ -24,38 +24,42 @@ a:hover {
 
 
 h3, h4, h5 {
-    border-radius: 5px;
-    display: block;
-    padding: 8px 16px;
     margin-top: 16px;
+    font-weight: bold;
 }
 
 h3 {
     font-size: 1.4em;
-    background: #DDD;
+    text-transform: uppercase;
+    margin-top: 32px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #DDD;
 }
 
 h4 {
     font-size: 1.2em;
-    background: #EEE;
 }
 
 h5 {
     font-size: 1.1em;
-    background: #E7E7E7;
 }
 
 plastic {
     border: 1px solid #CCC;
     display: block;
 }
-code {
-    font-weight: normal;
-}
 
 pre {
     border: none;
+    padding: 0;
+    border-radius: 5px;
 }
+
+code.hljs {
+    font-weight: normal;
+    padding: 0 16px;
+}
+
 
 
 footer {

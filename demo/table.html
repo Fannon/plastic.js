@@ -2,12 +2,12 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>&lt;plastic&gt; Table Demo</title>
+    <title>plastic.js Table Demo</title>
 
-    <link href="lib/rainbow/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="lib/rainbow/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+    <link href="lib/bootstrap/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="lib/bootstrap/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
 
-    <link href="lib/rainbow/css/blackboard.css" rel="stylesheet" type="text/css">
+    <link href="lib/highlight/styles/obsidian.css" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.0/jasmine.css">
 
@@ -24,7 +24,9 @@
     <!-- include source files here... -->
     <script src="lib/jquery.min.js"></script>
     <script src="lib/d3.min.js"></script>
-    <script src="lib/rainbow/rainbow-custom.min.js"></script>
+    <script src="lib/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
     <script src="../dist/plastic.js"></script>
 
     <!-- include spec files here... -->
@@ -35,7 +37,7 @@
 
         <div id="header">
             <h2 class="text-muted">
-                <a href="index.html">&lt;plastic&gt;</a><br>
+                <a href="index.html">plastic.js</a><br>
                 <small>Table Display Module</small>
             </h2>
         </div>
@@ -49,10 +51,10 @@
                 <a href="#documentation">Documentation</a>
             </li>
             <li>
-                <a href="#codeview">Code View</a>
+                <a href="#code">Embed Code</a>
             </li>
             <li>
-                <a href="#codeview">Data View</a>
+                <a href="#data">Example Data</a>
             </li>
         </ul>
 
@@ -75,7 +77,7 @@
 
         <h3 id="documentation">Documentation</h3>
 
-        <h4 id="codeview">Code View</h4>
+        <h4 id="code">Embed Code</h4>
         <pre><code data-language="json">
 &lt;plastic id=&quot;table-example&quot; style=&quot;height: 400px; width: 600px;&quot; data-url=&quot;data/musicians.json&quot;&gt;
     &lt;script class=&quot;plastic-options&quot; type=&quot;application/json&quot;&gt;
@@ -87,8 +89,8 @@
 &lt;/plastic&gt;
         </code></pre>
 
-        <h4 id="dataview">Data View</h4>
-        <pre><code data-language="json">
+        <h4 id="data">Example Data</h4>
+        <pre><code class="json">
 "name": {
     "type": "literal",
     "xml:lang": "en",
