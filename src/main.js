@@ -7,6 +7,9 @@
 
 var plastic = (function () {
 
+    /**
+     * Bootstrap plastic.js
+     */
     $(document).ready(function() {
 
         console.log('plastic.js version: ' + plastic.version);
@@ -16,8 +19,10 @@ var plastic = (function () {
 
         // Iterate all <plastic>
         plastic.$elements.each(function() {
+            prepareVisualisation($(this));
             getPlasticData($(this));
         });
+
     });
 
     /**
@@ -27,12 +32,12 @@ var plastic = (function () {
      *
      * @param el
      */
-    function getPlasticData(el) {
+    var getPlasticData = function(el) {
 
         var elData = {};
         var async = false;
 
-        console.log('main.getPlasticData(el)');
+        console.info('main.getPlasticData(el)');
 
 
         //////////////////////////////////////////
@@ -52,14 +57,15 @@ var plastic = (function () {
 
                 .done(function(data) {
                     console.log('getJSON from URL');
-                    elData.data = data;
+                    elData.rawData = data;
+                    console.log('Received asynchronous data.');
+                    parseData(elData);
                 })
                 .fail(function() {
                     console.error( "error" );
                 })
                 .always(function() {
-                    console.log('##### Asynchronous MetaData: ');
-                    console.dir(elData);
+
                 });
 
 
@@ -71,7 +77,7 @@ var plastic = (function () {
             if (dataObject.length > 0) {
                 var dataString = dataObject[0].text;
                 if (dataString && dataString !== '') {
-                    elData.data = JSON.parse(dataString);
+                    elData.rawData = JSON.parse(dataString);
                 } else {
                     console.log('Empty Element!');
                 }
@@ -97,37 +103,90 @@ var plastic = (function () {
             console.log('No Options Object');
         }
 
-        //////////////////////////////////////////
-        // OPTIONS                              //
-        //////////////////////////////////////////
-
         elData.height = el.height();
         elData.width = el.width();
 
         if (!async) {
-            console.log('##### Synchronous MetaData: ');
-            console.dir(elData);
+            console.log('Received Synchronous Data');
+            parseData(elData);
         }
 
-    }
+    };
+
+    /**
+     * Helper Function that calls the proper ParseData Module
+     *
+     * @param elData
+     */
+    var parseData = function(elData) {
+        console.info('PARSING DATA');
+        console.dir(elData);
+        var parser = plastic.dataParser.available[elData.options.dataFormat];
+
+        elData.data = plastic.dataParser[parser](elData.rawData);
+
+        drawData(elData);
+    };
+
+    /**
+     * Helper Function that calls the proper Display Module
+     *
+     * @param elData
+     */
+    var drawData = function(elData) {
+        var displayModule = plastic.display.available[elData.options.display];
+        plastic.display[displayModule](elData);
+    };
+
+    /**
+     * Inserts a drawing Canvas which has exactly the same size as the plastic Element
+     *
+     * TODO: If no size is given, or given by the options -> Consider this
+     *
+     * @param el
+     */
+    var prepareVisualisation = function(el) {
+        console.info('PREPARING VISUALISATION');
+
+        el.append('<div id="vis"></div>');
+        $('#vis')
+            .height(el.height())
+            .width(el.width())
+            .css('overflow', 'scroll')
+            .css('padding', '5px')
+        ;
+
+    };
 
 
-
-    // Reveal public pointers to private functions and properties
+    /**
+     * Reveal public pointers to private functions and properties
+     */
     return {
 
         version: '0.0.2', // semver
 
         $elements: [],
 
-        /** Display Modules Namespace */
-        display: {},
-
-        /** Helper Functions Namespace */
-        helper: {},
+        /** Data Parser Namespace */
+        dataParser: {
+            available: {}
+        },
 
         /** Data Parser Namespace */
-        dataParser: {}
+        queryParser: {
+            available: {}
+        },
+
+        /** Display Modules Namespace */
+        display: {
+            available: {}
+        },
+
+        /** Helper Functions Namespace */
+        helper: {}
+
+
 
     };
 

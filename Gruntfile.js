@@ -38,7 +38,8 @@ module.exports = function (grunt) {
                     'src/options.js',
                     'src/dataParser/**/*.js',
                     'src/display/**/*.js',
-                    'src/helper/**/*.js'
+                    'src/helper/**/*.js',
+                    'src/queryParser/**/*.js'
                 ],
                 dest: 'dist/plastic.js'
             }
