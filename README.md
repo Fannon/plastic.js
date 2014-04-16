@@ -9,8 +9,8 @@ Documentation can be found at the [Wiki](https://github.com/Fannon/plastic.js/wi
 
 Download the [production version][min] or the [development version][max].
 
-[min]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plasticjs.min.js
-[max]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plasticjs.js
+[min]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plastic.min.js
+[max]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plastic.js
 
 In your web page:
 
