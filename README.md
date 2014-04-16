@@ -11,13 +11,11 @@ Download the [production version][min] or the [development version][max].
 [max]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plastic.js
 
 In your web page:
-
 ```html
 <script src="jquery.js"></script>
 <script src="d3.min.js"></script>
 <script src="dist/plastic.min.js"></script>
 ```
-
 
 ## Documentation
 Documentation can be found at the [Wiki](https://github.com/Fannon/plastic.js/wiki)
