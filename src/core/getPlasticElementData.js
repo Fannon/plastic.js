@@ -32,7 +32,7 @@ plastic.getPlasticElementData = function($el) {
     //////////////////////////////////////////
 
     // Get Data-URL
-    elData.dataUrl = $el.find(".plastic-data").attr('data-src');
+    elData.dataUrl = $el.find(".plastic-data").attr('data-url');
 
     if (elData.dataUrl) { // Get Data from URL if given
 

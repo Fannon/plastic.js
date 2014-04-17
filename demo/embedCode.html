@@ -6,7 +6,7 @@
 <plastic id="table-example" style="height: 400px; width: 100%;" >
 
     <!-- Set data via URL (plastic.js will get it asynchronally -->
-    <script class="plastic-data" type="application/json" data-src="data/musicians.json" data-format="sparql-json"></script>
+    <script class="plastic-data" type="application/json" data-url="data/musicians.json" data-format="sparql-json"></script>
 
     <!-- Alternative: Set data as a JSON Object for synchronous use -->
     <script class="plastic-data" type="application/json" data-format="ask-basic-json">
@@ -84,6 +84,37 @@
     <!-- Define your options, especially which display module -->
     <!-- There will be global options and options tied to the display or parser module -->
     <!-- Those specific options will depend on which module/parser is used -->
+    <script class="plastic-options" type="application/json">
+        // TODO: We need to define a naming convention for the attributes
+        {
+            "general": {
+                "width": "100%",
+                "height": "400px",
+                "horizontal-scrollbar": true,
+                "vertical-scrollbar": true
+            },
+            "display": {
+                "module": 'table',
+                "table-options": {
+                    "table-head": true
+                }
+            },
+            "dataParser": {
+                module: 'sparql-json'
+            }
+        }
+    </script>
+
+</plastic>
+
+
+<!-- Usually you need only a few of those options. Here is a real-life example: -->
+
+<!-- This gets the data from an url to a json file, and displays is as a table. -->
+<plastic id="table-example" style="height: 400px; width: 100%;" >
+
+    <script class="plastic-data" type="application/json" data-url="data/musicians.json" data-format="sparql-json"></script>
+
     <script class="plastic-options" type="application/json">
         // TODO: We need to define a naming convention for the attributes
         {
