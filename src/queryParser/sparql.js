@@ -1,7 +1,8 @@
-/**
- * Created by Fannon on 15.04.2014.
- */
+
 /* global plastic */
+
+// Register query parser
+plastic.queryParser.available['sparql'] = 'sparql';
 
 /**
  * This is a SPARQL Query Parser

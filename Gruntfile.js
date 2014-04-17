@@ -36,10 +36,12 @@ module.exports = function (grunt) {
                 src: [
                     'src/main.js',
                     'src/options.js',
+                    'src/core/**/*.js',
                     'src/dataParser/**/*.js',
+                    'src/queryParser/**/*.js',
+                    'src/schemaParser/**/*.js',
                     'src/display/**/*.js',
-                    'src/helper/**/*.js',
-                    'src/queryParser/**/*.js'
+                    'src/helper/**/*.js'
                 ],
                 dest: 'dist/plastic.js'
             }

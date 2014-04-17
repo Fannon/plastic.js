@@ -1,6 +1,6 @@
 /* global plastic */
 
-
+// Register display module
 plastic.display.available['table'] = 'table';
 
 /**

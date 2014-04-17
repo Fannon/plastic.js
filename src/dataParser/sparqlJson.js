@@ -1,9 +1,6 @@
-/**
- * Created by fannon on 09.04.2014.
- */
 /* global plastic */
 
-// Register Parser
+// Register dataParser
 plastic.dataParser.available['sparql-json'] = 'sparqlJson';
 
 /**
@@ -13,7 +10,6 @@ plastic.dataParser.available['sparql-json'] = 'sparqlJson';
  * @returns Array
  */
 plastic.dataParser.sparqlJson = function(data) {
-
 
     console.info('PARSING DATA VIA: SPARQL JSON');
     console.dir(data);

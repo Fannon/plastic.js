@@ -1,6 +1,3 @@
-/**
- * Created by Fannon on 11.04.2014.
- */
 /* global plastic */
 
 /**

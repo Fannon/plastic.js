@@ -53,11 +53,13 @@ pre {
     border: none;
     padding: 0;
     border-radius: 5px;
+    background: #f8f8f8;
 }
 
 code.hljs {
     font-weight: normal;
     padding: 0 16px;
+    font-size: 0.85em;
 }
 
 

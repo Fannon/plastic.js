@@ -7,5 +7,5 @@
  * @type {{}}
  */
 plastic.options = {
-    test: 1
+    width: '100%'
 };
