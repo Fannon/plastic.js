@@ -1,4 +1,4 @@
-/*! plastic - v0.0.1 - 2014-04-15
+/*! plastic - v0.0.1 - 2014-04-17
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 var plastic = (function () {
@@ -11,161 +11,15 @@ var plastic = (function () {
         console.log('plastic.js version: ' + plastic.version);
 
         // Get all <plastic> elements on the page and store them as jQuery DOM Objects
-        plastic.$elements = $('plastic');
+        plastic.$elements = $('plastic, .plastic-js');
 
         // Iterate all <plastic>
         plastic.$elements.each(function() {
-            prepareVisualisation($(this));
-            getPlasticData($(this));
+            plastic.prepareCanvas($(this));
+            plastic.getPlasticElementData($(this));
         });
 
     });
-
-    /**
-     * Gets MetaData (Data/DataURL and Options) from <plastic> Element
-     *
-     * // TODO: Error Handling
-     *
-     * @param el
-     */
-    var getPlasticData = function(el) {
-
-        var elData = {};
-        var async = false;
-
-        console.info('main.getPlasticData(el)');
-
-
-        //////////////////////////////////////////
-        // DATA                                 //
-        //////////////////////////////////////////
-
-        // Get Data-URL
-        elData.dataUrl = el.attr('data-url');
-
-        if (elData.dataUrl) { // Get Data from URL if given
-
-            async = true;
-
-            // TODO: Asynchronous Event !!!
-
-            var request = $.ajax(elData.dataUrl)
-
-                .done(function(data) {
-
-                    // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
-                    console.log('Getting Data from URL via AJAX');
-
-                    try {
-                        if (data !== null && typeof data === 'object') {
-                            elData.rawData = data;
-                        } else {
-                            elData.rawData = $.parseJSON(data);
-                        }
-                    } catch(e) {
-                        console.error(e);
-                    }
-
-                    console.log('Received asynchronous data.');
-                    parseData(elData);
-                })
-                .fail(function() {
-                    console.error( "error" );
-                })
-                .always(function() {
-
-                });
-
-
-        } else {
-            // Else: Get data from script tag
-
-            var dataObject = el.find(".plastic-data");
-
-            if (dataObject.length > 0) {
-                var dataString = dataObject[0].text;
-                console.log(dataString);
-                if (dataString && dataString !== '') {
-                    elData.rawData = $.parseJSON(dataString);
-                } else {
-                    console.log('Empty Element!');
-                }
-            } else {
-                console.log('No Data Object');
-            }
-        }
-
-        //////////////////////////////////////////
-        // OPTIONS                              //
-        //////////////////////////////////////////
-
-        var optionsObject = el.find(".plastic-options");
-
-        if (optionsObject.length > 0) {
-            var optionsString = optionsObject[0].text;
-            if (optionsString && optionsString !== '') {
-                elData.options = JSON.parse(optionsString);
-            } else {
-                console.log('Empty Element!');
-            }
-        } else {
-            console.log('No Options Object');
-        }
-
-        elData.height = el.height();
-        elData.width = el.width();
-
-        if (!async) {
-            console.log('Received Synchronous Data');
-            parseData(elData);
-        }
-
-    };
-
-    /**
-     * Helper Function that calls the proper ParseData Module
-     *
-     * @param elData
-     */
-    var parseData = function(elData) {
-        console.info('PARSING DATA');
-        console.dir(elData);
-        var parser = plastic.dataParser.available[elData.options.dataFormat];
-
-        elData.data = plastic.dataParser[parser](elData.rawData);
-
-        drawData(elData);
-    };
-
-    /**
-     * Helper Function that calls the proper Display Module
-     *
-     * @param elData
-     */
-    var drawData = function(elData) {
-        var displayModule = plastic.display.available[elData.options.display];
-        plastic.display[displayModule](elData);
-    };
-
-    /**
-     * Inserts a drawing Canvas which has exactly the same size as the plastic Element
-     *
-     * TODO: If no size is given, or given by the options -> Consider this
-     *
-     * @param el
-     */
-    var prepareVisualisation = function(el) {
-        console.info('PREPARING VISUALISATION');
-
-        el.append('<div id="vis"></div>');
-        $('#vis')
-            .height(el.height())
-            .width(el.width())
-            .css('overflow', 'scroll')
-            .css('padding', '5px')
-        ;
-
-    };
 
 
     /**
@@ -175,6 +29,7 @@ var plastic = (function () {
 
         version: '0.0.2', // semver
 
+        /** This holds all the plastic jQuery elements */
         $elements: [],
 
         /** Data Parser Namespace */
@@ -187,6 +42,11 @@ var plastic = (function () {
             available: {}
         },
 
+        /** Data Parser Namespace */
+        schemaParser: {
+            available: {}
+        },
+
         /** Display Modules Namespace */
         display: {
             available: {}
@@ -194,7 +54,6 @@ var plastic = (function () {
 
         /** Helper Functions Namespace */
         helper: {}
-
 
 
     };
@@ -209,12 +68,213 @@ var plastic = (function () {
  * @type {{}}
  */
 plastic.options = {
-    test: 1
+    width: '100%'
 };
 
-/* global plastic */
+/**
+ * Helper Function that calls the proper Display Module
+ *
+ * @param elData
+ */
+plastic.callDisplay = function(elData) {
+    var displayModule = plastic.display.available[elData.options.display];
+    plastic.display[displayModule](elData);
+};
 
-// Register Parser
+/**
+ * Helper Function that calls the proper ParseData Module
+ *
+ * @param elData
+ */
+plastic.callParseData = function(elData) {
+    console.info('PARSING DATA');
+    console.dir(elData);
+
+    var parser = plastic.dataParser.available[elData.options.dataFormat];
+
+    elData.data = plastic.dataParser[parser](elData.rawData);
+
+    plastic.callDisplay(elData);
+};
+
+// TODO!
+
+// TODO!
+
+/**
+ * Gets MetaData (Data/DataURL and Options) from <plastic> Element
+ *
+ * // TODO: Error Handling
+ *
+ * @param $el    Plastic HTML Element selected via jQuery
+ */
+plastic.getPlasticElementData = function($el) {
+
+    var elData = {};
+    var async = false;
+    var request;
+
+    console.info('main.getPlasticData(el)');
+
+
+    //////////////////////////////////////////
+    // GET GENERAL DATA                     //
+    //////////////////////////////////////////
+
+    elData.height = $el.height();
+    elData.width = $el.width();
+
+    // TODO: Integrate this with width and height from options (?)
+    // TODO: Case handling if size was not defined (could be 0 height)
+
+
+    //////////////////////////////////////////
+    // GET DATA DATA                        //
+    //////////////////////////////////////////
+
+    // Get Data-URL
+    elData.dataUrl = $el.find(".plastic-data").attr('data-src');
+
+    if (elData.dataUrl) { // Get Data from URL if given
+
+        async = true;
+
+        // TODO: Asynchronous Event !!!
+
+        request = $.ajax(elData.dataUrl)
+
+            .fail(function() {
+                console.error( "error" );
+            })
+            .always(function() {
+
+            });
+
+    } else {
+        // Else: Get data from script tag
+
+        var dataObject = $el.find(".plastic-data");
+
+        if (dataObject.length > 0) {
+            var dataString = dataObject[0].text;
+            console.log(dataString);
+            if (dataString && dataString !== '') {
+                elData.rawData = $.parseJSON(dataString);
+            } else {
+                console.log('Empty Element!');
+            }
+        } else {
+            console.log('No Data Object');
+        }
+    }
+
+    //////////////////////////////////////////
+    // GET OPTIONS DATA                     //
+    //////////////////////////////////////////
+
+    var optionsObject = $el.find(".plastic-options");
+
+    console.log('$el.find(".plastic-options");');
+    console.dir(optionsObject);
+
+    if (optionsObject.length > 0) {
+        var optionsString = optionsObject[0].innerText;
+        if (optionsString && optionsString !== '') {
+            elData.options = JSON.parse(optionsString);
+        } else {
+            console.log('Empty Element!');
+        }
+    } else {
+        console.log('No Options Object');
+    }
+
+    //////////////////////////////////////////
+    // GET SCHEMA DATA                      //
+    //////////////////////////////////////////
+
+    // TODO
+
+
+    //////////////////////////////////////////
+    // GET QUERY DATA                       //
+    //////////////////////////////////////////
+
+    // TODO
+
+
+    //////////////////////////////////////////
+    // VALIDATE AND PASSING ON              //
+    //////////////////////////////////////////
+
+    /**
+     * Validate the elData Object
+     *
+     * // TODO: Not implemented yet
+     *
+     * @param elData
+     */
+    var validate = function(elData) {
+        plastic.callParseData(elData);
+    };
+
+
+    if (!async) {
+        console.log('Received Synchronous Data');
+        validate(elData);
+    } else {
+        request.done(function(data) {
+
+            // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
+            console.log('Getting Data from URL via AJAX');
+
+            try {
+                if (data !== null && typeof data === 'object') {
+                    elData.rawData = data;
+                } else {
+                    elData.rawData = $.parseJSON(data);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+
+            console.log('Received asynchronous data.');
+
+            validate(elData);
+        });
+    }
+
+
+
+
+
+};
+
+/**
+ * Inserts a drawing Canvas which has exactly the same size as the plastic Element
+ *
+ * TODO: If no size is given, or given by the options -> Consider this
+ *
+ * @param el
+ */
+plastic.prepareCanvas = function(el) {
+    console.info('PREPARING VISUALISATION');
+
+    el.append('<div id="vis"></div>');
+    $('#vis')
+        .height(el.height())
+        .width(el.width())
+        .css('overflow', 'scroll')
+        .css('padding', '5px')
+    ;
+
+};
+
+// This will parse the default plastic.js data-format.
+
+// TODO: This is not implemented yet
+// TODO: Decide how the default data format should look like
+
+// Register dataParser
 plastic.dataParser.available['sparql-json'] = 'sparqlJson';
 
 /**
@@ -224,7 +284,6 @@ plastic.dataParser.available['sparql-json'] = 'sparqlJson';
  * @returns Array
  */
 plastic.dataParser.sparqlJson = function(data) {
-
 
     console.info('PARSING DATA VIA: SPARQL JSON');
     console.dir(data);
@@ -248,6 +307,23 @@ plastic.dataParser.sparqlJson = function(data) {
 
 };
 
+// Register query parser
+plastic.queryParser.available['sparql'] = 'sparql';
+
+/**
+ * This is a SPARQL Query Parser
+ * It turns the Query into an API URL
+ *
+ * TODO: Not implemented yet.
+ */
+plastic.queryParser.sparql = function() {
+
+};
+
+// TODO: Write a default Schema Parser
+// TODO: Decide how the default schema should look like
+
+// Register display module
 plastic.display.available['table'] = 'table';
 
 /**
@@ -312,8 +388,6 @@ plastic.display.table = function (elData) {
 
 };
 
-/* global plastic */
-
 /**
  * Global Log Function
  * Should be used instead of console.logs
@@ -327,16 +401,4 @@ plastic.display.table = function (elData) {
 plastic.helper.log = function (type, msg) {
     // TODO
     console.log(type + ' :: ' + msg);
-};
-
-/* global plastic */
-
-/**
- * This is a SPARQL Query Parser
- * It turns the Query into an API URL
- *
- * TODO: Not implemented yet.
- */
-plastic.queryParser.sparql = function() {
-
 };

@@ -5,22 +5,34 @@
  *
  * // TODO: Error Handling
  *
- * @param el
+ * @param $el    Plastic HTML Element selected via jQuery
  */
-plastic.getPlasticElementData = function(el) {
+plastic.getPlasticElementData = function($el) {
 
     var elData = {};
     var async = false;
+    var request;
 
     console.info('main.getPlasticData(el)');
 
 
     //////////////////////////////////////////
-    // DATA                                 //
+    // GET GENERAL DATA                     //
+    //////////////////////////////////////////
+
+    elData.height = $el.height();
+    elData.width = $el.width();
+
+    // TODO: Integrate this with width and height from options (?)
+    // TODO: Case handling if size was not defined (could be 0 height)
+
+
+    //////////////////////////////////////////
+    // GET DATA DATA                        //
     //////////////////////////////////////////
 
     // Get Data-URL
-    elData.dataUrl = el.attr('data-url');
+    elData.dataUrl = $el.find(".plastic-data").attr('data-src');
 
     if (elData.dataUrl) { // Get Data from URL if given
 
@@ -28,26 +40,8 @@ plastic.getPlasticElementData = function(el) {
 
         // TODO: Asynchronous Event !!!
 
-        var request = $.ajax(elData.dataUrl)
+        request = $.ajax(elData.dataUrl)
 
-            .done(function(data) {
-
-                // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
-                console.log('Getting Data from URL via AJAX');
-
-                try {
-                    if (data !== null && typeof data === 'object') {
-                        elData.rawData = data;
-                    } else {
-                        elData.rawData = $.parseJSON(data);
-                    }
-                } catch(e) {
-                    console.error(e);
-                }
-
-                console.log('Received asynchronous data.');
-                plastic.callParseData(elData);
-            })
             .fail(function() {
                 console.error( "error" );
             })
@@ -55,11 +49,10 @@ plastic.getPlasticElementData = function(el) {
 
             });
 
-
     } else {
         // Else: Get data from script tag
 
-        var dataObject = el.find(".plastic-data");
+        var dataObject = $el.find(".plastic-data");
 
         if (dataObject.length > 0) {
             var dataString = dataObject[0].text;
@@ -75,13 +68,16 @@ plastic.getPlasticElementData = function(el) {
     }
 
     //////////////////////////////////////////
-    // OPTIONS                              //
+    // GET OPTIONS DATA                     //
     //////////////////////////////////////////
 
-    var optionsObject = el.find(".plastic-options");
+    var optionsObject = $el.find(".plastic-options");
+
+    console.log('$el.find(".plastic-options");');
+    console.dir(optionsObject);
 
     if (optionsObject.length > 0) {
-        var optionsString = optionsObject[0].text;
+        var optionsString = optionsObject[0].innerText;
         if (optionsString && optionsString !== '') {
             elData.options = JSON.parse(optionsString);
         } else {
@@ -91,12 +87,63 @@ plastic.getPlasticElementData = function(el) {
         console.log('No Options Object');
     }
 
-    elData.height = el.height();
-    elData.width = el.width();
+    //////////////////////////////////////////
+    // GET SCHEMA DATA                      //
+    //////////////////////////////////////////
+
+    // TODO
+
+
+    //////////////////////////////////////////
+    // GET QUERY DATA                       //
+    //////////////////////////////////////////
+
+    // TODO
+
+
+    //////////////////////////////////////////
+    // VALIDATE AND PASSING ON              //
+    //////////////////////////////////////////
+
+    /**
+     * Validate the elData Object
+     *
+     * // TODO: Not implemented yet
+     *
+     * @param elData
+     */
+    var validate = function(elData) {
+        plastic.callParseData(elData);
+    };
+
 
     if (!async) {
         console.log('Received Synchronous Data');
-        plastic.callParseData(elData);
+        validate(elData);
+    } else {
+        request.done(function(data) {
+
+            // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
+            console.log('Getting Data from URL via AJAX');
+
+            try {
+                if (data !== null && typeof data === 'object') {
+                    elData.rawData = data;
+                } else {
+                    elData.rawData = $.parseJSON(data);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+
+            console.log('Received asynchronous data.');
+
+            validate(elData);
+        });
     }
+
+
+
+
 
 };

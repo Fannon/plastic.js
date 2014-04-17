@@ -21,7 +21,7 @@ var plastic = (function () {
         console.log('plastic.js version: ' + plastic.version);
 
         // Get all <plastic> elements on the page and store them as jQuery DOM Objects
-        plastic.$elements = $('plastic');
+        plastic.$elements = $('plastic, .plastic-js');
 
         // Iterate all <plastic>
         plastic.$elements.each(function() {

@@ -8,9 +8,10 @@
 plastic.callParseData = function(elData) {
     console.info('PARSING DATA');
     console.dir(elData);
+
     var parser = plastic.dataParser.available[elData.options.dataFormat];
 
     elData.data = plastic.dataParser[parser](elData.rawData);
 
-    plastic.callDisplayModule(elData);
+    plastic.callDisplay(elData);
 };
