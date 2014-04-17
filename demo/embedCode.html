@@ -2,13 +2,16 @@
 
 <!-- First: Set up a new <plastic> Tag -->
 <!-- If you want to pre-define the height and width, do this via the style attribute -->
+<!-- If there's no support for custom HTML Tags, its possible to use a <div class="plastic-js"> instead of <plastic> -->
 <plastic id="table-example" style="height: 400px; width: 100%;" >
 
     <!-- Set data via URL (plastic.js will get it asynchronally -->
-    <script class="plastic-data" type="application/json" data-src="data/musicians.json" data-parser="sparql-json"></script>
+    <script class="plastic-data" type="application/json" data-src="data/musicians.json" data-format="sparql-json"></script>
 
     <!-- Alternative: Set data as a JSON Object for synchronous use -->
-    <script class="plastic-data" type="application/json" data-parser="ask-basic-json">
+    <script class="plastic-data" type="application/json" data-format="ask-basic-json">
+        // TODO: There is no default (recommended) data format yet.
+        // This is JSON Example Data coming from the ASK API
         {
             "Arthur Chesterton": {
                 "label": "Arthur Chesterton",
@@ -40,6 +43,8 @@
     <!-- If the data itself contains no schema, you can specify it here manually -->
     <!-- This is optional for some display modes, and mandatory for some others -->
     <script class="plastic-schema" type="application/json">
+        // TODO: There is no default (recommended) schema format yet.
+        // This is schema data coming from the ASK API
         {
             "":{
                 "label":"",
@@ -80,12 +85,13 @@
     <!-- There will be global options and options tied to the display or parser module -->
     <!-- Those specific options will depend on which module/parser is used -->
     <script class="plastic-options" type="application/json">
+        // TODO: We need to define a naming convention for the attributes
         {
             "general": {
                 "width": "100%",
                 "height": "400px",
                 "horizontal-scrollbar": true,
-                "vertical-scrollbar": true,
+                "vertical-scrollbar": true
             },
             "display": {
                 "module": 'table',
