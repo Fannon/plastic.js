@@ -6,29 +6,45 @@ plastic.dataParser.available['sparql-json'] = 'sparqlJson';
 /**
  * Parses tabular data from SPARQL Endpoints
  *
- * @param data
- * @returns Array
+ * TODO: Make this to module-pattern
+ * TODO: Break this into parse and validate (and possible helper functions)
  */
-plastic.dataParser.sparqlJson = function(data) {
+plastic.dataParser.sparqlJson = (function () {
 
-    console.info('PARSING DATA VIA: SPARQL JSON');
-    console.dir(data);
+    var validate = function(data) {
+        return true;
+    };
 
-    var processedData = [];
+    var parse = function(data) {
 
-    for (var i = 0; i < data.results.bindings.length; i++) {
+        var success = validate(data);
 
-        processedData[i] = {};
+        console.info('PARSING DATA VIA: SPARQL JSON');
+        console.dir(data);
 
-        var row = data.results.bindings[i];
+        var processedData = [];
 
-        for (var o in row) {
-            processedData[i][o] = row[o].value;
+        for (var i = 0; i < data.results.bindings.length; i++) {
+
+            processedData[i] = {};
+
+            var row = data.results.bindings[i];
+
+            for (var o in row) {
+                processedData[i][o] = row[o].value;
+            }
         }
-    }
 
-    console.dir(processedData);
+        console.dir(processedData);
 
-    return processedData;
+        return processedData;
 
-};
+    };
+
+
+    return {
+        validate: validate,
+        parse: parse
+    };
+
+})();

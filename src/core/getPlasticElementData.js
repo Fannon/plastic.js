@@ -72,14 +72,16 @@ plastic.getPlasticElementData = function($el) {
     //////////////////////////////////////////
 
     var optionsObject = $el.find(".plastic-options");
+    plastic.o = optionsObject;
 
     console.log('$el.find(".plastic-options");');
-    console.dir(optionsObject);
+//    console.dir(optionsObject);
 
     if (optionsObject.length > 0) {
-        var optionsString = optionsObject[0].innerText;
+        var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+        console.log(optionsString);
         if (optionsString && optionsString !== '') {
-            elData.options = JSON.parse(optionsString);
+            elData.options = $.parseJSON(optionsString);
         } else {
             console.log('Empty Element!');
         }
@@ -105,21 +107,9 @@ plastic.getPlasticElementData = function($el) {
     // VALIDATE AND PASSING ON              //
     //////////////////////////////////////////
 
-    /**
-     * Validate the elData Object
-     *
-     * // TODO: Not implemented yet
-     *
-     * @param elData
-     */
-    var validate = function(elData) {
-        plastic.callParseData(elData);
-    };
-
-
     if (!async) {
         console.log('Received Synchronous Data');
-        validate(elData);
+        plastic.callParseData(elData);
     } else {
         request.done(function(data) {
 
@@ -138,7 +128,7 @@ plastic.getPlasticElementData = function($el) {
 
             console.log('Received asynchronous data.');
 
-            validate(elData);
+            plastic.callParseData(elData);
         });
     }
 

@@ -11,7 +11,8 @@ plastic.callParseData = function(elData) {
 
     var parser = plastic.dataParser.available[elData.options.dataFormat];
 
-    elData.data = plastic.dataParser[parser](elData.rawData);
+    plastic.dataParser[parser].validate(elData.rawData);
+    elData.data = plastic.dataParser[parser].parse(elData.rawData);
 
     plastic.callDisplay(elData);
 };

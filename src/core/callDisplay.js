@@ -6,6 +6,8 @@
  * @param elData
  */
 plastic.callDisplay = function(elData) {
+    console.info('callDisplay');
+    console.dir(elData);
     var displayModule = plastic.display.available[elData.options.display];
     plastic.display[displayModule](elData);
 };

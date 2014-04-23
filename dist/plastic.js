@@ -1,4 +1,4 @@
-/*! plastic - v0.0.1 - 2014-04-17
+/*! plastic - v0.0.1 - 2014-04-23
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 var plastic = (function () {
@@ -77,6 +77,8 @@ plastic.options = {
  * @param elData
  */
 plastic.callDisplay = function(elData) {
+    console.info('callDisplay');
+    console.dir(elData);
     var displayModule = plastic.display.available[elData.options.display];
     plastic.display[displayModule](elData);
 };
@@ -92,7 +94,8 @@ plastic.callParseData = function(elData) {
 
     var parser = plastic.dataParser.available[elData.options.dataFormat];
 
-    elData.data = plastic.dataParser[parser](elData.rawData);
+    plastic.dataParser[parser].validate(elData.rawData);
+    elData.data = plastic.dataParser[parser].parse(elData.rawData);
 
     plastic.callDisplay(elData);
 };
@@ -133,7 +136,7 @@ plastic.getPlasticElementData = function($el) {
     //////////////////////////////////////////
 
     // Get Data-URL
-    elData.dataUrl = $el.find(".plastic-data").attr('data-src');
+    elData.dataUrl = $el.find(".plastic-data").attr('data-url');
 
     if (elData.dataUrl) { // Get Data from URL if given
 
@@ -173,14 +176,16 @@ plastic.getPlasticElementData = function($el) {
     //////////////////////////////////////////
 
     var optionsObject = $el.find(".plastic-options");
+    plastic.o = optionsObject;
 
     console.log('$el.find(".plastic-options");');
-    console.dir(optionsObject);
+//    console.dir(optionsObject);
 
     if (optionsObject.length > 0) {
-        var optionsString = optionsObject[0].innerText;
+        var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+        console.log(optionsString);
         if (optionsString && optionsString !== '') {
-            elData.options = JSON.parse(optionsString);
+            elData.options = $.parseJSON(optionsString);
         } else {
             console.log('Empty Element!');
         }
@@ -206,21 +211,9 @@ plastic.getPlasticElementData = function($el) {
     // VALIDATE AND PASSING ON              //
     //////////////////////////////////////////
 
-    /**
-     * Validate the elData Object
-     *
-     * // TODO: Not implemented yet
-     *
-     * @param elData
-     */
-    var validate = function(elData) {
-        plastic.callParseData(elData);
-    };
-
-
     if (!async) {
         console.log('Received Synchronous Data');
-        validate(elData);
+        plastic.callParseData(elData);
     } else {
         request.done(function(data) {
 
@@ -239,7 +232,7 @@ plastic.getPlasticElementData = function($el) {
 
             console.log('Received asynchronous data.');
 
-            validate(elData);
+            plastic.callParseData(elData);
         });
     }
 
@@ -280,32 +273,48 @@ plastic.dataParser.available['sparql-json'] = 'sparqlJson';
 /**
  * Parses tabular data from SPARQL Endpoints
  *
- * @param data
- * @returns Array
+ * TODO: Make this to module-pattern
+ * TODO: Break this into parse and validate (and possible helper functions)
  */
-plastic.dataParser.sparqlJson = function(data) {
+plastic.dataParser.sparqlJson = (function () {
 
-    console.info('PARSING DATA VIA: SPARQL JSON');
-    console.dir(data);
+    var validate = function(data) {
+        return true;
+    };
 
-    var processedData = [];
+    var parse = function(data) {
 
-    for (var i = 0; i < data.results.bindings.length; i++) {
+        var success = validate(data);
 
-        processedData[i] = {};
+        console.info('PARSING DATA VIA: SPARQL JSON');
+        console.dir(data);
 
-        var row = data.results.bindings[i];
+        var processedData = [];
 
-        for (var o in row) {
-            processedData[i][o] = row[o].value;
+        for (var i = 0; i < data.results.bindings.length; i++) {
+
+            processedData[i] = {};
+
+            var row = data.results.bindings[i];
+
+            for (var o in row) {
+                processedData[i][o] = row[o].value;
+            }
         }
-    }
 
-    console.dir(processedData);
+        console.dir(processedData);
 
-    return processedData;
+        return processedData;
 
-};
+    };
+
+
+    return {
+        validate: validate,
+        parse: parse
+    };
+
+})();
 
 // Register query parser
 plastic.queryParser.available['sparql'] = 'sparql';

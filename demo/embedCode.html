@@ -3,10 +3,11 @@
 <!-- First: Set up a new <plastic> Tag -->
 <!-- If you want to pre-define the height and width, do this via the style attribute -->
 <!-- If there's no support for custom HTML Tags, its possible to use a <div class="plastic-js"> instead of <plastic> -->
-<plastic id="table-example" style="height: 400px; width: 100%;" >
+<!--<plastic id="table-example" style="height: 400px; width: 100%;" ></plastic>-->
+<div class="plastic-js" id="table-example" style="height: 400px; width: 100%;" >
 
     <!-- Set data via URL (plastic.js will get it asynchronally -->
-    <script class="plastic-data" type="application/json" data-url="data/musicians.json" data-format="sparql-json"></script>
+    <script class="plastic-data" type="application/json" data-url="data/musicians.json"></script>
 
     <!-- Alternative: Set data as a JSON Object for synchronous use -->
     <script class="plastic-data" type="application/json" data-format="ask-basic-json">
@@ -105,7 +106,7 @@
         }
     </script>
 
-</plastic>
+</div>
 
 
 <!-- Usually you need only a few of those options. Here is a real-life example: -->
