@@ -10,7 +10,12 @@
  * @param type      enum: info, warning, error)
  * @param msg       Log Message
  */
-plastic.helper.log = function (type, msg) {
+plastic.helper.log = function (msg, type) {
     // TODO
-    console.log(type + ' :: ' + msg);
+    if (type) {
+        console.log(type + ' :: ' + msg);
+    } else {
+        console.log('--> ' + msg);
+    }
+
 };

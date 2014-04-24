@@ -35,6 +35,7 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     'src/main.js',
+                    'bower_components/yepnope/yepnope.js',
                     'src/options.js',
                     'src/core/**/*.js',
                     'src/dataParser/**/*.js',
@@ -71,7 +72,8 @@ module.exports = function (grunt) {
         /** JavaScript Linting */
         jshint: {
             options: {
-                reporter: require('jshint-stylish')
+                reporter: require('jshint-stylish'),
+                force: false
             },
             gruntfile: {
                 options: {
@@ -87,9 +89,9 @@ module.exports = function (grunt) {
             },
             test: {
                 options: {
-                    jshintrc: 'demo/spec/.jshintrc'
+                    jshintrc: 'test/spec/.jshintrc'
                 },
-                src: ['demo/spec/**/*.js']
+                src: ['test/spec/**/*.js']
             }
         },
 
@@ -108,16 +110,16 @@ module.exports = function (grunt) {
 
         /** Copies Files */
         copy: {
-            demo: {
+            documentation: {
                 files: [{
                     src: ['bower_components/d3/d3.min.js'],
-                    dest: 'demo/lib/d3.min.js'
+                    dest: 'documentation/lib/d3.min.js'
                 }, {
                     src: ['bower_components/jquery/dist/jquery.min.js'],
-                    dest: 'demo/lib/jquery.min.js'
+                    dest: 'documentation/lib/jquery.min.js'
                 }, {
                     src: ['bower_components/foundation/css/foundation.min.css'],
-                    dest: 'demo/lib/foundation.min.css'
+                    dest: 'documentation/lib/foundation.min.css'
                 }]
             }
         },
@@ -130,18 +132,11 @@ module.exports = function (grunt) {
             },
             src: {
                 files: 'src/**/*.*',
-                tasks: ['jshint:src', 'concat']
+//                tasks: ['jshint:src', 'concat']
+                tasks: ['concat']
             },
-//            demo: {
-//                files: 'demo/**/*.*',
-//                tasks: ['jshint:src']
-//            },
-//            test: {
-//                files: 'test/**/*.*',
-//                tasks: ['jshint:test', 'qunit']
-//            },
             livereload: {
-                files: ['dist/**/*.js', 'demo/**/*.*'],
+                files: ['src/**/*.js', 'test/**/*.*'],
                 options: {
                     livereload: true
                 }
@@ -218,7 +213,7 @@ module.exports = function (grunt) {
         'content:concat', 'concat',
         'content:uglify', 'uglify',
         'content:sizediff', 'sizediff',
-        'content:copy', 'copy:demo',
+        'content:copy', 'copy:documentation',
         'content:done'
     ]);
 };
