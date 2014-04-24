@@ -639,17 +639,17 @@ plastic.options = {
     width: '100%'
 };
 
-plastic.callDisplayModule = function(elData, $el) {
+plastic.callDisplayModule = function(el, elData) {
 
     console.info('callDisplayModule');
     console.dir(elData);
 
-    plastic.prepareCanvas($el);
+    plastic.prepareCanvas(el);
 
     var displayModule = plastic.modules.display.registry[elData.options.display].fileName;
 
     if (displayModule) {
-        plastic.modules.display[displayModule](elData);
+        plastic.modules.display[displayModule](el, elData).render();
     } else {
         plastic.helper.msg('Display Module not found!', 'error');
     }
@@ -681,10 +681,10 @@ plastic.callDataParser = function(elData) {
 
 plastic.callQueryParser = function(elData) {
     // TODO!
-}
+};
 plastic.callSchemaParser = function(elData) {
     // TODO
-}
+};
 plastic.getElementData = function(el) {
 
 
@@ -939,15 +939,13 @@ plastic.processElement = function($el, elData) {
     // TODO: Wait for Data if requested via AJAX
 
 
-
-
-}
+};
 plastic.validateElementData = function(elData) {
 
     console.info('plastic.validateElementData();');
 
     return true;
-}
+};
 plastic.helper.msg = function (msg, type, el) {
 
     if (type) {

@@ -10,4 +10,4 @@ plastic.modules.display.registry = {
         dependencies: ['d3']
     }
 
-}
+};

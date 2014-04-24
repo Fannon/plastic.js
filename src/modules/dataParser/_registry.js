@@ -15,4 +15,4 @@ plastic.modules.dataParser.registry = {
         dependencies: []
     }
 
-}
+};

@@ -12,4 +12,4 @@ plastic.validateElementData = function(elData) {
     console.info('plastic.validateElementData();');
 
     return true;
-}
+};

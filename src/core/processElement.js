@@ -10,6 +10,8 @@
  *  4 IF Schema provided        Calling the Schema Parser
  *  5 ALWAYS                    Calling the Display Module
  *
+ *  // TODO: Wrap this into a module pattern and integrate the callFunctions from the core as private functions
+ *
  * @param $el
  * @param elData
  */
@@ -102,6 +104,4 @@ plastic.processElement = function($el, elData) {
     // TODO: Wait for Data if requested via AJAX
 
 
-
-
-}
+};

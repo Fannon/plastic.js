@@ -9,4 +9,4 @@ plastic.modules.queryParser.registry = {
         humanReadableName: "SPARQL Query Parser",
         dependencies: []
     }
-}
+};

@@ -9,4 +9,4 @@ plastic.modules.schemaParser.registry = {
         humanReadableName: "Default Schema Parser",
         dependencies: []
     }
-}
+};

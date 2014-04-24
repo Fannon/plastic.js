@@ -6,13 +6,26 @@
  */
 plastic.modules.dataParser.sparqlJson = (function () {
 
+    var dependencies = [];
+
+    /**
+     * Validate this specific data format
+     * Returns true if valid, false if not.
+     *
+     * @param data
+     * @returns {boolean}
+     */
     var validate = function(data) {
         return true;
     };
 
+    /**
+     * Parses the data into an internal used data format
+     *
+     * @param data
+     * @returns {Array}
+     */
     var parse = function(data) {
-
-        var success = validate(data);
 
         console.info('PARSING DATA VIA: SPARQL JSON');
         console.dir(data);
@@ -36,8 +49,9 @@ plastic.modules.dataParser.sparqlJson = (function () {
 
     };
 
-
+    // Make public
     return {
+        dependencies: dependencies,
         validate: validate,
         parse: parse
     };
