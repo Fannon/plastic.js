@@ -10,15 +10,18 @@ var plastic = (function () {
      */
     $(document).ready(function() {
 
-        console.log('plastic.js version: ' + plastic.version);
-
         // Get all <plastic> elements on the page and store them as jQuery DOM Objects
-        plastic.$elements = $('plastic, .plastic-js');
+        plastic.elements = $('plastic, .plastic-js');
 
-        // Iterate all <plastic>
-        plastic.$elements.each(function() {
-            plastic.prepareCanvas($(this));
-            plastic.getPlasticElementData($(this));
+        // Iterate all <plastic> Elements
+        plastic.elements.each(function() {
+
+            // Get Element Data
+            var elData = plastic.getElementData($(this));
+
+            // Process this Element
+            plastic.processElement($(this), elData);
+
         });
 
     });
@@ -29,10 +32,10 @@ var plastic = (function () {
      */
     return {
 
-        version: '0.0.2', // semver
+        version: '0.0.3', // semver
 
         /** This holds all the plastic jQuery elements */
-        $elements: [],
+        elements: [],
 
         /** Namespace for all plastic modules */
         modules: {
@@ -633,16 +636,19 @@ plastic.options = {
     width: '100%'
 };
 
-plastic.callDisplay = function(elData) {
+plastic.callDisplay = function(elData, $el) {
+
     console.info('callDisplay');
     console.dir(elData);
+
+    plastic.prepareCanvas($el);
 
     var displayModule = plastic.modules.display.registry[elData.options.display].fileName;
 
     if (displayModule) {
         plastic.modules.display[displayModule](elData);
     } else {
-        plastic.helper.log('Display Module not found!', 'error');
+        plastic.helper.msg('Display Module not found!', 'error');
     }
 
 
@@ -655,7 +661,7 @@ plastic.callParseData = function(elData) {
 
     // Look for data parser module in the registry
     var parser = plastic.modules.dataParser.registry[elData.options.dataFormat].fileName;
-    console.log('Using Parser: ' + parser);
+    console.msg('Using Parser: ' + parser);
 
     if (parser) {
         plastic.modules.dataParser[parser].validate(elData.rawData);
@@ -663,7 +669,7 @@ plastic.callParseData = function(elData) {
 
         plastic.callDisplay(elData);
     } else {
-        plastic.helper.log('Parser Module not found!', 'error');
+        plastic.helper.msg('Parser Module not found!', 'error');
     }
 
 
@@ -674,50 +680,88 @@ plastic.callParseData = function(elData) {
 
 // TODO!
 
-plastic.getPlasticElementData = function($el) {
+plastic.getElementData = function(el) {
+
+    console.info('plastic.getElementData();');
 
 
     /**
      * Element Data Object.
      * This contains all information that is read from the plastic HTML element
-     *
-     * @type {{}}
      */
     var elData = {};
 
-    var async = false;
-    var request;
 
-    console.info('main.getPlasticData(el)');
+    //////////////////////////////////////////
+    // GET ELEMENT STYLE                    //
+    //////////////////////////////////////////
+
+    // TODO: Case handling if size was not defined (could be 0 height)
+
+    /** Element CSS Style (Contains Width and Height) */
+    elData.style = {};
+
+    elData.style.height = el.height();
+    elData.style.width = el.width();
 
 
     //////////////////////////////////////////
     // GET OPTIONS DATA                     //
     //////////////////////////////////////////
 
-    elData.height = $el.height();
-    elData.width = $el.width();
+    /** Element Options */
+    elData.options = {}; // mandatory!
 
-    // TODO: Integrate this with width and height from options (?)
-    // TODO: Case handling if size was not defined (could be 0 height)
-
-    var optionsObject = $el.find(".plastic-options");
+    var optionsObject = el.find(".plastic-options");
     plastic.o = optionsObject;
 
-    console.log('$el.find(".plastic-options");');
-//    console.dir(optionsObject);
 
     if (optionsObject.length > 0) {
+
         var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
-        console.log(optionsString);
+//        console.log(optionsString);
+
         if (optionsString && optionsString !== '') {
-            elData.options = $.parseJSON(optionsString);
+
+            try {
+                elData.options = $.parseJSON(optionsString);
+            } catch(e) {
+                plastic.helper.msg('Invalid JSON in the Options Object!');
+            }
+
         } else {
-            console.log('Empty Element!');
+            plastic.helper.msg('Empty Obptions Element!', 'error', el);
         }
     } else {
-        console.log('No Options Object');
+        plastic.helper.msg('No options provided!', 'error', el);
     }
+
+
+    //////////////////////////////////////////
+    // GET QUERY DATA                       //
+    //////////////////////////////////////////
+
+    // Get Data-URL
+    var queryElement = el.find(".plastic-query");
+
+    if (queryElement.length > 0)  {
+
+        /** Element Query Data */
+        elData.query = {};
+
+        elData.query.url = queryElement.attr('data-query-url');
+        elData.query.type = queryElement.attr('type');
+
+        var queryString = queryElement[0].text;
+
+        if (queryString && queryString !== '') {
+            elData.query.text = $.parseJSON(queryString);
+        } else {
+            plastic.helper.msg('Empty Query Element!', 'error', el);
+        }
+
+    }
+
 
 
     //////////////////////////////////////////
@@ -725,87 +769,64 @@ plastic.getPlasticElementData = function($el) {
     //////////////////////////////////////////
 
     // Get Data-URL
-    elData.dataUrl = $el.find(".plastic-data").attr('data-url');
+    var dataElement = el.find(".plastic-data");
 
-    if (elData.dataUrl) { // Get Data from URL if given
+    if (dataElement.length > 0) {
 
-        async = true;
+        /** Element Data */
+        elData.data = {};
 
-        // TODO: Asynchronous Event !!!
+        elData.data.url = dataElement.attr('data-url');
+        elData.data.parser = dataElement.attr('data-format');
 
-        request = $.ajax(elData.dataUrl)
+        // If no Data URL given, read Data Object
+        if (!elData.data.url) {
 
-            .fail(function() {
-                console.error( "error" );
-            })
-            .always(function() {
-
-            });
-
-    } else {
-        // Else: Get data from script tag
-
-        var dataObject = $el.find(".plastic-data");
-
-        if (dataObject.length > 0) {
-            var dataString = dataObject[0].text;
-            console.log(dataString);
+            var dataString = dataElement[0].text;
+            console.msg(dataString);
             if (dataString && dataString !== '') {
-                elData.rawData = $.parseJSON(dataString);
+                elData.data.object = $.parseJSON(dataString);
             } else {
-                console.log('Empty Element!');
+                plastic.helper.msg('Empty Data Element!', 'error', el);
             }
-        } else {
-            console.log('No Data Object');
+
         }
+
     }
+
 
 
     //////////////////////////////////////////
     // GET SCHEMA DATA                      //
     //////////////////////////////////////////
 
-    // TODO
+    // Get Data-URL
+    var schemaElement = el.find(".plastic-schema");
 
+    if (queryElement.length > 0)  {
 
-    //////////////////////////////////////////
-    // GET QUERY DATA                       //
-    //////////////////////////////////////////
+        /** Element Schema Data */
+        elData.schema = {};
 
-    // TODO
+        elData.schema.type = schemaElement.attr('data-schema-format');
 
+        var schemaString = schemaElement[0].text;
 
-    //////////////////////////////////////////
-    // VALIDATE AND PASSING ON              //
-    //////////////////////////////////////////
+        if (schemaString && schemaString !== '') {
+            elData.schema.text = $.parseJSON(schemaString);
+        } else {
+            plastic.helper.msg('Empty Schema Element!', 'error', el);
+        }
 
-    if (!async) {
-        console.log('Received Synchronous Data');
-        plastic.callParseData(elData);
-    } else {
-        request.done(function(data) {
-
-            // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
-            console.log('Getting Data from URL via AJAX');
-
-            try {
-                if (data !== null && typeof data === 'object') {
-                    elData.rawData = data;
-                } else {
-                    elData.rawData = $.parseJSON(data);
-                }
-            } catch(e) {
-                console.error(e);
-            }
-
-            console.log('Received asynchronous data.');
-
-            plastic.callParseData(elData);
-        });
     }
 
 
+    //////////////////////////////////////////
+    // RETURN ELEMENT DATA                  //
+    //////////////////////////////////////////
 
+    console.dir(elData);
+    return elData;
 
 
 };
@@ -823,7 +844,53 @@ plastic.prepareCanvas = function(el) {
 
 };
 
+plastic.processElement = function($el, elData) {
 
+    var async = false;
+    var request;
+
+
+    if (elData.dataUrl) { // Get Data from URL if given
+
+        async = true;
+
+
+        request = $.ajax(elData.dataUrl)
+            .fail(function() {
+                plastic.helper.msg('Could not get Data from URL ' + elData.dataUrl, "error", $el );
+            })
+            .always(function() { });
+
+    }
+
+
+    if (!async) {
+        console.msg('Received Synchronous Data');
+        plastic.callParseData(elData);
+    } else {
+        request.done(function(data) {
+
+            // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
+            console.msg('Getting Data from URL via AJAX');
+
+            try {
+                if (data !== null && typeof data === 'object') {
+                    elData.rawData = data;
+                } else {
+                    elData.rawData = $.parseJSON(data);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+
+            console.msg('Received asynchronous data.');
+
+            plastic.callParseData(elData);
+        });
+    }
+
+}
+// TODO
 plastic.modules.dataParser.registry = {
     "default": {
         fileName: "default", // This has to be named like the JavaScript File in the /src/dataParser directory
@@ -883,12 +950,13 @@ plastic.modules.dataParser.sparqlJson = (function () {
 })();
 
 plastic.modules.queryParser.registry = {
-    "default": {
+    "plication/sparql-query": {
         fileName: "sparql", // This has to be named like the JavaScript File in the /src/dataParser directory
         humanReadableName: "SPARQL Query Parser",
         dependencies: []
     }
 }
+
 plastic.modules.queryParser.sparql = function(elData) {
 
 //    var url = elData.data.url
@@ -974,20 +1042,21 @@ plastic.modules.display.table = function (elData) {
 
 };
 
-/**
- * Global Log Function
- * Should be used instead of console.logs
- *
- * TODO: Make this visible as an overlay of the visualisation
- * TODO: Make it closeable
- *
- * @param type      enum: info, warning, error)
- * @param msg       Log Message
- */
-plastic.helper.log = function (msg, type) {
-    // TODO
+plastic.helper.msg = function (msg, type, el) {
+
     if (type) {
-        console.log(type + ' :: ' + msg);
+
+        if (type === 'error') {
+            console.error(type + ' :: ' + msg);
+        } else if (type === 'warning') {
+            console.warn(type + ' :: ' + msg);
+        } else if (type === 'info') {
+            console.info(type + ' :: ' + msg);
+        } else {
+            console.log(type + ' :: ' + msg);
+        }
+
+
     } else {
         console.log('--> ' + msg);
     }

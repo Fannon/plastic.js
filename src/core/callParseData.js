@@ -10,7 +10,7 @@ plastic.callParseData = function(elData) {
 
     // Look for data parser module in the registry
     var parser = plastic.modules.dataParser.registry[elData.options.dataFormat].fileName;
-    console.log('Using Parser: ' + parser);
+    console.msg('Using Parser: ' + parser);
 
     if (parser) {
         plastic.modules.dataParser[parser].validate(elData.rawData);
@@ -18,7 +18,7 @@ plastic.callParseData = function(elData) {
 
         plastic.callDisplay(elData);
     } else {
-        plastic.helper.log('Parser Module not found!', 'error');
+        plastic.helper.msg('Parser Module not found!', 'error');
     }
 
 

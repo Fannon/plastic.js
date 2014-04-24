@@ -20,15 +20,18 @@ var plastic = (function () {
      */
     $(document).ready(function() {
 
-        console.log('plastic.js version: ' + plastic.version);
-
         // Get all <plastic> elements on the page and store them as jQuery DOM Objects
-        plastic.$elements = $('plastic, .plastic-js');
+        plastic.elements = $('plastic, .plastic-js');
 
-        // Iterate all <plastic>
-        plastic.$elements.each(function() {
-            plastic.prepareCanvas($(this));
-            plastic.getPlasticElementData($(this));
+        // Iterate all <plastic> Elements
+        plastic.elements.each(function() {
+
+            // Get Element Data
+            var elData = plastic.getElementData($(this));
+
+            // Process this Element
+            plastic.processElement($(this), elData);
+
         });
 
     });
@@ -39,10 +42,10 @@ var plastic = (function () {
      */
     return {
 
-        version: '0.0.2', // semver
+        version: '0.0.3', // semver
 
         /** This holds all the plastic jQuery elements */
-        $elements: [],
+        elements: [],
 
         /** Namespace for all plastic modules */
         modules: {
