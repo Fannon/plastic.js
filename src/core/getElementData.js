@@ -1,15 +1,22 @@
-/* global plastic */
-
 /**
  * Gets MetaData (Data/DataURL and Options) from <plastic> Element
  *
  * // TODO: Error Handling
+ * // TODO: Remove dependencies on jQuery
  *
  * @param $el    Plastic HTML Element selected via jQuery
  */
 plastic.getPlasticElementData = function($el) {
 
+
+    /**
+     * Element Data Object.
+     * This contains all information that is read from the plastic HTML element
+     *
+     * @type {{}}
+     */
     var elData = {};
+
     var async = false;
     var request;
 
@@ -17,7 +24,7 @@ plastic.getPlasticElementData = function($el) {
 
 
     //////////////////////////////////////////
-    // GET GENERAL DATA                     //
+    // GET OPTIONS DATA                     //
     //////////////////////////////////////////
 
     elData.height = $el.height();
@@ -25,6 +32,24 @@ plastic.getPlasticElementData = function($el) {
 
     // TODO: Integrate this with width and height from options (?)
     // TODO: Case handling if size was not defined (could be 0 height)
+
+    var optionsObject = $el.find(".plastic-options");
+    plastic.o = optionsObject;
+
+    console.log('$el.find(".plastic-options");');
+//    console.dir(optionsObject);
+
+    if (optionsObject.length > 0) {
+        var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+        console.log(optionsString);
+        if (optionsString && optionsString !== '') {
+            elData.options = $.parseJSON(optionsString);
+        } else {
+            console.log('Empty Element!');
+        }
+    } else {
+        console.log('No Options Object');
+    }
 
 
     //////////////////////////////////////////
@@ -67,27 +92,6 @@ plastic.getPlasticElementData = function($el) {
         }
     }
 
-    //////////////////////////////////////////
-    // GET OPTIONS DATA                     //
-    //////////////////////////////////////////
-
-    var optionsObject = $el.find(".plastic-options");
-    plastic.o = optionsObject;
-
-    console.log('$el.find(".plastic-options");');
-//    console.dir(optionsObject);
-
-    if (optionsObject.length > 0) {
-        var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
-        console.log(optionsString);
-        if (optionsString && optionsString !== '') {
-            elData.options = $.parseJSON(optionsString);
-        } else {
-            console.log('Empty Element!');
-        }
-    } else {
-        console.log('No Options Object');
-    }
 
     //////////////////////////////////////////
     // GET SCHEMA DATA                      //

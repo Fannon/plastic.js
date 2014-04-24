@@ -1,12 +1,7 @@
-/* global plastic */
-
-// Register display module
-plastic.display.available['table'] = 'table';
-
 /**
  * Table Display Module
  */
-plastic.display.table = function (elData) {
+plastic.modules.display.table = function (elData) {
 
     console.info('DISPLAY MODULE: TABLE');
     console.dir(elData);

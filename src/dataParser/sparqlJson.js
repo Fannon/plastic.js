@@ -1,15 +1,10 @@
-/* global plastic */
-
-// Register dataParser
-plastic.dataParser.available['sparql-json'] = 'sparqlJson';
-
 /**
  * Parses tabular data from SPARQL Endpoints
  *
  * TODO: Make this to module-pattern
  * TODO: Break this into parse and validate (and possible helper functions)
  */
-plastic.dataParser.sparqlJson = (function () {
+plastic.modules.dataParser.sparqlJson = (function () {
 
     var validate = function(data) {
         return true;

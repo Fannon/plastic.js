@@ -1,16 +1,10 @@
-
-/* global plastic */
-
-// Register query parser
-plastic.queryParser.available['sparql'] = 'sparql';
-
 /**
  * This is a SPARQL Query Parser
  * It turns the Query into an API URL
  *
  * TODO: Not implemented yet.
  */
-plastic.queryParser.sparql = function(elData) {
+plastic.modules.queryParser.sparql = function(elData) {
 
 //    var url = elData.data.url
 

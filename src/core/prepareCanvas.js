@@ -1,5 +1,3 @@
-/* global plastic */
-
 /**
  * Inserts a drawing Canvas which has exactly the same size as the plastic Element
  *

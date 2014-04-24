@@ -11,6 +11,8 @@
  * Licensed under the MIT license.
  */
 
+/*jshint -W079 */ // Ignores Redefinition of plastic
+
 var plastic = (function () {
 
     /**
@@ -42,24 +44,21 @@ var plastic = (function () {
         /** This holds all the plastic jQuery elements */
         $elements: [],
 
-        /** Data Parser Namespace */
-        dataParser: {
-            available: {}
-        },
+        /** Namespace for all plastic modules */
+        modules: {
 
-        /** Data Parser Namespace */
-        queryParser: {
-            available: {}
-        },
+            /** Data Parser Namespace */
+            dataParser: {},
 
-        /** Data Parser Namespace */
-        schemaParser: {
-            available: {}
-        },
+            /** Data Parser Namespace */
+            queryParser: {},
 
-        /** Display Modules Namespace */
-        display: {
-            available: {}
+            /** Data Parser Namespace */
+            schemaParser: {},
+
+            /** Display Modules Namespace */
+            display: {}
+
         },
 
         /** Helper Functions Namespace */

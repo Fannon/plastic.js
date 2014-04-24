@@ -1,6 +1,8 @@
 /*! plastic - v0.0.1 - 2014-04-24
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
+/*jshint -W079 */ // Ignores Redefinition of plastic
+
 var plastic = (function () {
 
     /**
@@ -32,24 +34,21 @@ var plastic = (function () {
         /** This holds all the plastic jQuery elements */
         $elements: [],
 
-        /** Data Parser Namespace */
-        dataParser: {
-            available: {}
-        },
+        /** Namespace for all plastic modules */
+        modules: {
 
-        /** Data Parser Namespace */
-        queryParser: {
-            available: {}
-        },
+            /** Data Parser Namespace */
+            dataParser: {},
 
-        /** Data Parser Namespace */
-        schemaParser: {
-            available: {}
-        },
+            /** Data Parser Namespace */
+            queryParser: {},
 
-        /** Display Modules Namespace */
-        display: {
-            available: {}
+            /** Data Parser Namespace */
+            schemaParser: {},
+
+            /** Display Modules Namespace */
+            display: {}
+
         },
 
         /** Helper Functions Namespace */
@@ -634,49 +633,58 @@ plastic.options = {
     width: '100%'
 };
 
-/**
- * Helper Function that calls the proper Display Module
- *
- * @param elData
- */
 plastic.callDisplay = function(elData) {
     console.info('callDisplay');
     console.dir(elData);
-    var displayModule = plastic.display.available[elData.options.display];
-    plastic.display[displayModule](elData);
+
+    var displayModule = plastic.modules.display.registry[elData.options.display].fileName;
+
+    if (displayModule) {
+        plastic.modules.display[displayModule](elData);
+    } else {
+        plastic.helper.log('Display Module not found!', 'error');
+    }
+
+
 };
 
-/**
- * Helper Function that calls the proper ParseData Module
- *
- * @param elData
- */
 plastic.callParseData = function(elData) {
+
     console.info('PARSING DATA');
     console.dir(elData);
 
-    var parser = plastic.dataParser.available[elData.options.dataFormat];
+    // Look for data parser module in the registry
+    var parser = plastic.modules.dataParser.registry[elData.options.dataFormat].fileName;
+    console.log('Using Parser: ' + parser);
 
-    plastic.dataParser[parser].validate(elData.rawData);
-    elData.data = plastic.dataParser[parser].parse(elData.rawData);
+    if (parser) {
+        plastic.modules.dataParser[parser].validate(elData.rawData);
+        elData.data = plastic.modules.dataParser[parser].parse(elData.rawData);
 
-    plastic.callDisplay(elData);
+        plastic.callDisplay(elData);
+    } else {
+        plastic.helper.log('Parser Module not found!', 'error');
+    }
+
+
+
 };
 
 // TODO!
 
 // TODO!
 
-/**
- * Gets MetaData (Data/DataURL and Options) from <plastic> Element
- *
- * // TODO: Error Handling
- *
- * @param $el    Plastic HTML Element selected via jQuery
- */
 plastic.getPlasticElementData = function($el) {
 
+
+    /**
+     * Element Data Object.
+     * This contains all information that is read from the plastic HTML element
+     *
+     * @type {{}}
+     */
     var elData = {};
+
     var async = false;
     var request;
 
@@ -684,7 +692,7 @@ plastic.getPlasticElementData = function($el) {
 
 
     //////////////////////////////////////////
-    // GET GENERAL DATA                     //
+    // GET OPTIONS DATA                     //
     //////////////////////////////////////////
 
     elData.height = $el.height();
@@ -692,6 +700,24 @@ plastic.getPlasticElementData = function($el) {
 
     // TODO: Integrate this with width and height from options (?)
     // TODO: Case handling if size was not defined (could be 0 height)
+
+    var optionsObject = $el.find(".plastic-options");
+    plastic.o = optionsObject;
+
+    console.log('$el.find(".plastic-options");');
+//    console.dir(optionsObject);
+
+    if (optionsObject.length > 0) {
+        var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+        console.log(optionsString);
+        if (optionsString && optionsString !== '') {
+            elData.options = $.parseJSON(optionsString);
+        } else {
+            console.log('Empty Element!');
+        }
+    } else {
+        console.log('No Options Object');
+    }
 
 
     //////////////////////////////////////////
@@ -734,27 +760,6 @@ plastic.getPlasticElementData = function($el) {
         }
     }
 
-    //////////////////////////////////////////
-    // GET OPTIONS DATA                     //
-    //////////////////////////////////////////
-
-    var optionsObject = $el.find(".plastic-options");
-    plastic.o = optionsObject;
-
-    console.log('$el.find(".plastic-options");');
-//    console.dir(optionsObject);
-
-    if (optionsObject.length > 0) {
-        var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
-        console.log(optionsString);
-        if (optionsString && optionsString !== '') {
-            elData.options = $.parseJSON(optionsString);
-        } else {
-            console.log('Empty Element!');
-        }
-    } else {
-        console.log('No Options Object');
-    }
 
     //////////////////////////////////////////
     // GET SCHEMA DATA                      //
@@ -805,13 +810,6 @@ plastic.getPlasticElementData = function($el) {
 
 };
 
-/**
- * Inserts a drawing Canvas which has exactly the same size as the plastic Element
- *
- * TODO: If no size is given, or given by the options -> Consider this
- *
- * @param el
- */
 plastic.prepareCanvas = function(el) {
     console.info('PREPARING VISUALISATION');
 
@@ -825,21 +823,26 @@ plastic.prepareCanvas = function(el) {
 
 };
 
+
+plastic.modules.dataParser.registry = {
+    "default": {
+        fileName: "default", // This has to be named like the JavaScript File in the /src/dataParser directory
+        humanReadableName: "Default data format",
+        dependencies: []
+    },
+    "sparql-json": {
+        fileName: "sparqlJson",
+        humanReadableName: "SPARQL JSON",
+        dependencies: []
+    }
+
+}
 // This will parse the default plastic.js data-format.
 
 // TODO: This is not implemented yet
 // TODO: Decide how the default data format should look like
 
-// Register dataParser
-plastic.dataParser.available['sparql-json'] = 'sparqlJson';
-
-/**
- * Parses tabular data from SPARQL Endpoints
- *
- * TODO: Make this to module-pattern
- * TODO: Break this into parse and validate (and possible helper functions)
- */
-plastic.dataParser.sparqlJson = (function () {
+plastic.modules.dataParser.sparqlJson = (function () {
 
     var validate = function(data) {
         return true;
@@ -879,16 +882,14 @@ plastic.dataParser.sparqlJson = (function () {
 
 })();
 
-// Register query parser
-plastic.queryParser.available['sparql'] = 'sparql';
-
-/**
- * This is a SPARQL Query Parser
- * It turns the Query into an API URL
- *
- * TODO: Not implemented yet.
- */
-plastic.queryParser.sparql = function(elData) {
+plastic.modules.queryParser.registry = {
+    "default": {
+        fileName: "sparql", // This has to be named like the JavaScript File in the /src/dataParser directory
+        humanReadableName: "SPARQL Query Parser",
+        dependencies: []
+    }
+}
+plastic.modules.queryParser.sparql = function(elData) {
 
 //    var url = elData.data.url
 
@@ -896,16 +897,25 @@ plastic.queryParser.sparql = function(elData) {
 
 };
 
+plastic.modules.schemaParser.registry = {
+    "default": {
+        fileName: "default", // This has to be named like the JavaScript File in the /src/dataParser directory
+        humanReadableName: "Default Schema Parser",
+        dependencies: []
+    }
+}
 // TODO: Write a default Schema Parser
 // TODO: Decide how the default schema should look like
 
-// Register display module
-plastic.display.available['table'] = 'table';
+plastic.modules.display.registry = {
+    "table": {
+        fileName: "table", // This has to be named like the JavaScript File in the /src/dataParser directory
+        humanReadableName: "Table Display",
+        dependencies: ['d3']
+    }
 
-/**
- * Table Display Module
- */
-plastic.display.table = function (elData) {
+}
+plastic.modules.display.table = function (elData) {
 
     console.info('DISPLAY MODULE: TABLE');
     console.dir(elData);
