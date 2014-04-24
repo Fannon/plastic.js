@@ -3,7 +3,7 @@
  *
  * @param elData
  */
-plastic.callParseData = function(elData) {
+plastic.callDataParser = function(elData) {
 
     console.info('PARSING DATA');
     console.dir(elData);
@@ -16,7 +16,7 @@ plastic.callParseData = function(elData) {
         plastic.modules.dataParser[parser].validate(elData.rawData);
         elData.data = plastic.modules.dataParser[parser].parse(elData.rawData);
 
-        plastic.callDisplay(elData);
+        plastic.callDisplayModule(elData);
     } else {
         plastic.helper.msg('Parser Module not found!', 'error');
     }

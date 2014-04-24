@@ -19,6 +19,9 @@ var plastic = (function () {
             // Get Element Data
             var elData = plastic.getElementData($(this));
 
+            // Validate Element Data
+            var valid = plastic.validateElementData(elData);
+
             // Process this Element
             plastic.processElement($(this), elData);
 
@@ -636,9 +639,9 @@ plastic.options = {
     width: '100%'
 };
 
-plastic.callDisplay = function(elData, $el) {
+plastic.callDisplayModule = function(elData, $el) {
 
-    console.info('callDisplay');
+    console.info('callDisplayModule');
     console.dir(elData);
 
     plastic.prepareCanvas($el);
@@ -654,7 +657,7 @@ plastic.callDisplay = function(elData, $el) {
 
 };
 
-plastic.callParseData = function(elData) {
+plastic.callDataParser = function(elData) {
 
     console.info('PARSING DATA');
     console.dir(elData);
@@ -667,7 +670,7 @@ plastic.callParseData = function(elData) {
         plastic.modules.dataParser[parser].validate(elData.rawData);
         elData.data = plastic.modules.dataParser[parser].parse(elData.rawData);
 
-        plastic.callDisplay(elData);
+        plastic.callDisplayModule(elData);
     } else {
         plastic.helper.msg('Parser Module not found!', 'error');
     }
@@ -676,11 +679,14 @@ plastic.callParseData = function(elData) {
 
 };
 
-// TODO!
-
-// TODO!
-
+plastic.callQueryParser = function(elData) {
+    // TODO!
+}
+plastic.callSchemaParser = function(elData) {
+    // TODO
+}
 plastic.getElementData = function(el) {
+
 
     console.info('plastic.getElementData();');
 
@@ -825,7 +831,7 @@ plastic.getElementData = function(el) {
     // RETURN ELEMENT DATA                  //
     //////////////////////////////////////////
 
-    console.dir(elData);
+    console.log(elData);
     return elData;
 
 
@@ -846,202 +852,102 @@ plastic.prepareCanvas = function(el) {
 
 plastic.processElement = function($el, elData) {
 
+    console.info('plastic.processElement();');
+
     var async = false;
-    var request;
 
 
-    if (elData.dataUrl) { // Get Data from URL if given
+    //////////////////////////////////////////
+    // CALLING QUERY PARSER                 //
+    //////////////////////////////////////////
+
+    if (elData.query) { // OPTIONAL
+        // TODO
+    }
+
+
+    //////////////////////////////////////////
+    // GETTING DATA VIA URL                 //
+    //////////////////////////////////////////
+
+
+    if (elData.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
 
         async = true;
 
-
-        request = $.ajax(elData.dataUrl)
+         var request = $.ajax(elData.data.url)
             .fail(function() {
                 plastic.helper.msg('Could not get Data from URL ' + elData.dataUrl, "error", $el );
             })
-            .always(function() { });
+            .done(function(data) {
+
+                // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
+                console.msg('Getting Data from URL via AJAX');
+
+                try {
+                    if (data !== null && typeof data === 'object') {
+                        elData.data.object = data;
+                    } else {
+                        elData.rawData = $.parseJSON(data);
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+
+                console.msg('Received asynchronous data.');
+
+                plastic.callDataParser(elData);
+
+
+            })
+            .always(function() {
+
+            })
+        ;
 
     }
 
+    //////////////////////////////////////////
+    // CALLING THE DATA PARSER              //
+    //////////////////////////////////////////
 
     if (!async) {
         console.msg('Received Synchronous Data');
-        plastic.callParseData(elData);
+        plastic.callDataParser(elData);
     } else {
-        request.done(function(data) {
-
-            // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
-            console.msg('Getting Data from URL via AJAX');
-
-            try {
-                if (data !== null && typeof data === 'object') {
-                    elData.rawData = data;
-                } else {
-                    elData.rawData = $.parseJSON(data);
-                }
-            } catch(e) {
-                console.error(e);
-            }
-
-            console.msg('Received asynchronous data.');
-
-            plastic.callParseData(elData);
-        });
+        // Data will be sent within the "Getting Data via URL Function when its done"
     }
+
+
+    //////////////////////////////////////////
+    // CALLING SCHEMA PARSER                 //
+    //////////////////////////////////////////
+
+    if (elData.schema) { // OPTIONAL
+        // TODO
+    }
+
+
+    //////////////////////////////////////////
+    // CALLING DISPLAY MODULE               //
+    //////////////////////////////////////////
+
+    function callDisplayModule() {
+
+    }
+
+    // TODO: Wait for Data if requested via AJAX
+
+
+
 
 }
-// TODO
-plastic.modules.dataParser.registry = {
-    "default": {
-        fileName: "default", // This has to be named like the JavaScript File in the /src/dataParser directory
-        humanReadableName: "Default data format",
-        dependencies: []
-    },
-    "sparql-json": {
-        fileName: "sparqlJson",
-        humanReadableName: "SPARQL JSON",
-        dependencies: []
-    }
+plastic.validateElementData = function(elData) {
 
+    console.info('plastic.validateElementData();');
+
+    return true;
 }
-// This will parse the default plastic.js data-format.
-
-// TODO: This is not implemented yet
-// TODO: Decide how the default data format should look like
-
-plastic.modules.dataParser.sparqlJson = (function () {
-
-    var validate = function(data) {
-        return true;
-    };
-
-    var parse = function(data) {
-
-        var success = validate(data);
-
-        console.info('PARSING DATA VIA: SPARQL JSON');
-        console.dir(data);
-
-        var processedData = [];
-
-        for (var i = 0; i < data.results.bindings.length; i++) {
-
-            processedData[i] = {};
-
-            var row = data.results.bindings[i];
-
-            for (var o in row) {
-                processedData[i][o] = row[o].value;
-            }
-        }
-
-        console.dir(processedData);
-
-        return processedData;
-
-    };
-
-
-    return {
-        validate: validate,
-        parse: parse
-    };
-
-})();
-
-plastic.modules.queryParser.registry = {
-    "plication/sparql-query": {
-        fileName: "sparql", // This has to be named like the JavaScript File in the /src/dataParser directory
-        humanReadableName: "SPARQL Query Parser",
-        dependencies: []
-    }
-}
-
-plastic.modules.queryParser.sparql = function(elData) {
-
-//    var url = elData.data.url
-
-//    http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=PREFIX+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0D%0APREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0D%0APREFIX+foaf%3A+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2F%3E%0D%0APREFIX+dc%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E%0D%0APREFIX+%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0APREFIX+dbpedia2%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fproperty%2F%3E%0D%0APREFIX+dbpedia%3A+%3Chttp%3A%2F%2Fdbpedia.org%2F%3E%0D%0APREFIX+skos%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23%3E%0D%0APREFIX+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0A%0D%0ASELECT+%3Fname+%3Fbirth+%3Fdescription+%3Fperson+WHERE+%7B%0D%0A+++++%3Fperson+dbo%3AbirthPlace+%3ABerlin+.%0D%0A+++++%3Fperson+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Fterms%2Fsubject%3E+%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2FCategory%3AGerman_musicians%3E+.%0D%0A+++++%3Fperson+dbo%3AbirthDate+%3Fbirth+.%0D%0A+++++%3Fperson+foaf%3Aname+%3Fname+.%0D%0A+++++%3Fperson+rdfs%3Acomment+%3Fdescription+.%0D%0A+++++FILTER+%28LANG%28%3Fdescription%29+%3D+%27en%27%29+.%0D%0A%7D%0D%0AORDER+BY+%3Fname&output=jsonp
-
-};
-
-plastic.modules.schemaParser.registry = {
-    "default": {
-        fileName: "default", // This has to be named like the JavaScript File in the /src/dataParser directory
-        humanReadableName: "Default Schema Parser",
-        dependencies: []
-    }
-}
-// TODO: Write a default Schema Parser
-// TODO: Decide how the default schema should look like
-
-plastic.modules.display.registry = {
-    "table": {
-        fileName: "table", // This has to be named like the JavaScript File in the /src/dataParser directory
-        humanReadableName: "Table Display",
-        dependencies: ['d3']
-    }
-
-}
-plastic.modules.display.table = function (elData) {
-
-    console.info('DISPLAY MODULE: TABLE');
-    console.dir(elData);
-
-    var data = elData.data;
-    var vis = d3.select("#vis");
-
-    var table = vis.append("table");
-    var thead = table.append("thead");
-    var tbody = table.append("tbody");
-
-    // Get Columns from Data
-    var columns = [];
-    for (var o in data[0]) {
-        if (data[0].hasOwnProperty(o)) {
-            columns.push(o);
-        }
-    }
-
-    // Create Header Row (TH)
-    thead.append("tr")
-        .selectAll("th")
-        .data(columns)
-        .enter()
-        .append("th")
-        .text(function(column) {
-            return column;
-        });
-
-    // Create a row for each object in the data
-    var rows = tbody.selectAll("tr")
-        .data(data)
-        .enter()
-        .append("tr");
-
-    // Create a cell in each row for each column
-    var cells = rows.selectAll("td")
-        .data(function(row) {
-            return columns.map(function(column) {
-                return {
-                    column: column,
-                    value: row[column]
-                };
-            });
-        })
-        .enter()
-        .append("td")
-        .html(function(d) {
-            return d.value;
-        });
-
-    // Twitter Bootstrap Classes
-    $('table').addClass('table table-condensed');
-
-    return table;
-
-};
-
 plastic.helper.msg = function (msg, type, el) {
 
     if (type) {

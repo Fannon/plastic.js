@@ -3,9 +3,9 @@
  *
  * @param elData
  */
-plastic.callDisplay = function(elData, $el) {
+plastic.callDisplayModule = function(elData, $el) {
 
-    console.info('callDisplay');
+    console.info('callDisplayModule');
     console.dir(elData);
 
     plastic.prepareCanvas($el);

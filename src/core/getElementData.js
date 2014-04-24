@@ -8,6 +8,7 @@
  */
 plastic.getElementData = function(el) {
 
+
     console.info('plastic.getElementData();');
 
 
@@ -151,7 +152,7 @@ plastic.getElementData = function(el) {
     // RETURN ELEMENT DATA                  //
     //////////////////////////////////////////
 
-    console.dir(elData);
+    console.log(elData);
     return elData;
 
 

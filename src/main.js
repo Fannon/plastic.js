@@ -29,6 +29,9 @@ var plastic = (function () {
             // Get Element Data
             var elData = plastic.getElementData($(this));
 
+            // Validate Element Data
+            var valid = plastic.validateElementData(elData);
+
             // Process this Element
             plastic.processElement($(this), elData);
 
