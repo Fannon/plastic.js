@@ -1,11 +1,10 @@
 /**
  * Parses tabular data from SPARQL Endpoints
  *
- * TODO: Make this to module-pattern
- * TODO: Break this into parse and validate (and possible helper functions)
  */
 plastic.modules.dataParser.sparqlJson = (function () {
 
+    var name = 'SPARQL JSON Parser';
     var dependencies = [];
 
     /**
@@ -51,6 +50,7 @@ plastic.modules.dataParser.sparqlJson = (function () {
 
     // Make public
     return {
+        name: name,
         dependencies: dependencies,
         validate: validate,
         parse: parse

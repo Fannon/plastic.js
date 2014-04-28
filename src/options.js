@@ -7,5 +7,6 @@
  * @type {{}}
  */
 plastic.options = {
+    debug: true,
     width: '100%'
 };

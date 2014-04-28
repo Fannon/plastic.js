@@ -90,6 +90,31 @@ plastic.getElementData = function(el) {
     }
 
 
+    //////////////////////////////////////////
+    // GET SCHEMA DATA                      //
+    //////////////////////////////////////////
+
+    // Get Data-URL
+    var schemaElement = el.find(".plastic-schema");
+
+    if (queryElement.length > 0)  {
+
+        /** Element Schema Data */
+        elData.schema = {};
+
+        elData.schema.type = schemaElement.attr('data-schema-format');
+
+        var schemaString = schemaElement[0].text;
+
+        if (schemaString && schemaString !== '') {
+            elData.schema.text = $.parseJSON(schemaString);
+        } else {
+            plastic.helper.msg('Empty Schema Element!', 'error', el);
+        }
+
+    }
+
+
 
     //////////////////////////////////////////
     // GET DATA DATA                        //
@@ -121,31 +146,6 @@ plastic.getElementData = function(el) {
 
     }
 
-
-
-    //////////////////////////////////////////
-    // GET SCHEMA DATA                      //
-    //////////////////////////////////////////
-
-    // Get Data-URL
-    var schemaElement = el.find(".plastic-schema");
-
-    if (queryElement.length > 0)  {
-
-        /** Element Schema Data */
-        elData.schema = {};
-
-        elData.schema.type = schemaElement.attr('data-schema-format');
-
-        var schemaString = schemaElement[0].text;
-
-        if (schemaString && schemaString !== '') {
-            elData.schema.text = $.parseJSON(schemaString);
-        } else {
-            plastic.helper.msg('Empty Schema Element!', 'error', el);
-        }
-
-    }
 
 
     //////////////////////////////////////////

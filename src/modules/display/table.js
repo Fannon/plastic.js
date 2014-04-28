@@ -3,6 +3,10 @@
  */
 plastic.modules.display.table = (function () {
 
+    var name = 'Simple Table Display Module';
+
+    var dependencies = ['d3'];
+
     var validate = function(elData) {
         return true;
     };
@@ -12,7 +16,7 @@ plastic.modules.display.table = (function () {
         console.info('DISPLAY MODULE: TABLE');
         console.dir(elData);
 
-        var data = elData.data;
+        var data = elData.data.object;
         var vis = d3.select("#vis");
 
         var table = vis.append("table");
@@ -69,6 +73,8 @@ plastic.modules.display.table = (function () {
 
     // Make Functions public
     return {
+        name: name,
+        dependencies: dependencies,
         validate: validate,
         render: render
     };
