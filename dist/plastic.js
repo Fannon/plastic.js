@@ -961,7 +961,33 @@ plastic.processElement = (function () {
      */
     var callSchemaParser = function(el, elData) {
         console.info('processElement.callSchemaParser()');
-        return true;
+
+        var newElData = elData;
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.schemaParser._registry[elData.schema.type];
+        var parser = plastic.modules.schemaParser[moduleInfo.fileName];
+
+        if (parser) {
+
+            if (plastic.options.debug) {
+                parser.validate(elData.query);
+                newElData = parser.parse(elData);
+            } else {
+                try {
+                    parser.validate(elData.query);
+                    newElData = parser.parse(elData);
+                } catch(e) {
+                    plastic.helper.msg(e, 'error', this.el);
+                }
+            }
+
+
+        } else {
+            plastic.helper.msg('Schema Parser Module for Type ' + elData.query.type + ' not found.', 'error', el);
+        }
+
+        return newElData;
     };
 
     /**
@@ -1010,7 +1036,8 @@ plastic.processElement = (function () {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var displayModule = plastic.modules.display[elData.options.display.module];
+        var moduleInfo = plastic.modules.display._registry[elData.options.display.module];
+        var displayModule = plastic.modules.display[moduleInfo.fileName];
 
         if (displayModule) {
 

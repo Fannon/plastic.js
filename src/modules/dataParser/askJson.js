@@ -37,12 +37,9 @@ plastic.modules.dataParser.askJson = (function () {
         for (var obj in data.query.results) {
 
             var row = data.query.results[obj];
-            console.log(row.printouts);
-
             processedData.push(row.printouts);
         }
 
-        console.dir(processedData);
         return processedData;
 
     };
