@@ -26,8 +26,7 @@ plastic.modules.dataParser.sparqlJson = (function () {
      */
     var parse = function(data) {
 
-        console.info('PARSING DATA VIA: SPARQL JSON');
-        console.dir(data);
+        console.info('plastic.modules.dataParser.sparqlJson();');
 
         var processedData = [];
 
@@ -41,8 +40,6 @@ plastic.modules.dataParser.sparqlJson = (function () {
                 processedData[i][o] = row[o].value;
             }
         }
-
-        console.dir(processedData);
 
         return processedData;
 

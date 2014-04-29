@@ -8,7 +8,7 @@
  * @param el
  */
 plastic.prepareCanvas = function(el) {
-    console.info('PREPARING VISUALISATION');
+    console.info('plastic.prepareCanvas();');
 
     el.css('position', 'relative');
 

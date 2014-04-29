@@ -21,10 +21,9 @@ plastic.processElement = (function () {
 
         console.info('plastic.processElement();');
 
-        this.el = el;
-        this.elData = elData;
-
+        /** Asynchronous Mode */
         var async = false;
+        var request;
 
         plastic.prepareCanvas(el);
 
@@ -34,51 +33,7 @@ plastic.processElement = (function () {
         //////////////////////////////////////////
 
         if (elData.query) { // OPTIONAL
-            // TODO
-        }
-
-
-        //////////////////////////////////////////
-        // GETTING DATA VIA URL                 //
-        //////////////////////////////////////////
-
-
-        if (elData.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
-
-            async = true;
-
-            var request = $.ajax(elData.data.url)
-                    .fail(function() {
-                        plastic.helper.msg('Could not get Data from URL ' + elData.dataUrl, "error", el );
-                    })
-                    .done(function(data) {
-
-                        // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
-                        console.log('Getting Data from URL via AJAX');
-
-                        try {
-                            if (data !== null && typeof data === 'object') {
-                                elData.data.object = data;
-                            } else {
-                                elData.rawData = $.parseJSON(data);
-                            }
-                        } catch(e) {
-                            console.error(e);
-                        }
-
-                        console.log('Received asynchronous data.');
-
-                        callDataParser(el, elData);
-
-                        callDisplayModule(el, elData);
-
-
-                    })
-                    .always(function() {
-
-                    })
-                ;
-
+            elData = callQueryParser(el, elData);
         }
 
 
@@ -93,26 +48,59 @@ plastic.processElement = (function () {
 
 
         //////////////////////////////////////////
-        // CALLING THE DATA PARSER              //
+        // GETTING DATA VIA URL                 //
         //////////////////////////////////////////
 
-        if (!async) {
-            console.msg('Received Synchronous Data');
-            callDataParser(el, elData);
-        } else {
-            // Data will be sent within the "Getting Data via URL Function when its done"
+        if (elData.data && elData.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
+
+            var start = (new Date()).getTime();
+            async = true;
+
+            console.log('Getting Data from URL via AJAX: ' + elData.data.url);
+
+
+            request = $.getJSON(elData.data.url)
+                .done(function(data) {
+                    try {
+                        if (data !== null && typeof data === 'object') {
+                            elData.data.object = data;
+                        } else {
+                            elData.data.object = $.parseJSON(data);
+                        }
+                    } catch(e) {
+                        plastic.helper.msg(e, 'error', el);
+                    }
+
+                })
+                .fail(function() {
+                    plastic.helper.msg('Could not get Data from URL ' + elData.data.url, "error", el );
+                })
+                .always(function() {
+                    var diff = (new Date()).getTime() - start;
+                    console.log("Request completed in " + diff + 'ms');
+                })
+            ;
+
         }
 
 
 
-
         //////////////////////////////////////////
-        // CALLING DISPLAY MODULE               //
+        // CALLING THE DATA & DISPLAX MODULE    //
         //////////////////////////////////////////
 
-
-
-        // TODO: Wait for Data if requested via AJAX
+        if (async) {
+            // On Request complete
+            request.complete(function(data) {
+                console.log('Received asynchronous data.');
+                callDataParser(el, elData);
+                callDisplayModule(el, elData);
+            });
+        } else {
+            console.log('Received Synchronous Data');
+            callDataParser(el, elData);
+            callDisplayModule(el, elData);
+        }
 
 
     };
@@ -122,11 +110,39 @@ plastic.processElement = (function () {
      *
      * @private
      *
+     * @param el
      * @param elData
      */
     var callQueryParser = function(el, elData) {
-        console.info('processElement.callQueryParser()');
-        return true;
+
+        console.info('processElement.callQueryParser();');
+
+        var newElData = elData;
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
+        var parser = plastic.modules.queryParser[moduleInfo.fileName];
+
+        if (parser) {
+
+            if (plastic.options.debug) {
+                parser.validate(elData.query);
+                newElData.data = parser.parse(elData.query);
+            } else {
+                try {
+                    parser.validate(elData.query);
+                    newElData.data = parser.parse(elData.query);
+                } catch(e) {
+                    plastic.helper.msg(e, 'error', this.el);
+                }
+            }
+
+
+        } else {
+            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found.', 'error', el);
+        }
+
+        return newElData;
     };
 
     /**
@@ -134,6 +150,7 @@ plastic.processElement = (function () {
      *
      * @private
      *
+     * @param el
      * @param elData
      */
     var callSchemaParser = function(el, elData) {
@@ -152,7 +169,6 @@ plastic.processElement = (function () {
     var callDataParser = function(el, elData) {
 
         console.info('processElement.callDataParser()');
-        console.dir(elData);
 
         // Look for data parser module in the registry
         var parser = plastic.modules.dataParser[elData.data.parser];
@@ -185,7 +201,6 @@ plastic.processElement = (function () {
     var callDisplayModule = function(el, elData) {
 
         console.info('processElement.callDataParser()');
-        console.dir(elData);
 
         // Look for data parser module in the registry
         var displayModule = plastic.modules.display[elData.options.display.module];

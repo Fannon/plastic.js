@@ -8,7 +8,6 @@
  */
 plastic.getElementData = function(el) {
 
-
     console.info('plastic.getElementData();');
 
 
@@ -28,8 +27,8 @@ plastic.getElementData = function(el) {
     /** Element CSS Style (Contains Width and Height) */
     elData.style = {};
 
-    elData.style.height = el.height();
-    elData.style.width = el.width();
+    elData.style.height = 12;
+    elData.style.width = 12;
 
 
     //////////////////////////////////////////
@@ -40,13 +39,10 @@ plastic.getElementData = function(el) {
     elData.options = {}; // mandatory!
 
     var optionsObject = el.find(".plastic-options");
-    plastic.o = optionsObject;
-
 
     if (optionsObject.length > 0) {
 
         var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
-//        console.log(optionsString);
 
         if (optionsString && optionsString !== '') {
 
@@ -59,6 +55,7 @@ plastic.getElementData = function(el) {
         } else {
             plastic.helper.msg('Empty Obptions Element!', 'error', el);
         }
+
     } else {
         plastic.helper.msg('No options provided!', 'error', el);
     }
@@ -81,8 +78,11 @@ plastic.getElementData = function(el) {
 
         var queryString = queryElement[0].text;
 
+        // Trim all Whitespace
+        var queryStringStripped = $.trim(queryString.replace(/\s+/g, ' '));
+
         if (queryString && queryString !== '') {
-            elData.query.text = $.parseJSON(queryString);
+            elData.query.text = queryStringStripped;
         } else {
             plastic.helper.msg('Empty Query Element!', 'error', el);
         }
@@ -97,7 +97,7 @@ plastic.getElementData = function(el) {
     // Get Data-URL
     var schemaElement = el.find(".plastic-schema");
 
-    if (queryElement.length > 0)  {
+    if (schemaElement.length > 0)  {
 
         /** Element Schema Data */
         elData.schema = {};
@@ -113,7 +113,6 @@ plastic.getElementData = function(el) {
         }
 
     }
-
 
 
     //////////////////////////////////////////
@@ -135,7 +134,7 @@ plastic.getElementData = function(el) {
         if (!elData.data.url) {
 
             var dataString = dataElement[0].text;
-            console.msg(dataString);
+
             if (dataString && dataString !== '') {
                 elData.data.object = $.parseJSON(dataString);
             } else {

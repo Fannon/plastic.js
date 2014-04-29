@@ -1,71 +1,74 @@
-/*! plastic - v0.0.1 - 2014-04-24
+/*! plastic - v0.0.1 - 2014-04-29
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /*jshint -W079 */ // Ignores Redefinition of plastic
 
-var plastic = (function () {
+/**
+ * plastic.js Namespace
+ */
+var plastic = {
 
-    /**
-     * Bootstrap plastic.js
-     */
-    $(document).ready(function() {
+    version: '0.0.4', // semver
 
-        // Get all <plastic> elements on the page and store them as jQuery DOM Objects
-        plastic.elements = $('plastic, .plastic-js');
+    /** This holds all the plastic jQuery elements */
+    elements: [],
 
-        // Iterate all <plastic> Elements
-        plastic.elements.each(function() {
+    /** Namespace for all plastic modules */
+    modules: {
 
-            // Get Element Data
-            var elData = plastic.getElementData($(this));
+        /** Data Parser Namespace */
+        dataParser: {},
 
-            // Validate Element Data
-            var valid = plastic.validateElementData(elData);
+        /** Data Parser Namespace */
+        queryParser: {},
 
-            // Process this Element
-            plastic.processElement($(this), elData);
+        /** Data Parser Namespace */
+        schemaParser: {},
 
-        });
+        /** Display Modules Namespace */
+        display: {}
+
+    },
+
+    /** Helper Functions Namespace */
+    helper: {}
+
+
+};
+
+$(document).ready(function() {
+
+    console.info('plastic.js version v' + plastic.version);
+
+    // Build registry of all available Modules
+    plastic.helper.buildRegistries();
+
+    // Get all <plastic> elements on the page and store them as jQuery DOM Objects
+    plastic.elements = $('plastic, .plastic-js');
+
+//    // Iterate all <plastic> Elements
+    plastic.elements.each(function() {
+
+        var el = $(this);
+
+        var elData = plastic.getElementData(el);
+
+        // Validate Element Data
+        var valid = plastic.validateElementData(elData);
+
+        // Process this Element
+        plastic.processElement($(this), elData);
 
     });
 
-
-    /**
-     * Reveal public pointers to private functions and properties
-     */
-    return {
-
-        version: '0.0.3', // semver
-
-        /** This holds all the plastic jQuery elements */
-        elements: [],
-
-        /** Namespace for all plastic modules */
-        modules: {
-
-            /** Data Parser Namespace */
-            dataParser: {},
-
-            /** Data Parser Namespace */
-            queryParser: {},
-
-            /** Data Parser Namespace */
-            schemaParser: {},
-
-            /** Display Modules Namespace */
-            display: {}
-
-        },
-
-        /** Helper Functions Namespace */
-        helper: {}
+});
 
 
-    };
 
-})();
-
-
+// Debugging Functions
+console.o = function(o) {
+    console.log($.parseJSON(JSON.stringify(o)));
+};
 // yepnope.js
 // Version - 1.5.4pre
 //
@@ -636,57 +639,11 @@ var docElement            = doc.documentElement,
  * @type {{}}
  */
 plastic.options = {
+    debug: true,
     width: '100%'
 };
 
-plastic.callDisplayModule = function(el, elData) {
-
-    console.info('callDisplayModule');
-    console.dir(elData);
-
-    plastic.prepareCanvas(el);
-
-    var displayModule = plastic.modules.display.registry[elData.options.display].fileName;
-
-    if (displayModule) {
-        plastic.modules.display[displayModule](el, elData).render();
-    } else {
-        plastic.helper.msg('Display Module not found!', 'error');
-    }
-
-
-};
-
-plastic.callDataParser = function(elData) {
-
-    console.info('PARSING DATA');
-    console.dir(elData);
-
-    // Look for data parser module in the registry
-    var parser = plastic.modules.dataParser.registry[elData.options.dataFormat].fileName;
-    console.msg('Using Parser: ' + parser);
-
-    if (parser) {
-        plastic.modules.dataParser[parser].validate(elData.rawData);
-        elData.data = plastic.modules.dataParser[parser].parse(elData.rawData);
-
-        plastic.callDisplayModule(elData);
-    } else {
-        plastic.helper.msg('Parser Module not found!', 'error');
-    }
-
-
-
-};
-
-plastic.callQueryParser = function(elData) {
-    // TODO!
-};
-plastic.callSchemaParser = function(elData) {
-    // TODO
-};
 plastic.getElementData = function(el) {
-
 
     console.info('plastic.getElementData();');
 
@@ -707,8 +664,8 @@ plastic.getElementData = function(el) {
     /** Element CSS Style (Contains Width and Height) */
     elData.style = {};
 
-    elData.style.height = el.height();
-    elData.style.width = el.width();
+    elData.style.height = 12;
+    elData.style.width = 12;
 
 
     //////////////////////////////////////////
@@ -719,13 +676,10 @@ plastic.getElementData = function(el) {
     elData.options = {}; // mandatory!
 
     var optionsObject = el.find(".plastic-options");
-    plastic.o = optionsObject;
-
 
     if (optionsObject.length > 0) {
 
         var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
-//        console.log(optionsString);
 
         if (optionsString && optionsString !== '') {
 
@@ -738,6 +692,7 @@ plastic.getElementData = function(el) {
         } else {
             plastic.helper.msg('Empty Obptions Element!', 'error', el);
         }
+
     } else {
         plastic.helper.msg('No options provided!', 'error', el);
     }
@@ -760,14 +715,41 @@ plastic.getElementData = function(el) {
 
         var queryString = queryElement[0].text;
 
+        // Trim all Whitespace
+        var queryStringStripped = $.trim(queryString.replace(/\s+/g, ' '));
+
         if (queryString && queryString !== '') {
-            elData.query.text = $.parseJSON(queryString);
+            elData.query.text = queryStringStripped;
         } else {
             plastic.helper.msg('Empty Query Element!', 'error', el);
         }
 
     }
 
+
+    //////////////////////////////////////////
+    // GET SCHEMA DATA                      //
+    //////////////////////////////////////////
+
+    // Get Data-URL
+    var schemaElement = el.find(".plastic-schema");
+
+    if (schemaElement.length > 0)  {
+
+        /** Element Schema Data */
+        elData.schema = {};
+
+        elData.schema.type = schemaElement.attr('data-schema-format');
+
+        var schemaString = schemaElement[0].text;
+
+        if (schemaString && schemaString !== '') {
+            elData.schema.text = $.parseJSON(schemaString);
+        } else {
+            plastic.helper.msg('Empty Schema Element!', 'error', el);
+        }
+
+    }
 
 
     //////////////////////////////////////////
@@ -789,7 +771,7 @@ plastic.getElementData = function(el) {
         if (!elData.data.url) {
 
             var dataString = dataElement[0].text;
-            console.msg(dataString);
+
             if (dataString && dataString !== '') {
                 elData.data.object = $.parseJSON(dataString);
             } else {
@@ -803,31 +785,6 @@ plastic.getElementData = function(el) {
 
 
     //////////////////////////////////////////
-    // GET SCHEMA DATA                      //
-    //////////////////////////////////////////
-
-    // Get Data-URL
-    var schemaElement = el.find(".plastic-schema");
-
-    if (queryElement.length > 0)  {
-
-        /** Element Schema Data */
-        elData.schema = {};
-
-        elData.schema.type = schemaElement.attr('data-schema-format');
-
-        var schemaString = schemaElement[0].text;
-
-        if (schemaString && schemaString !== '') {
-            elData.schema.text = $.parseJSON(schemaString);
-        } else {
-            plastic.helper.msg('Empty Schema Element!', 'error', el);
-        }
-
-    }
-
-
-    //////////////////////////////////////////
     // RETURN ELEMENT DATA                  //
     //////////////////////////////////////////
 
@@ -838,7 +795,9 @@ plastic.getElementData = function(el) {
 };
 
 plastic.prepareCanvas = function(el) {
-    console.info('PREPARING VISUALISATION');
+    console.info('plastic.prepareCanvas();');
+
+    el.css('position', 'relative');
 
     el.append('<div id="vis"></div>');
     $('#vis')
@@ -848,121 +807,322 @@ plastic.prepareCanvas = function(el) {
         .css('padding', '5px')
     ;
 
+    el.append('<div class="messages"></div>');
+    $('.messages')
+        .height(el.height())
+        .width(el.width())
+        .css('position', 'absolute')
+        .css('top', '0')
+        .css('left', '0')
+        .css('padding', '5px')
+        .css('pointer-events', 'none')
+    ;
+
 };
 
-plastic.processElement = function($el, elData) {
+plastic.processElement = (function () {
 
-    console.info('plastic.processElement();');
+    /**
+     * @param el
+     * @param elData
+     */
+    var process = function(el, elData) {
 
-    var async = false;
+        console.info('plastic.processElement();');
 
+        /** Asynchronous Mode */
+        var async = false;
+        var request;
 
-    //////////////////////////////////////////
-    // CALLING QUERY PARSER                 //
-    //////////////////////////////////////////
-
-    if (elData.query) { // OPTIONAL
-        // TODO
-    }
-
-
-    //////////////////////////////////////////
-    // GETTING DATA VIA URL                 //
-    //////////////////////////////////////////
+        plastic.prepareCanvas(el);
 
 
-    if (elData.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
+        //////////////////////////////////////////
+        // CALLING QUERY PARSER                 //
+        //////////////////////////////////////////
 
-        async = true;
+        if (elData.query) { // OPTIONAL
+            elData = callQueryParser(el, elData);
+        }
 
-         var request = $.ajax(elData.data.url)
-            .fail(function() {
-                plastic.helper.msg('Could not get Data from URL ' + elData.dataUrl, "error", $el );
-            })
-            .done(function(data) {
 
-                // TODO: Prüfen ob data schon Objekt ist oder noch erst JSON.parsed werden muss
-                console.msg('Getting Data from URL via AJAX');
+        //////////////////////////////////////////
+        // CALLING SCHEMA PARSER                 //
+        //////////////////////////////////////////
 
-                try {
-                    if (data !== null && typeof data === 'object') {
-                        elData.data.object = data;
-                    } else {
-                        elData.rawData = $.parseJSON(data);
+        if (elData.schema) { // OPTIONAL
+            // TODO
+        }
+
+
+
+        //////////////////////////////////////////
+        // GETTING DATA VIA URL                 //
+        //////////////////////////////////////////
+
+        if (elData.data && elData.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
+
+            var start = (new Date()).getTime();
+            async = true;
+
+            console.log('Getting Data from URL via AJAX: ' + elData.data.url);
+
+
+            request = $.getJSON(elData.data.url)
+                .done(function(data) {
+                    try {
+                        if (data !== null && typeof data === 'object') {
+                            elData.data.object = data;
+                        } else {
+                            elData.data.object = $.parseJSON(data);
+                        }
+                    } catch(e) {
+                        plastic.helper.msg(e, 'error', el);
                     }
+
+                })
+                .fail(function() {
+                    plastic.helper.msg('Could not get Data from URL ' + elData.data.url, "error", el );
+                })
+                .always(function() {
+                    var diff = (new Date()).getTime() - start;
+                    console.log("Request completed in " + diff + 'ms');
+                })
+            ;
+
+        }
+
+
+
+        //////////////////////////////////////////
+        // CALLING THE DATA & DISPLAX MODULE    //
+        //////////////////////////////////////////
+
+        if (async) {
+            // On Request complete
+            request.complete(function(data) {
+                console.log('Received asynchronous data.');
+                callDataParser(el, elData);
+                callDisplayModule(el, elData);
+            });
+        } else {
+            console.log('Received Synchronous Data');
+            callDataParser(el, elData);
+            callDisplayModule(el, elData);
+        }
+
+
+    };
+
+    /**
+     * Helper Function to call the Query Parser Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callQueryParser = function(el, elData) {
+
+        console.info('processElement.callQueryParser();');
+
+        var newElData = elData;
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
+        var parser = plastic.modules.queryParser[moduleInfo.fileName];
+
+        if (parser) {
+
+            if (plastic.options.debug) {
+                parser.validate(elData.query);
+                newElData.data = parser.parse(elData.query);
+            } else {
+                try {
+                    parser.validate(elData.query);
+                    newElData.data = parser.parse(elData.query);
                 } catch(e) {
-                    console.error(e);
+                    plastic.helper.msg(e, 'error', this.el);
                 }
-
-                console.msg('Received asynchronous data.');
-
-                plastic.callDataParser(elData);
+            }
 
 
-            })
-            .always(function() {
+        } else {
+            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found.', 'error', el);
+        }
 
-            })
-        ;
+        return newElData;
+    };
 
-    }
+    /**
+     * Helper Function to call the Schema Parser Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callSchemaParser = function(el, elData) {
+        console.info('processElement.callSchemaParser()');
+        return true;
+    };
 
-    //////////////////////////////////////////
-    // CALLING THE DATA PARSER              //
-    //////////////////////////////////////////
+    /**
+     * Helper Function to call the Data Parser Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callDataParser = function(el, elData) {
 
-    if (!async) {
-        console.msg('Received Synchronous Data');
-        plastic.callDataParser(elData);
-    } else {
-        // Data will be sent within the "Getting Data via URL Function when its done"
-    }
+        console.info('processElement.callDataParser()');
+
+        // Look for data parser module in the registry
+        var parser = plastic.modules.dataParser[elData.data.parser];
+
+        if (parser) {
+
+            console.log('Using Parser: ' + parser.name);
+
+            try {
+                parser.validate(elData.data.object);
+                elData.data.object = parser.parse(elData.data.object);
+            } catch(e) {
+                plastic.helper.msg(e, 'error', this.el);
+            }
+
+        } else {
+            plastic.helper.msg('Data Parser Module ' + elData.data.parser + ' not found.', 'error', el);
+        }
+
+    };
+
+    /**
+     * Helper Function to call the Display Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callDisplayModule = function(el, elData) {
+
+        console.info('processElement.callDataParser()');
+
+        // Look for data parser module in the registry
+        var displayModule = plastic.modules.display[elData.options.display.module];
+
+        if (displayModule) {
+
+            console.log('Using Display Module: ' + displayModule.name);
+
+            if (plastic.options.debug) {
+                displayModule.validate(elData);
+                elData.data = displayModule.render(el, elData);
+            } else {
+                try {
+                    displayModule.validate(elData);
+                    elData.data = displayModule.render(el, elData);
+                } catch(e) {
+                    plastic.helper.msg(e, 'error', this.el);
+                }
+            }
 
 
-    //////////////////////////////////////////
-    // CALLING SCHEMA PARSER                 //
-    //////////////////////////////////////////
-
-    if (elData.schema) { // OPTIONAL
-        // TODO
-    }
+        } else {
+            plastic.helper.msg('Display Module ' + elData.data.parser + ' not found.', 'error', el);
+        }
 
 
-    //////////////////////////////////////////
-    // CALLING DISPLAY MODULE               //
-    //////////////////////////////////////////
+    };
 
-    function callDisplayModule() {
-
-    }
-
-    // TODO: Wait for Data if requested via AJAX
+    return process;
 
 
-};
+})();
+
 plastic.validateElementData = function(elData) {
 
     console.info('plastic.validateElementData();');
 
     return true;
 };
-plastic.helper.msg = function (msg, type, el) {
+plastic.helper.buildRegistries = (function () {
 
-    if (type) {
+    return function() {
 
-        if (type === 'error') {
-            console.error(type + ' :: ' + msg);
-        } else if (type === 'warning') {
-            console.warn(type + ' :: ' + msg);
-        } else if (type === 'info') {
-            console.info(type + ' :: ' + msg);
-        } else {
-            console.log(type + ' :: ' + msg);
+        console.info('plastic.helper.buildRegistries();');
+
+        // Query Parser Registry
+        var queryParserRegistry = {};
+        for (var obj in plastic.modules.queryParser) {
+            var module = plastic.modules.queryParser[obj];
+            if(plastic.modules.queryParser.hasOwnProperty(obj) && module.apiName){
+                queryParserRegistry[module.apiName] = {
+                    name: module.name,
+                    fileName: module.fileName,
+                    dependencies: module.dependencies
+                };
+            }
         }
 
+        plastic.modules.queryParser._registry = queryParserRegistry;
+    };
 
-    } else {
-        console.log('--> ' + msg);
-    }
+})();
+plastic.helper.msg = (function () {
 
-};
+    /**
+     *
+     * @param type      enum: info, warning, error)
+     * @param msg       Log Message
+     * @param el        plastic element to append the message on
+     */
+    var message = function (msg, type, el) {
+
+        if (type) {
+
+            if (type === 'error') {
+                if (msg !== null && typeof msg === 'object') {
+                    console.error(msg);
+                    createNotification(msg, type, el);
+                } else {
+                    console.error(type + ' :: ' + msg);
+                    createNotification(msg, type, el);
+                }
+
+            } else if (type === 'warning') {
+                console.warn(type + ' :: ' + msg);
+            } else if (type === 'info') {
+                console.info(type + ' :: ' + msg);
+            } else {
+                console.log(type + ' :: ' + msg);
+            }
+
+
+        } else {
+            console.log('--> ' + msg);
+        }
+
+    };
+
+    var createNotification = function(msg, type, el) {
+
+        el.find('.messages').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
+        $('.plastic-msg-error')
+            .width(el.width() - 28)
+            .css('border', '1px solid #B31818')
+            .css('display', 'block')
+            .css('background', '#F6CECE')
+            .css('color', '#B31818')
+            .css('padding', '4px 8px')
+
+        ;
+    };
+
+    return message;
+
+})();
+

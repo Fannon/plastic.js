@@ -14,7 +14,6 @@ plastic.modules.display.table = (function () {
     var render = function(el, elData) {
 
         console.info('DISPLAY MODULE: TABLE');
-        console.dir(elData);
 
         var data = elData.data.object;
         var vis = d3.select("#vis");
