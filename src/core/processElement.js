@@ -171,7 +171,8 @@ plastic.processElement = (function () {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var parser = plastic.modules.dataParser[elData.data.parser];
+        var moduleInfo = plastic.modules.dataParser._registry[elData.data.parser];
+        var parser = plastic.modules.dataParser[moduleInfo.fileName];
 
         if (parser) {
 

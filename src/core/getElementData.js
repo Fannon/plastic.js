@@ -78,11 +78,8 @@ plastic.getElementData = function(el) {
 
         var queryString = queryElement[0].text;
 
-        // Trim all Whitespace
-        var queryStringStripped = $.trim(queryString.replace(/\s+/g, ' '));
-
         if (queryString && queryString !== '') {
-            elData.query.text = queryStringStripped;
+            elData.query.text = queryString;
         } else {
             plastic.helper.msg('Empty Query Element!', 'error', el);
         }

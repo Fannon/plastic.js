@@ -2,11 +2,11 @@
  * Parses tabular data from SPARQL Endpoints
  *
  */
-plastic.modules.dataParser.sparqlJson = (function () {
+plastic.modules.dataParser.askJson = (function () {
 
-    var name = 'SPARQL JSON Parser';
-    var apiName = 'sparql-json';
-    var fileName = 'sparqlJson';
+    var name = 'ASK (basic) JSON Parser';
+    var apiName = 'ask-json';
+    var fileName = 'askJson';
     var dependencies = [];
 
     /**
@@ -28,21 +28,21 @@ plastic.modules.dataParser.sparqlJson = (function () {
      */
     var parse = function(data) {
 
-        console.info('plastic.modules.dataParser.sparqlJson();');
+        console.info('plastic.modules.dataParser.askJson();');
+
+        console.dir(data);
 
         var processedData = [];
 
-        for (var i = 0; i < data.results.bindings.length; i++) {
+        for (var obj in data.query.results) {
 
-            processedData[i] = {};
+            var row = data.query.results[obj];
+            console.log(row.printouts);
 
-            var row = data.results.bindings[i];
-
-            for (var o in row) {
-                processedData[i][o] = row[o].value;
-            }
+            processedData.push(row.printouts);
         }
 
+        console.dir(processedData);
         return processedData;
 
     };

@@ -1,37 +1,38 @@
 /**
- * This is a SPARQL Query Parser
- * It turns the Query into a SPARQL Endpoint URL
+ * This is a ASK Query Parser
+ * It turns the Query into a ASK API URL
  */
-plastic.modules.queryParser.sparql = (function () {
+plastic.modules.queryParser.ask = (function () {
 
-    var name = 'SPARQL Query Parser';
-    var apiName = 'application/sparql-query';
-    var fileName = 'sparql';
+    var name = 'ASK Query Parser (SMW)';
+    var apiName = 'application/ask-query';
+    var fileName = 'ask';
     var dependencies = [];
 
     var validate = function(queryObj) {
-        console.info('queryParser.sparql.validate();');
+        console.info('queryParser.ask.validate();');
         return true;
     };
 
     var parse = function(queryObj) {
 
-        console.info('queryParser.sparql.parse();');
+        console.info('queryParser.ask.parse();');
 
         // Set Data Parser Module
         var dataObj = {
-            parser: 'sparql-json'
+            parser: 'ask-json'
         };
 
         var url = queryObj.url;
         var query = queryObj.text;
 
-        // Trim all Whitespace
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ' '));
+        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
+
+        console.log(queryTrimmed);
 
         var queryEncoded = encodeURIComponent(queryTrimmed);
 
-        dataObj.url = url + '?query=' + queryEncoded + '&output=json&callback=?';
+        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
 
         return dataObj;
     };

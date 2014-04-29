@@ -715,11 +715,8 @@ plastic.getElementData = function(el) {
 
         var queryString = queryElement[0].text;
 
-        // Trim all Whitespace
-        var queryStringStripped = $.trim(queryString.replace(/\s+/g, ' '));
-
         if (queryString && queryString !== '') {
-            elData.query.text = queryStringStripped;
+            elData.query.text = queryString;
         } else {
             plastic.helper.msg('Empty Query Element!', 'error', el);
         }
@@ -980,7 +977,8 @@ plastic.processElement = (function () {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var parser = plastic.modules.dataParser[elData.data.parser];
+        var moduleInfo = plastic.modules.dataParser._registry[elData.data.parser];
+        var parser = plastic.modules.dataParser[moduleInfo.fileName];
 
         if (parser) {
 
@@ -1051,16 +1049,35 @@ plastic.validateElementData = function(elData) {
 };
 plastic.helper.buildRegistries = (function () {
 
-    return function() {
+    /**
+     * Build dynamically Registries of all available Modules for each Module Type
+     * The registry includes some basic informations about the Module
+     */
+    var builder = function() {
 
         console.info('plastic.helper.buildRegistries();');
 
-        // Query Parser Registry
-        var queryParserRegistry = {};
-        for (var obj in plastic.modules.queryParser) {
-            var module = plastic.modules.queryParser[obj];
-            if(plastic.modules.queryParser.hasOwnProperty(obj) && module.apiName){
-                queryParserRegistry[module.apiName] = {
+        // Build Registry of all Module Types
+        buildModuleRegistry('queryParser');
+        buildModuleRegistry('dataParser');
+        buildModuleRegistry('display');
+        buildModuleRegistry('schemaParser');
+
+    };
+
+    /**
+     * Private Helper Function that does the actual work
+     *
+     * @param moduleType    Name of the Module Type
+     */
+    var buildModuleRegistry = function(moduleType) {
+
+        var moduleTypeRegistry = {};
+
+        for (var obj in plastic.modules[moduleType]) {
+            var module = plastic.modules[moduleType][obj];
+            if(plastic.modules[moduleType].hasOwnProperty(obj) && module.apiName){
+                moduleTypeRegistry[module.apiName] = {
                     name: module.name,
                     fileName: module.fileName,
                     dependencies: module.dependencies
@@ -1068,8 +1085,10 @@ plastic.helper.buildRegistries = (function () {
             }
         }
 
-        plastic.modules.queryParser._registry = queryParserRegistry;
+        plastic.modules[moduleType]._registry = moduleTypeRegistry;
     };
+
+    return builder;
 
 })();
 plastic.helper.msg = (function () {

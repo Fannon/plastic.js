@@ -4,7 +4,8 @@
 plastic.modules.display.table = (function () {
 
     var name = 'Simple Table Display Module';
-
+    var apiName = 'table';
+    var fileName = 'table';
     var dependencies = ['d3'];
 
     var validate = function(elData) {
@@ -13,7 +14,7 @@ plastic.modules.display.table = (function () {
 
     var render = function(el, elData) {
 
-        console.info('DISPLAY MODULE: TABLE');
+        console.info('plastic.modules.display.table();');
 
         var data = elData.data.object;
         var vis = d3.select("#vis");
@@ -73,6 +74,8 @@ plastic.modules.display.table = (function () {
     // Make Functions public
     return {
         name: name,
+        apiName: apiName,
+        fileName: fileName,
         dependencies: dependencies,
         validate: validate,
         render: render
