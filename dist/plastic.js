@@ -46,18 +46,28 @@ $(document).ready(function() {
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
     plastic.elements = $('plastic, .plastic-js');
 
-//    // Iterate all <plastic> Elements
+    // Iterate all <plastic> Elements
     plastic.elements.each(function() {
 
         var el = $(this);
 
-        var elData = plastic.getElementData(el);
+        try {
 
-        // Validate Element Data
-        var valid = plastic.validateElementData(elData);
+            // Get Element Data
+            var elData = plastic.getElementData(el);
 
-        // Process this Element
-        plastic.processElement($(this), elData);
+            // Check if Element Data is valid
+            var valid = plastic.validateElementData(elData);
+
+            if (valid) {
+                plastic.processElement($(this), elData);
+            } else {
+                console.error('Invalid Element Data!');
+            }
+
+        } catch(e) {
+            console.error('plastic.js Element Crash');
+        }
 
     });
 
@@ -796,16 +806,18 @@ plastic.prepareCanvas = function(el) {
 
     el.css('position', 'relative');
 
-    el.append('<div id="vis"></div>');
-    $('#vis')
+    el.append('<div class="plastic-js-display"></div>');
+    var displayEl = el.find('.plastic-js-display');
+    displayEl
         .height(el.height())
         .width(el.width())
         .css('overflow', 'scroll')
         .css('padding', '5px')
     ;
 
-    el.append('<div class="messages"></div>');
-    $('.messages')
+    el.append('<div class="plastic-js-msg"></div>');
+    var msgEl = el.find('.plastic-js-msg');
+    msgEl
         .height(el.height())
         .width(el.width())
         .css('position', 'absolute')
@@ -820,6 +832,8 @@ plastic.prepareCanvas = function(el) {
 plastic.processElement = (function () {
 
     /**
+     * TODO: Introduce Error State: Stop further Processing if there are Exceptions
+     *
      * @param el
      * @param elData
      */
@@ -829,6 +843,7 @@ plastic.processElement = (function () {
 
         /** Asynchronous Mode */
         var async = false;
+        var error = false;
         var request;
 
         plastic.prepareCanvas(el);
@@ -848,7 +863,7 @@ plastic.processElement = (function () {
         //////////////////////////////////////////
 
         if (elData.schema) { // OPTIONAL
-            // TODO
+            elData = callSchemaParser(el, elData);
         }
 
 
@@ -863,7 +878,6 @@ plastic.processElement = (function () {
             async = true;
 
             console.log('Getting Data from URL via AJAX: ' + elData.data.url);
-
 
             request = $.getJSON(elData.data.url)
                 .done(function(data) {
@@ -880,6 +894,7 @@ plastic.processElement = (function () {
                 })
                 .fail(function() {
                     plastic.helper.msg('Could not get Data from URL ' + elData.data.url, "error", el );
+                    error = true;
                 })
                 .always(function() {
                     var diff = (new Date()).getTime() - start;
@@ -896,16 +911,31 @@ plastic.processElement = (function () {
         //////////////////////////////////////////
 
         if (async) {
+
             // On Request complete
             request.complete(function(data) {
+
                 console.log('Received asynchronous data.');
-                callDataParser(el, elData);
-                callDisplayModule(el, elData);
+
+                if (!error) {
+                    callDataParser(el, elData);
+                }
+                if (!error) {
+                    callDisplayModule(el, elData);
+                }
             });
+
         } else {
+
             console.log('Received Synchronous Data');
-            callDataParser(el, elData);
-            callDisplayModule(el, elData);
+
+            if (!error) {
+                callDataParser(el, elData);
+            }
+            if (!error) {
+                callDisplayModule(el, elData);
+            }
+
         }
 
 
@@ -927,26 +957,35 @@ plastic.processElement = (function () {
 
         // Look for data parser module in the registry
         var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
-        var parser = plastic.modules.queryParser[moduleInfo.fileName];
 
-        if (parser) {
+        if (moduleInfo) {
+            var parser = plastic.modules.queryParser[moduleInfo.fileName];
 
-            if (plastic.options.debug) {
-                parser.validate(elData.query);
-                newElData.data = parser.parse(elData.query);
-            } else {
-                try {
+            if (parser) {
+
+                if (plastic.options.debug) {
                     parser.validate(elData.query);
                     newElData.data = parser.parse(elData.query);
-                } catch(e) {
-                    plastic.helper.msg(e, 'error', this.el);
+                } else {
+                    try {
+                        parser.validate(elData.query);
+                        newElData.data = parser.parse(elData.query);
+                    } catch(e) {
+                        plastic.helper.msg(e, 'error', this.el);
+                    }
                 }
+
+
+            } else {
+                plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Module)', 'error', el);
             }
 
-
         } else {
-            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found.', 'error', el);
+            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Registry)', 'error', el);
         }
+
+
+
 
         return newElData;
     };
@@ -1131,6 +1170,7 @@ plastic.helper.msg = (function () {
         if (type) {
 
             if (type === 'error') {
+
                 if (msg !== null && typeof msg === 'object') {
                     console.error(msg);
                     createNotification(msg, type, el);
@@ -1156,7 +1196,7 @@ plastic.helper.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.messages').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
+        el.find('.plastic-js-msg').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
         $('.plastic-msg-error')
             .width(el.width() - 28)
             .css('border', '1px solid #B31818')

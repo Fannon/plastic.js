@@ -14,6 +14,8 @@
 plastic.processElement = (function () {
 
     /**
+     * TODO: Introduce Error State: Stop further Processing if there are Exceptions
+     *
      * @param el
      * @param elData
      */
@@ -23,6 +25,7 @@ plastic.processElement = (function () {
 
         /** Asynchronous Mode */
         var async = false;
+        var error = false;
         var request;
 
         plastic.prepareCanvas(el);
@@ -42,7 +45,7 @@ plastic.processElement = (function () {
         //////////////////////////////////////////
 
         if (elData.schema) { // OPTIONAL
-            // TODO
+            elData = callSchemaParser(el, elData);
         }
 
 
@@ -57,7 +60,6 @@ plastic.processElement = (function () {
             async = true;
 
             console.log('Getting Data from URL via AJAX: ' + elData.data.url);
-
 
             request = $.getJSON(elData.data.url)
                 .done(function(data) {
@@ -74,6 +76,7 @@ plastic.processElement = (function () {
                 })
                 .fail(function() {
                     plastic.helper.msg('Could not get Data from URL ' + elData.data.url, "error", el );
+                    error = true;
                 })
                 .always(function() {
                     var diff = (new Date()).getTime() - start;
@@ -90,16 +93,31 @@ plastic.processElement = (function () {
         //////////////////////////////////////////
 
         if (async) {
+
             // On Request complete
             request.complete(function(data) {
+
                 console.log('Received asynchronous data.');
-                callDataParser(el, elData);
-                callDisplayModule(el, elData);
+
+                if (!error) {
+                    callDataParser(el, elData);
+                }
+                if (!error) {
+                    callDisplayModule(el, elData);
+                }
             });
+
         } else {
+
             console.log('Received Synchronous Data');
-            callDataParser(el, elData);
-            callDisplayModule(el, elData);
+
+            if (!error) {
+                callDataParser(el, elData);
+            }
+            if (!error) {
+                callDisplayModule(el, elData);
+            }
+
         }
 
 
@@ -121,26 +139,35 @@ plastic.processElement = (function () {
 
         // Look for data parser module in the registry
         var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
-        var parser = plastic.modules.queryParser[moduleInfo.fileName];
 
-        if (parser) {
+        if (moduleInfo) {
+            var parser = plastic.modules.queryParser[moduleInfo.fileName];
 
-            if (plastic.options.debug) {
-                parser.validate(elData.query);
-                newElData.data = parser.parse(elData.query);
-            } else {
-                try {
+            if (parser) {
+
+                if (plastic.options.debug) {
                     parser.validate(elData.query);
                     newElData.data = parser.parse(elData.query);
-                } catch(e) {
-                    plastic.helper.msg(e, 'error', this.el);
+                } else {
+                    try {
+                        parser.validate(elData.query);
+                        newElData.data = parser.parse(elData.query);
+                    } catch(e) {
+                        plastic.helper.msg(e, 'error', this.el);
+                    }
                 }
+
+
+            } else {
+                plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Module)', 'error', el);
             }
 
-
         } else {
-            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found.', 'error', el);
+            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Registry)', 'error', el);
         }
+
+
+
 
         return newElData;
     };

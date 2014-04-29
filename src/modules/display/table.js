@@ -16,8 +16,11 @@ plastic.modules.display.table = (function () {
 
         console.info('plastic.modules.display.table();');
 
+        var $el = el.find('.plastic-js-display')[0];
+        console.dir($el);
+
         var data = elData.data.object;
-        var vis = d3.select("#vis");
+        var vis = d3.select($el);
 
         var table = vis.append("table");
         var thead = table.append("thead");

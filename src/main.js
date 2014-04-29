@@ -56,18 +56,28 @@ $(document).ready(function() {
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
     plastic.elements = $('plastic, .plastic-js');
 
-//    // Iterate all <plastic> Elements
+    // Iterate all <plastic> Elements
     plastic.elements.each(function() {
 
         var el = $(this);
 
-        var elData = plastic.getElementData(el);
+        try {
 
-        // Validate Element Data
-        var valid = plastic.validateElementData(elData);
+            // Get Element Data
+            var elData = plastic.getElementData(el);
 
-        // Process this Element
-        plastic.processElement($(this), elData);
+            // Check if Element Data is valid
+            var valid = plastic.validateElementData(elData);
+
+            if (valid) {
+                plastic.processElement($(this), elData);
+            } else {
+                console.error('Invalid Element Data!');
+            }
+
+        } catch(e) {
+            console.error('plastic.js Element Crash');
+        }
 
     });
 

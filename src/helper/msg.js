@@ -19,6 +19,7 @@ plastic.helper.msg = (function () {
         if (type) {
 
             if (type === 'error') {
+
                 if (msg !== null && typeof msg === 'object') {
                     console.error(msg);
                     createNotification(msg, type, el);
@@ -44,7 +45,7 @@ plastic.helper.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.messages').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
+        el.find('.plastic-js-msg').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
         $('.plastic-msg-error')
             .width(el.width() - 28)
             .css('border', '1px solid #B31818')

@@ -12,16 +12,18 @@ plastic.prepareCanvas = function(el) {
 
     el.css('position', 'relative');
 
-    el.append('<div id="vis"></div>');
-    $('#vis')
+    el.append('<div class="plastic-js-display"></div>');
+    var displayEl = el.find('.plastic-js-display');
+    displayEl
         .height(el.height())
         .width(el.width())
         .css('overflow', 'scroll')
         .css('padding', '5px')
     ;
 
-    el.append('<div class="messages"></div>');
-    $('.messages')
+    el.append('<div class="plastic-js-msg"></div>');
+    var msgEl = el.find('.plastic-js-msg');
+    msgEl
         .height(el.height())
         .width(el.width())
         .css('position', 'absolute')
