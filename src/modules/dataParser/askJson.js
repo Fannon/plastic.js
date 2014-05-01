@@ -9,6 +9,7 @@ plastic.modules.dataParser.askJson = (function () {
     var fileName = 'askJson';
     var dependencies = [];
 
+
     /**
      * Validate this specific data format
      * Returns true if valid, false if not.
@@ -17,8 +18,14 @@ plastic.modules.dataParser.askJson = (function () {
      * @returns {boolean}
      */
     var validate = function(data) {
+
+        var schema = {
+
+        };
+
         return true;
     };
+
 
     /**
      * Parses the data into an internal used data format
@@ -43,6 +50,7 @@ plastic.modules.dataParser.askJson = (function () {
         return processedData;
 
     };
+
 
     // Make public
     return {

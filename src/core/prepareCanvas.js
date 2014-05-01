@@ -30,7 +30,6 @@ plastic.prepareCanvas = function(el) {
         .css('top', '0')
         .css('left', '0')
         .css('padding', '5px')
-        .css('pointer-events', 'none')
     ;
 
 };

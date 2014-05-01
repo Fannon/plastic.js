@@ -1,5 +1,8 @@
 /**
  * Table Display Module
+ *
+ * Revealing Module Pattern
+ * http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript
  */
 plastic.modules.display.table = (function () {
 
@@ -69,6 +72,8 @@ plastic.modules.display.table = (function () {
         // Twitter Bootstrap Classes
         $('table').addClass('table table-condensed');
 
+//        throw new Error('test');
+
         return table;
 
     };
@@ -81,7 +86,8 @@ plastic.modules.display.table = (function () {
         fileName: fileName,
         dependencies: dependencies,
         validate: validate,
-        render: render
+        render: render,
+        update: render // TODO: Write Update Function
     };
 
 })();

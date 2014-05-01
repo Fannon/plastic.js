@@ -43,7 +43,7 @@ h5 {
     font-size: 1.1em;
 }
 
-plastic {
+plastic, .plastic-js {
     border: 1px solid #CCC;
     display: block;
 }

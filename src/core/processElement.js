@@ -75,7 +75,7 @@ plastic.processElement = (function () {
 
                 })
                 .fail(function() {
-                    plastic.helper.msg('Could not get Data from URL ' + elData.data.url, "error", el );
+                    plastic.helper.msg('Could not get Data from URL <a href="' + elData.data.url + '">' + elData.data.url + '</a>', "error", el );
                     error = true;
                 })
                 .always(function() {

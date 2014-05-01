@@ -53,7 +53,7 @@ plastic.helper.msg = (function () {
             .css('background', '#F6CECE')
             .css('color', '#B31818')
             .css('padding', '4px 8px')
-
+            .css('overflow', 'hidden')
         ;
     };
 

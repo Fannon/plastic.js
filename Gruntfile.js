@@ -8,7 +8,7 @@ module.exports = function (grunt) {
     // Show elapsed time at the end
     require('time-grunt')(grunt);
 
-    // Project configuration.
+    // Project configuration.4
     grunt.initConfig({
 
         /** Get Metadata from Bower package.json */

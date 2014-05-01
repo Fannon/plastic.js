@@ -27,7 +27,6 @@ plastic.modules.queryParser.ask = (function () {
         var query = queryObj.text;
 
         var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-
         var queryEncoded = encodeURIComponent(queryTrimmed);
 
         dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';

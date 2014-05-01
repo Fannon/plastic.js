@@ -1,4 +1,4 @@
-/*! plastic - v0.0.1 - 2014-04-29
+/*! plastic - v0.0.1 - 2014-05-01
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /*jshint -W079 */ // Ignores Redefinition of plastic
@@ -824,7 +824,6 @@ plastic.prepareCanvas = function(el) {
         .css('top', '0')
         .css('left', '0')
         .css('padding', '5px')
-        .css('pointer-events', 'none')
     ;
 
 };
@@ -893,7 +892,7 @@ plastic.processElement = (function () {
 
                 })
                 .fail(function() {
-                    plastic.helper.msg('Could not get Data from URL ' + elData.data.url, "error", el );
+                    plastic.helper.msg('Could not get Data from URL <a href="' + elData.data.url + '">' + elData.data.url + '</a>', "error", el );
                     error = true;
                 })
                 .always(function() {
@@ -1204,7 +1203,7 @@ plastic.helper.msg = (function () {
             .css('background', '#F6CECE')
             .css('color', '#B31818')
             .css('padding', '4px 8px')
-
+            .css('overflow', 'hidden')
         ;
     };
 
