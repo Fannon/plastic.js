@@ -1,8 +1,7 @@
 /**
  * Gets MetaData (Data/DataURL and Options) from <plastic> Element
  *
- * // TODO: Error Handling
- * // TODO: Remove dependencies on jQuery
+ * @todo Improve Error Handling
  *
  * @param el    Plastic HTML Element selected via jQuery
  */

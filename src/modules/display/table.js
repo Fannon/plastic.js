@@ -3,6 +3,7 @@
  *
  * Revealing Module Pattern
  * http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript
+ *
  */
 plastic.modules.display.table = (function () {
 
@@ -11,6 +12,11 @@ plastic.modules.display.table = (function () {
     var fileName = 'table';
     var dependencies = ['d3'];
 
+    /**
+     * Validate
+     * @param elData
+     * @returns {boolean}
+     */
     var validate = function(elData) {
         return true;
     };

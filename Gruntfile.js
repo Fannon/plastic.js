@@ -110,15 +110,6 @@ module.exports = function (grunt) {
                     'dist/plastic.js',
                     'dist/plastic.min.js'
                 ]
-            },
-            css: {
-                options: {
-                    target: 'master' // branch
-                },
-                src: [
-                    'dist/plastic.css',
-                    'dist/plastic.min.css'
-                ]
             }
         },
 
@@ -157,6 +148,17 @@ module.exports = function (grunt) {
         karma: {
             unit: {
                 configFile: 'karma.conf.js'
+            }
+        },
+
+        jsdoc : {
+            api : {
+                src : ['src/**/**.js', 'README.md'],
+                options : {
+                    destination : 'docs/api',
+                    template : "bower_components/jaguarjs-jsdoc",
+                    configure : "jsdoc.conf.json"
+                }
             }
         },
 

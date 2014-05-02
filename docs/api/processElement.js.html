@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: core/processElement.js</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"plastic.js API","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"","description":"","keyword":""}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">plastic.js API</a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="plastic">
+            <span class="title">
+                <a href="plastic.html">plastic</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.elements"><a href="plastic.html#elements">elements</a></li>
+            
+                <li data-name="plastic.options"><a href="plastic.html#options">options</a></li>
+            
+                <li data-name="plastic.processElement"><a href="plastic.html#processElement">processElement</a></li>
+            
+                <li data-name="plastic.version"><a href="plastic.html#version">version</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.getElementData"><a href="plastic.html#getElementData">getElementData</a></li>
+            
+                <li data-name="plastic.prepareCanvas"><a href="plastic.html#prepareCanvas">prepareCanvas</a></li>
+            
+                <li data-name="plastic.validateElementData"><a href="plastic.html#validateElementData">validateElementData</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.helper">
+            <span class="title">
+                <a href="plastic.helper.html">plastic.helper</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.helper.msg"><a href="plastic.helper.html#msg">msg</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules">
+            <span class="title">
+                <a href="plastic.modules.html">plastic.modules</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.dependencies"><a href="plastic.modules.html#dependencies">dependencies</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.dataParser">
+            <span class="title">
+                <a href="plastic.modules.dataParser.html">plastic.modules.dataParser</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.dataParser.askJson"><a href="plastic.modules.dataParser.html#askJson">askJson</a></li>
+            
+                <li data-name="plastic.modules.dataParser.sparqlJson"><a href="plastic.modules.dataParser.html#sparqlJson">sparqlJson</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.display">
+            <span class="title">
+                <a href="plastic.modules.display.html">plastic.modules.display</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.display.table"><a href="plastic.modules.display.html#table">table</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.queryParser">
+            <span class="title">
+                <a href="plastic.modules.queryParser.html">plastic.modules.queryParser</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.queryParser.ask"><a href="plastic.modules.queryParser.html#ask">ask</a></li>
+            
+                <li data-name="plastic.modules.queryParser.sparql"><a href="plastic.modules.queryParser.html#sparql">sparql</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.schemaParser">
+            <span class="title">
+                <a href="plastic.modules.schemaParser.html">plastic.modules.schemaParser</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="processElement.js.html">Source: core/processElement.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * Process a specific plastic element
+ *
+ * This initiates all the main steps necessary to create a Data Display
+ *
+ * The Main Steps are:
+ *  1 IF Query provided         Calling the Query Parser
+ *  2 IF Data URL provided      Getting the Data via AJAX
+ *  2 IF Schema provided        Calling the Schema Parser
+ *  4 ALWAYS                    Calling the Data Parser
+ *  5 ALWAYS                    Calling the Display Module
+ *
+ */
+plastic.processElement = (function () {
+
+    /**
+     * TODO: Introduce Error State: Stop further Processing if there are Exceptions
+     *
+     * @param el
+     * @param elData
+     */
+    var process = function(el, elData) {
+
+        console.info('plastic.processElement();');
+
+        /** Asynchronous Mode */
+        var async = false;
+        var error = false;
+        var request;
+
+        plastic.prepareCanvas(el);
+
+
+        //////////////////////////////////////////
+        // CALLING QUERY PARSER                 //
+        //////////////////////////////////////////
+
+        if (elData.query) { // OPTIONAL
+            elData = callQueryParser(el, elData);
+        }
+
+
+        //////////////////////////////////////////
+        // CALLING SCHEMA PARSER                 //
+        //////////////////////////////////////////
+
+        if (elData.schema) { // OPTIONAL
+            elData = callSchemaParser(el, elData);
+        }
+
+
+
+        //////////////////////////////////////////
+        // GETTING DATA VIA URL                 //
+        //////////////////////////////////////////
+
+        if (elData.data && elData.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
+
+            var start = (new Date()).getTime();
+            async = true;
+
+            console.log('Getting Data from URL via AJAX: ' + elData.data.url);
+
+            request = $.getJSON(elData.data.url)
+                .done(function(data) {
+                    try {
+                        if (data !== null && typeof data === 'object') {
+                            elData.data.object = data;
+                        } else {
+                            elData.data.object = $.parseJSON(data);
+                        }
+                    } catch(e) {
+                        plastic.helper.msg(e, 'error', el);
+                    }
+
+                })
+                .fail(function() {
+                    plastic.helper.msg('Could not get Data from URL &lt;a href="' + elData.data.url + '">' + elData.data.url + '&lt;/a>', "error", el );
+                    error = true;
+                })
+                .always(function() {
+                    var diff = (new Date()).getTime() - start;
+                    console.log("Request completed in " + diff + 'ms');
+                })
+            ;
+
+        }
+
+
+
+        //////////////////////////////////////////
+        // CALLING THE DATA & DISPLAX MODULE    //
+        //////////////////////////////////////////
+
+        if (async) {
+
+            // On Request complete
+            request.complete(function(data) {
+
+                console.log('Received asynchronous data.');
+
+                if (!error) {
+                    callDataParser(el, elData);
+                }
+                if (!error) {
+                    callDisplayModule(el, elData);
+                }
+            });
+
+        } else {
+
+            console.log('Received Synchronous Data');
+
+            if (!error) {
+                callDataParser(el, elData);
+            }
+            if (!error) {
+                callDisplayModule(el, elData);
+            }
+
+        }
+
+
+    };
+
+    /**
+     * Helper Function to call the Query Parser Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callQueryParser = function(el, elData) {
+
+        console.info('processElement.callQueryParser();');
+
+        var newElData = elData;
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
+
+        if (moduleInfo) {
+            var parser = plastic.modules.queryParser[moduleInfo.fileName];
+
+            if (parser) {
+
+                if (plastic.options.debug) {
+                    parser.validate(elData.query);
+                    newElData.data = parser.parse(elData.query);
+                } else {
+                    try {
+                        parser.validate(elData.query);
+                        newElData.data = parser.parse(elData.query);
+                    } catch(e) {
+                        plastic.helper.msg(e, 'error', this.el);
+                    }
+                }
+
+
+            } else {
+                plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Module)', 'error', el);
+            }
+
+        } else {
+            plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Registry)', 'error', el);
+        }
+
+
+
+
+        return newElData;
+    };
+
+    /**
+     * Helper Function to call the Schema Parser Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callSchemaParser = function(el, elData) {
+        console.info('processElement.callSchemaParser()');
+
+        var newElData = elData;
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.schemaParser._registry[elData.schema.type];
+        var parser = plastic.modules.schemaParser[moduleInfo.fileName];
+
+        if (parser) {
+
+            if (plastic.options.debug) {
+                parser.validate(elData.query);
+                newElData = parser.parse(elData);
+            } else {
+                try {
+                    parser.validate(elData.query);
+                    newElData = parser.parse(elData);
+                } catch(e) {
+                    plastic.helper.msg(e, 'error', this.el);
+                }
+            }
+
+
+        } else {
+            plastic.helper.msg('Schema Parser Module for Type ' + elData.query.type + ' not found.', 'error', el);
+        }
+
+        return newElData;
+    };
+
+    /**
+     * Helper Function to call the Data Parser Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callDataParser = function(el, elData) {
+
+        console.info('processElement.callDataParser()');
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.dataParser._registry[elData.data.parser];
+        var parser = plastic.modules.dataParser[moduleInfo.fileName];
+
+        if (parser) {
+
+            console.log('Using Parser: ' + parser.name);
+
+            try {
+                parser.validate(elData.data.object);
+                elData.data.object = parser.parse(elData.data.object);
+            } catch(e) {
+                plastic.helper.msg(e, 'error', this.el);
+            }
+
+        } else {
+            plastic.helper.msg('Data Parser Module ' + elData.data.parser + ' not found.', 'error', el);
+        }
+
+    };
+
+    /**
+     * Helper Function to call the Display Module
+     *
+     * @private
+     *
+     * @param el
+     * @param elData
+     */
+    var callDisplayModule = function(el, elData) {
+
+        console.info('processElement.callDataParser()');
+
+        // Look for data parser module in the registry
+        var moduleInfo = plastic.modules.display._registry[elData.options.display.module];
+        var displayModule = plastic.modules.display[moduleInfo.fileName];
+
+        if (displayModule) {
+
+            console.log('Using Display Module: ' + displayModule.name);
+
+            if (plastic.options.debug) {
+                displayModule.validate(elData);
+                elData.data = displayModule.render(el, elData);
+            } else {
+                try {
+                    displayModule.validate(elData);
+                    elData.data = displayModule.render(el, elData);
+                } catch(e) {
+                    plastic.helper.msg(e, 'error', this.el);
+                }
+            }
+
+
+        } else {
+            plastic.helper.msg('Display Module ' + elData.data.parser + ' not found.', 'error', el);
+        }
+
+
+    };
+
+    return process;
+
+
+})();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri May 02 2014 18:21:48 GMT+0200 (MESZ)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

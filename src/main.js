@@ -15,32 +15,56 @@
 
 /**
  * plastic.js Namespace
+ *
+ * @namespace
  */
 var plastic = {
 
-    version: '0.0.4', // semver
+    /** type String */
+    version: '0.0.4',
 
-    /** This holds all the plastic jQuery elements */
+    /**
+     * This holds all the plastic jQuery elements
+     * @type Array
+     */
     elements: [],
 
-    /** Namespace for all plastic modules */
+    /**
+     * plastic.js modules
+     * @namespace
+     */
     modules: {
 
-        /** Data Parser Namespace */
+        /**
+         * Data Parser Modules
+         * @namespace
+         */
         dataParser: {},
 
-        /** Data Parser Namespace */
+        /**
+         * Query Parser Modules
+         * @namespace
+         */
         queryParser: {},
 
-        /** Data Parser Namespace */
+        /**
+         * Schema Parser Modules
+         * @namespace
+         */
         schemaParser: {},
 
-        /** Display Modules Namespace */
+        /**
+         * Display Modules
+         * @namespace
+         */
         display: {}
 
     },
 
-    /** Helper Functions Namespace */
+    /**
+     * Helper Functions
+     * @namespace
+     */
     helper: {}
 
 

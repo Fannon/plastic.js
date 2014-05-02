@@ -9,10 +9,10 @@ Download either the whole repository (files are in the dist/ folder) or directly
 * Production [JavaScript (minified)][js-min] and [CSS (minified][css-min]
 * Development [JavaScript][js-max] and [CSS][css-max]
 
-[js-min]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.min.js
-[js-max]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.js
-[css-min]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.min.css
-[css-max]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.css
+[js-min]: https://raw.github.com/Fannon/plastic.js/master/dist/plastic.min.js
+[js-max]: https://raw.github.com/Fannon/plastic.js/master/dist/plastic.js
+[css-min]: https://raw.github.com/Fannon/plastic.js/master/dist/plastic.min.css
+[css-max]: https://raw.github.com/Fannon/plastic.js/master/dist/plastic.css
 
 In your web page:
 ```html
