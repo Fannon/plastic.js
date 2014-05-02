@@ -5,10 +5,14 @@ This project is currently in development and not production ready!
 
 ## Getting Started
 
-Download the [production version][min] or the [development version][max].
+Download either the whole repository (files are in the dist/ folder) or directly here:
+* Production [JavaScript (minified)][js-min] and [CSS (minified][css-min]
+* Development [JavaScript][js-max] and [CSS][css-max]
 
-[min]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plastic.min.js
-[max]: https://raw.github.com/Fannon/jquery-plasticjs/master/dist/jquery.plastic.js
+[js-min]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.min.js
+[js-max]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.js
+[css-min]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.min.css
+[css-max]: https://raw.github.com/Fannon/plastic.js/master/dist/jquery.plastic.css
 
 In your web page:
 ```html

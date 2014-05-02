@@ -32,7 +32,7 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
                 stripBanners: true
             },
-            dist: {
+            js: {
                 src: [
                     'src/main.js',
                     'bower_components/yepnope/yepnope.js',
@@ -45,6 +45,13 @@ module.exports = function (grunt) {
                     'src/helper/**/*.js'
                 ],
                 dest: 'dist/plastic.js'
+            },
+            css: {
+                src: [
+                    'src/main.css',
+                    'src/modules/display/*.css'
+                ],
+                dest: 'dist/plastic.css'
             }
         },
 
@@ -59,15 +66,13 @@ module.exports = function (grunt) {
             }
         },
 
-        /** QUnit Unit Testing */
-//        qunit: {
-//            all: {
-//                options: {
-//                    timeout: 5000,
-//                    urls: ['http://localhost:9000/test/index.html']
-//                }
-//            }
-//        },
+        cssmin: {
+            add_banner: {
+                files: {
+                    'dist/plastic.min.css': ['dist/plastic.css']
+                }
+            }
+        },
 
         /** JavaScript Linting */
         jshint: {
@@ -97,13 +102,22 @@ module.exports = function (grunt) {
 
         /** Compare Sizes of built Library */
         sizediff: {
-            dist: {
+            js: {
                 options: {
                     target: 'master' // branch
                 },
                 src: [
                     'dist/plastic.js',
                     'dist/plastic.min.js'
+                ]
+            },
+            css: {
+                options: {
+                    target: 'master' // branch
+                },
+                src: [
+                    'dist/plastic.css',
+                    'dist/plastic.min.css'
                 ]
             }
         },
@@ -113,13 +127,10 @@ module.exports = function (grunt) {
             documentation: {
                 files: [{
                     src: ['bower_components/d3/d3.min.js'],
-                    dest: 'documentation/lib/d3.min.js'
+                    dest: 'docs/lib/d3.min.js'
                 }, {
                     src: ['bower_components/jquery/dist/jquery.min.js'],
-                    dest: 'documentation/lib/jquery.min.js'
-                }, {
-                    src: ['bower_components/foundation/css/foundation.min.css'],
-                    dest: 'documentation/lib/foundation.min.css'
+                    dest: 'docs/lib/jquery.min.js'
                 }]
             }
         },
@@ -180,6 +191,9 @@ module.exports = function (grunt) {
             uglify: {
                 text: "\n###################################################\n### MINIFY JAVASCRIPT\n###################################################"
             },
+            cssmin: {
+                text: "\n###################################################\n### MINIFY CSS\n###################################################"
+            },
             sizediff: {
                 text: "\n###################################################\n### COMPARING NEW SIZE\n###################################################"
             },
@@ -204,7 +218,6 @@ module.exports = function (grunt) {
         'content:connect', 'connect',
         'content:concat', 'concat',
         'content:jshint', 'jshint'
-//        'content:test', 'qunit'
     ]);
 
     grunt.registerTask('build', [
@@ -212,6 +225,7 @@ module.exports = function (grunt) {
         'content:clean', 'clean',
         'content:concat', 'concat',
         'content:uglify', 'uglify',
+        'content:cssmin', 'cssmin',
         'content:sizediff', 'sizediff',
         'content:copy', 'copy:documentation',
         'content:done'
