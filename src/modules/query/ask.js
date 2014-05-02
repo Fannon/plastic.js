@@ -2,7 +2,7 @@
  * This is a ASK Query Parser
  * It turns the Query into a ASK API URL
  */
-plastic.modules.queryParser.ask = (function () {
+plastic.modules.query.ask = (function () {
 
     var name = 'ASK Query Parser (SMW)';
     var apiName = 'application/ask-query';
@@ -10,13 +10,13 @@ plastic.modules.queryParser.ask = (function () {
     var dependencies = [];
 
     var validate = function(queryObj) {
-        console.info('queryParser.ask.validate();');
+        console.info('query.ask.validate();');
         return true;
     };
 
     var parse = function(queryObj) {
 
-        console.info('queryParser.ask.parse();');
+        console.info('query.ask.parse();');
 
         // Set Data Parser Module
         var dataObj = {

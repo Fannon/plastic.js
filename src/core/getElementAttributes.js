@@ -5,9 +5,9 @@
  *
  * @param el    Plastic HTML Element selected via jQuery
  */
-plastic.getElementData = function(el) {
+plastic.getElementAttributes = function(el) {
 
-    console.info('plastic.getElementData();');
+    console.info('plastic.getElementAttributes();');
 
 
     /**

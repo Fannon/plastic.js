@@ -36,22 +36,22 @@ var plastic = {
     modules: {
 
         /**
-         * Data Parser Modules
-         * @namespace
-         */
-        dataParser: {},
-
-        /**
          * Query Parser Modules
          * @namespace
          */
-        queryParser: {},
+        query: {},
 
         /**
-         * Schema Parser Modules
+         * API Parser Modules
          * @namespace
          */
-        schemaParser: {},
+        api: {},
+
+        /**
+         * Data Parser Modules
+         * @namespace
+         */
+        data: {},
 
         /**
          * Display Modules
@@ -88,10 +88,10 @@ $(document).ready(function() {
         try {
 
             // Get Element Data
-            var elData = plastic.getElementData(el);
+            var elData = plastic.getElementAttributes(el);
 
             // Check if Element Data is valid
-            var valid = plastic.validateElementData(elData);
+            var valid = plastic.validateElementAttributes(elData);
 
             if (valid) {
                 plastic.processElement($(this), elData);

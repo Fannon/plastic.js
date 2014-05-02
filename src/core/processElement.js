@@ -1,3 +1,5 @@
+/* global jjv */
+
 /**
  * Process a specific plastic element
  *
@@ -38,16 +40,6 @@ plastic.processElement = (function () {
         if (elData.query) { // OPTIONAL
             elData = callQueryParser(el, elData);
         }
-
-
-        //////////////////////////////////////////
-        // CALLING SCHEMA PARSER                 //
-        //////////////////////////////////////////
-
-        if (elData.schema) { // OPTIONAL
-            elData = callSchemaParser(el, elData);
-        }
-
 
 
         //////////////////////////////////////////
@@ -138,10 +130,10 @@ plastic.processElement = (function () {
         var newElData = elData;
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
+        var moduleInfo = plastic.modules.query._registry[elData.query.type];
 
         if (moduleInfo) {
-            var parser = plastic.modules.queryParser[moduleInfo.fileName];
+            var parser = plastic.modules.query[moduleInfo.fileName];
 
             if (parser) {
 
@@ -224,8 +216,8 @@ plastic.processElement = (function () {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.dataParser._registry[elData.data.parser];
-        var parser = plastic.modules.dataParser[moduleInfo.fileName];
+        var moduleInfo = plastic.modules.data._registry[elData.data.parser];
+        var parser = plastic.modules.data[moduleInfo.fileName];
 
         if (parser) {
 

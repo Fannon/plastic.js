@@ -26,22 +26,22 @@ var plastic = {
     modules: {
 
         /**
-         * Data Parser Modules
-         * @namespace
-         */
-        dataParser: {},
-
-        /**
          * Query Parser Modules
          * @namespace
          */
-        queryParser: {},
+        query: {},
 
         /**
-         * Schema Parser Modules
+         * API Parser Modules
          * @namespace
          */
-        schemaParser: {},
+        api: {},
+
+        /**
+         * Data Parser Modules
+         * @namespace
+         */
+        data: {},
 
         /**
          * Display Modules
@@ -78,10 +78,10 @@ $(document).ready(function() {
         try {
 
             // Get Element Data
-            var elData = plastic.getElementData(el);
+            var elData = plastic.getElementAttributes(el);
 
             // Check if Element Data is valid
-            var valid = plastic.validateElementData(elData);
+            var valid = plastic.validateElementAttributes(elData);
 
             if (valid) {
                 plastic.processElement($(this), elData);
@@ -678,9 +678,9 @@ plastic.options = {
     width: '100%'
 };
 
-plastic.getElementData = function(el) {
+plastic.getElementAttributes = function(el) {
 
-    console.info('plastic.getElementData();');
+    console.info('plastic.getElementAttributes();');
 
 
     /**
@@ -848,6 +848,19 @@ plastic.prepareCanvas = function(el) {
 
 };
 
+/**
+ * Process a specific plastic element
+ *
+ * This initiates all the main steps necessary to create a Data Display
+ *
+ * The Main Steps are:
+ *  1 IF Query provided         Calling the Query Parser
+ *  2 IF Data URL provided      Getting the Data via AJAX
+ *  2 IF Schema provided        Calling the Schema Parser
+ *  4 ALWAYS                    Calling the Data Parser
+ *  5 ALWAYS                    Calling the Display Module
+ *
+ */
 plastic.processElement = (function () {
 
     /**
@@ -875,16 +888,6 @@ plastic.processElement = (function () {
         if (elData.query) { // OPTIONAL
             elData = callQueryParser(el, elData);
         }
-
-
-        //////////////////////////////////////////
-        // CALLING SCHEMA PARSER                 //
-        //////////////////////////////////////////
-
-        if (elData.schema) { // OPTIONAL
-            elData = callSchemaParser(el, elData);
-        }
-
 
 
         //////////////////////////////////////////
@@ -975,10 +978,10 @@ plastic.processElement = (function () {
         var newElData = elData;
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.queryParser._registry[elData.query.type];
+        var moduleInfo = plastic.modules.query._registry[elData.query.type];
 
         if (moduleInfo) {
-            var parser = plastic.modules.queryParser[moduleInfo.fileName];
+            var parser = plastic.modules.query[moduleInfo.fileName];
 
             if (parser) {
 
@@ -1061,18 +1064,19 @@ plastic.processElement = (function () {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.dataParser._registry[elData.data.parser];
-        var parser = plastic.modules.dataParser[moduleInfo.fileName];
+        var moduleInfo = plastic.modules.data._registry[elData.data.parser];
+        var parser = plastic.modules.data[moduleInfo.fileName];
 
         if (parser) {
 
             console.log('Using Parser: ' + parser.name);
 
             try {
+                validateDataStructure(parser, elData.data.object);
                 parser.validate(elData.data.object);
                 elData.data.object = parser.parse(elData.data.object);
             } catch(e) {
-                plastic.helper.msg(e, 'error', this.el);
+                plastic.helper.msg(e, 'error', el);
             }
 
         } else {
@@ -1121,17 +1125,32 @@ plastic.processElement = (function () {
 
     };
 
+    var validateDataStructure = function(module, data) {
+        if (module.dataStructure) {
+            var env = jjv();
+            env.addSchema('data', module.dataStructure);
+            var errors = env.validate('data', data);
+
+            // validation was successful
+            if (errors) {
+                console.dir(errors);
+                throw new Error('Data Structure invalid!');
+            }
+        }
+    };
+
     return process;
 
 
 })();
 
-plastic.validateElementData = function(elData) {
+plastic.validateElementAttributes = function(elData) {
 
-    console.info('plastic.validateElementData();');
+    console.info('plastic.validateElementAttributes();');
 
     return true;
 };
+
 plastic.helper.buildRegistries = (function () {
 
     /**
@@ -1143,10 +1162,10 @@ plastic.helper.buildRegistries = (function () {
         console.info('plastic.helper.buildRegistries();');
 
         // Build Registry of all Module Types
-        buildModuleRegistry('queryParser');
-        buildModuleRegistry('dataParser');
+        buildModuleRegistry('query');
+        buildModuleRegistry('data');
         buildModuleRegistry('display');
-        buildModuleRegistry('schemaParser');
+        buildModuleRegistry('api');
 
     };
 
@@ -1176,6 +1195,7 @@ plastic.helper.buildRegistries = (function () {
     return builder;
 
 })();
+
 plastic.helper.msg = (function () {
 
     /**
@@ -1215,7 +1235,7 @@ plastic.helper.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.plastic-js-msg').append('<div class="plastic-msg plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
+        el.find('.plastic-js-msg').append('<div class="plastic-msg plastic-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
     };
 
     return message;

@@ -7,9 +7,9 @@
  * @param elData
  * @returns {boolean}
  */
-plastic.validateElementData = function(elData) {
+plastic.validateElementAttributes = function(elData) {
 
-    console.info('plastic.validateElementData();');
+    console.info('plastic.validateElementAttributes();');
 
     return true;
 };

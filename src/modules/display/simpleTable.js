@@ -5,11 +5,11 @@
  * http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript
  *
  */
-plastic.modules.display.table = (function () {
+plastic.modules.display.simpleTable = (function () {
 
     var name = 'Simple Table Display Module';
-    var apiName = 'table';
-    var fileName = 'table';
+    var apiName = 'simple-table';
+    var fileName = 'simpleTable';
     var dependencies = ['d3'];
 
     /**

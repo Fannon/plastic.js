@@ -25,25 +25,22 @@
     <script src="../src/options.js"></script>
 
     <!-- Core Functions -->
-    <script src="../src/core/getElementData.js"></script>
-    <script src="../src/core/validateElementData.js"></script>
+    <script src="../src/core/getElementAttributes.js"></script>
+    <script src="../src/core/validateElementAttributes.js"></script>
     <script src="../src/core/processElement.js"></script>
     <script src="../src/core/prepareCanvas.js"></script>
 
     <!-- Data Parser Modules -->
-    <script src="../src/modules/dataParser/sparqlJson.js"></script>
-    <script src="../src/modules/dataParser/askJson.js"></script>
-    <script src="../src/modules/dataParser/default.js"></script>
+    <script src="../src/modules/data/sparqlJson.js"></script>
+    <script src="../src/modules/data/askJson.js"></script>
+    <script src="../src/modules/api/default.js"></script>
 
     <!-- Display Modules -->
-    <script src="../src/modules/display/table.js"></script>
+    <script src="../src/modules/display/simpleTable.js"></script>
 
     <!-- Query Parser Modules -->
-    <script src="../src/modules/queryParser/ask.js"></script>
-    <script src="../src/modules/queryParser/sparql.js"></script>
-
-    <!-- Data Parser Modules -->
-    <script src="../src/modules/schemaParser/default.js"></script>
+    <script src="../src/modules/query/ask.js"></script>
+    <script src="../src/modules/query/sparql.js"></script>
 
     <!-- Helper Modules -->
     <script src="../src/helper/msg.js"></script>
@@ -84,7 +81,7 @@
                         "verticalScrollbar": true
                     },
                     "display": {
-                        "module": "table",
+                        "module": "simple-table",
                         "options": {
                             "tableHead": true
                         }
@@ -129,7 +126,7 @@
                         "verticalScrollbar": true
                     },
                     "display": {
-                        "module": "table",
+                        "module": "simple-table",
                         "options": {
                             "tableHead": true
                         }
@@ -153,7 +150,7 @@
                         "verticalScrollbar": true
                     },
                     "display": {
-                        "module": "table",
+                        "module": "simple-table",
                         "options": {
                             "tableHead": true
                         }

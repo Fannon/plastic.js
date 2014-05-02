@@ -2,7 +2,7 @@
  * This is a SPARQL Query Parser
  * It turns the Query into a SPARQL Endpoint URL
  */
-plastic.modules.queryParser.sparql = (function () {
+plastic.modules.query.sparql = (function () {
 
     var name = 'SPARQL Query Parser';
     var apiName = 'application/sparql-query';
@@ -10,13 +10,13 @@ plastic.modules.queryParser.sparql = (function () {
     var dependencies = [];
 
     var validate = function(queryObj) {
-        console.info('queryParser.sparql.validate();');
+        console.info('query.sparql.validate();');
         return true;
     };
 
     var parse = function(queryObj) {
 
-        console.info('queryParser.sparql.parse();');
+        console.info('query.sparql.parse();');
 
         // Set Data Parser Module
         var dataObj = {

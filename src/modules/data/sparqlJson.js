@@ -2,7 +2,7 @@
  * Parses tabular data from SPARQL Endpoints
  *
  */
-plastic.modules.dataParser.sparqlJson = (function () {
+plastic.modules.data.sparqlJson = (function () {
 
     var name = 'SPARQL JSON Parser';
     var apiName = 'sparql-json';
@@ -28,7 +28,7 @@ plastic.modules.dataParser.sparqlJson = (function () {
      */
     var parse = function(data) {
 
-        console.info('plastic.modules.dataParser.sparqlJson();');
+        console.info('plastic.modules.data.sparqlJson();');
 
         var processedData = [];
 

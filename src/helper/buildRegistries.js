@@ -1,3 +1,6 @@
+/**
+ * Helper Function which builds a registry of all available modules
+ */
 plastic.helper.buildRegistries = (function () {
 
     /**
@@ -9,10 +12,10 @@ plastic.helper.buildRegistries = (function () {
         console.info('plastic.helper.buildRegistries();');
 
         // Build Registry of all Module Types
-        buildModuleRegistry('queryParser');
-        buildModuleRegistry('dataParser');
+        buildModuleRegistry('query');
+        buildModuleRegistry('data');
         buildModuleRegistry('display');
-        buildModuleRegistry('schemaParser');
+        buildModuleRegistry('api');
 
     };
 

@@ -38,8 +38,8 @@ module.exports = function (grunt) {
                     'bower_components/yepnope/yepnope.js',
                     'src/options.js',
                     'src/core/**/*.js',
-                    'src/dataParser/**/*.js',
-                    'src/queryParser/**/*.js',
+                    'src/data/**/*.js',
+                    'src/query/**/*.js',
                     'src/schemaParser/**/*.js',
                     'src/display/**/*.js',
                     'src/helper/**/*.js'
@@ -214,6 +214,9 @@ module.exports = function (grunt) {
             copy: {
                 text: "\n###################################################\n### COPYING FILES\n###################################################"
             },
+            jsdoc: {
+                text: "\n###################################################\n### GENERATING API DOCUMENTATION\n###################################################"
+            },
             done: {
                 text: "\n###################################################\n### GRUNT COMPLETED \n###################################################"
             }
@@ -239,6 +242,7 @@ module.exports = function (grunt) {
         'content:cssmin', 'cssmin',
         'content:sizediff', 'sizediff',
         'content:copy', 'copy:documentation',
+        'content:jsdoc', 'jsdoc',
         'content:done'
     ]);
 };
