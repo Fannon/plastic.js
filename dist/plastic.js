@@ -5,32 +5,56 @@
 
 /**
  * plastic.js Namespace
+ *
+ * @namespace
  */
 var plastic = {
 
-    version: '0.0.4', // semver
+    /** type String */
+    version: '0.0.4',
 
-    /** This holds all the plastic jQuery elements */
+    /**
+     * This holds all the plastic jQuery elements
+     * @type Array
+     */
     elements: [],
 
-    /** Namespace for all plastic modules */
+    /**
+     * plastic.js modules
+     * @namespace
+     */
     modules: {
 
-        /** Data Parser Namespace */
+        /**
+         * Data Parser Modules
+         * @namespace
+         */
         dataParser: {},
 
-        /** Data Parser Namespace */
+        /**
+         * Query Parser Modules
+         * @namespace
+         */
         queryParser: {},
 
-        /** Data Parser Namespace */
+        /**
+         * Schema Parser Modules
+         * @namespace
+         */
         schemaParser: {},
 
-        /** Display Modules Namespace */
+        /**
+         * Display Modules
+         * @namespace
+         */
         display: {}
 
     },
 
-    /** Helper Functions Namespace */
+    /**
+     * Helper Functions
+     * @namespace
+     */
     helper: {}
 
 
@@ -79,6 +103,7 @@ $(document).ready(function() {
 console.o = function(o) {
     console.log($.parseJSON(JSON.stringify(o)));
 };
+
 // yepnope.js
 // Version - 1.5.4pre
 //
@@ -802,6 +827,7 @@ plastic.getElementData = function(el) {
 };
 
 plastic.prepareCanvas = function(el) {
+
     console.info('plastic.prepareCanvas();');
 
     el.css('position', 'relative');
@@ -811,8 +837,6 @@ plastic.prepareCanvas = function(el) {
     displayEl
         .height(el.height())
         .width(el.width())
-        .css('overflow', 'scroll')
-        .css('padding', '5px')
     ;
 
     el.append('<div class="plastic-js-msg"></div>');
@@ -820,10 +844,6 @@ plastic.prepareCanvas = function(el) {
     msgEl
         .height(el.height())
         .width(el.width())
-        .css('position', 'absolute')
-        .css('top', '0')
-        .css('left', '0')
-        .css('padding', '5px')
     ;
 
 };
@@ -1195,16 +1215,7 @@ plastic.helper.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.plastic-js-msg').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
-        $('.plastic-msg-error')
-            .width(el.width() - 28)
-            .css('border', '1px solid #B31818')
-            .css('display', 'block')
-            .css('background', '#F6CECE')
-            .css('color', '#B31818')
-            .css('padding', '4px 8px')
-            .css('overflow', 'hidden')
-        ;
+        el.find('.plastic-js-msg').append('<div class="plastic-msg plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
     };
 
     return message;

@@ -8,6 +8,7 @@
  * @param el
  */
 plastic.prepareCanvas = function(el) {
+
     console.info('plastic.prepareCanvas();');
 
     el.css('position', 'relative');
@@ -17,8 +18,6 @@ plastic.prepareCanvas = function(el) {
     displayEl
         .height(el.height())
         .width(el.width())
-        .css('overflow', 'scroll')
-        .css('padding', '5px')
     ;
 
     el.append('<div class="plastic-js-msg"></div>');
@@ -26,10 +25,6 @@ plastic.prepareCanvas = function(el) {
     msgEl
         .height(el.height())
         .width(el.width())
-        .css('position', 'absolute')
-        .css('top', '0')
-        .css('left', '0')
-        .css('padding', '5px')
     ;
 
 };

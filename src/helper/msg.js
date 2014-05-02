@@ -45,16 +45,7 @@ plastic.helper.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.plastic-js-msg').append('<div class="plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
-        $('.plastic-msg-error')
-            .width(el.width() - 28)
-            .css('border', '1px solid #B31818')
-            .css('display', 'block')
-            .css('background', '#F6CECE')
-            .css('color', '#B31818')
-            .css('padding', '4px 8px')
-            .css('overflow', 'hidden')
-        ;
+        el.find('.plastic-js-msg').append('<div class="plastic-msg plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
     };
 
     return message;

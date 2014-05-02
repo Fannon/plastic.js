@@ -110,6 +110,15 @@ module.exports = function (grunt) {
                     'dist/plastic.js',
                     'dist/plastic.min.js'
                 ]
+            },
+            css: {
+                options: {
+                    target: 'master' // branch
+                },
+                src: [
+                    'dist/plastic.css',
+                    'dist/plastic.min.css'
+                ]
             }
         },
 
