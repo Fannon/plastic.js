@@ -9,6 +9,48 @@ plastic.modules.dataParser.askJson = (function () {
     var fileName = 'askJson';
     var dependencies = [];
 
+    /**
+     * Provides a JSON-Schema to validate the incoming Data
+     *
+     * Uses json-schema
+     *
+     * @type {{}}
+     */
+    var dataStructure = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+
+        "properties": {
+            "query": {
+                "type": "object",
+                "properties": {
+                    "printrequests": {
+                        "type": "array",
+                        "properties": {
+                            "label": {"type": "string"},
+                            "typeid": {"type": "string"},
+                            "mode": {"type": "number"}
+                        },
+                        "required": ["label", "typeid"]
+                    },
+                    "results": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                                "printouts": {"type": "object"},
+                                "fulltext": {"type": "string"},
+                                "fullurl": {"type": "string"}
+                            },
+                            "required": ["printouts"]
+                        }
+                    }
+                },
+                "required": ["printrequests", "results"]
+            }
+        },
+        "required": ["query"]
+    };
 
     /**
      * Validate this specific data format
@@ -19,11 +61,8 @@ plastic.modules.dataParser.askJson = (function () {
      */
     var validate = function(data) {
 
-        var schema = {
-
-        };
-
         return true;
+
     };
 
 
@@ -58,6 +97,7 @@ plastic.modules.dataParser.askJson = (function () {
         apiName: apiName,
         fileName: fileName,
         dependencies: dependencies,
+        dataStructure: dataStructure,
         validate: validate,
         parse: parse
     };

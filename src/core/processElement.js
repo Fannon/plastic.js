@@ -232,10 +232,11 @@ plastic.processElement = (function () {
             console.log('Using Parser: ' + parser.name);
 
             try {
+                validateDataStructure(parser, elData.data.object);
                 parser.validate(elData.data.object);
                 elData.data.object = parser.parse(elData.data.object);
             } catch(e) {
-                plastic.helper.msg(e, 'error', this.el);
+                plastic.helper.msg(e, 'error', el);
             }
 
         } else {
@@ -282,6 +283,20 @@ plastic.processElement = (function () {
         }
 
 
+    };
+
+    var validateDataStructure = function(module, data) {
+        if (module.dataStructure) {
+            var env = jjv();
+            env.addSchema('data', module.dataStructure);
+            var errors = env.validate('data', data);
+
+            // validation was successful
+            if (errors) {
+                console.dir(errors);
+                throw new Error('Data Structure invalid!');
+            }
+        }
     };
 
     return process;

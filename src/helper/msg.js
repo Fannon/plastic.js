@@ -45,7 +45,7 @@ plastic.helper.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.plastic-js-msg').append('<div class="plastic-msg plastic-msg-error"><strong>' + type + ':</strong> ' + msg + '</div>');
+        el.find('.plastic-js-msg').append('<div class="plastic-msg plastic-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
     };
 
     return message;
