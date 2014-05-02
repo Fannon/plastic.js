@@ -8,6 +8,7 @@
     "devDependencies": {
         "jquery": "~2.1.0",
         "d3": "~3.4.5",
-        "yepnope": "~1.5.4"
+        "yepnope": "~1.5.4",
+        "jjv": "~1.0.0"
     }
 }
