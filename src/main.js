@@ -70,8 +70,8 @@ var plastic = {
 
 };
 
-$(document).ready(function() {
-
+plastic.run = function() {
+    "use strict";
     console.info('plastic.js version v' + plastic.version);
 
     // Build registry of all available Modules
@@ -81,35 +81,36 @@ $(document).ready(function() {
     plastic.elements = $('plastic, .plastic-js');
 
     // Iterate all <plastic> Elements
+    var plasticCounter = 0;
     plastic.elements.each(function() {
 
         var el = $(this);
 
+        plastic.elements[plasticCounter] = new plastic.Element(el);
+
         try {
 
-            // Get Element Data
-            var elData = plastic.getElementAttributes(el);
+//            plastic.elements[plasticCounter] = new plastic.Element(el);
 
-            // Check if Element Data is valid
-            var valid = plastic.validateElementAttributes(elData);
-
-            if (valid) {
-                plastic.processElement($(this), elData);
-            } else {
-                console.error('Invalid Element Data!');
-            }
+//            // Get Element Data
+//            var elData = plastic.getElementAttributes(el);
+//
+//            // Check if Element Data is valid
+//            var valid = plastic.validateElementAttributes(elData);
+//
+//            if (valid) {
+//                plastic.processElement($(this), elData);
+//            } else {
+//                console.error('Invalid Element Data!');
+//            }
 
         } catch(e) {
             console.error('plastic.js Element Crash');
         }
 
     });
-
-});
-
-
-
-// Debugging Functions
-console.o = function(o) {
-    console.log($.parseJSON(JSON.stringify(o)));
 };
+
+$(document).ready(function() {
+    plastic.run();
+});

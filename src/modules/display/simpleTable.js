@@ -3,7 +3,7 @@
  *
  * Revealing Module Pattern
  * http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript
- *
+ * @namespace
  */
 plastic.modules.display.simpleTable = (function () {
 
@@ -21,6 +21,12 @@ plastic.modules.display.simpleTable = (function () {
         return true;
     };
 
+    /**
+     * Render
+     * @param el
+     * @param elData
+     * @returns {*}
+     */
     var render = function(el, elData) {
 
         console.info('plastic.modules.display.table();');
@@ -91,6 +97,10 @@ plastic.modules.display.simpleTable = (function () {
         apiName: apiName,
         fileName: fileName,
         dependencies: dependencies,
+
+        /**
+         * Validate
+         */
         validate: validate,
         render: render,
         update: render // TODO: Write Update Function

@@ -56,10 +56,6 @@
             
                 <li data-name="plastic.elements"><a href="plastic.html#elements">elements</a></li>
             
-                <li data-name="plastic.options"><a href="plastic.html#options">options</a></li>
-            
-                <li data-name="plastic.processElement"><a href="plastic.html#processElement">processElement</a></li>
-            
                 <li data-name="plastic.version"><a href="plastic.html#version">version</a></li>
             
             </ul>
@@ -70,11 +66,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.getElementData"><a href="plastic.html#getElementData">getElementData</a></li>
+                <li data-name="plastic.getElementAttributes"><a href="plastic.html#getElementAttributes">getElementAttributes</a></li>
             
                 <li data-name="plastic.prepareCanvas"><a href="plastic.html#prepareCanvas">prepareCanvas</a></li>
             
-                <li data-name="plastic.validateElementData"><a href="plastic.html#validateElementData">validateElementData</a></li>
+                <li data-name="plastic.processElement"><a href="plastic.html#processElement">processElement</a></li>
+            
+                <li data-name="plastic.validateElementAttributes"><a href="plastic.html#validateElementAttributes">validateElementAttributes</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -92,6 +90,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.helper.buildRegistries"><a href="plastic.helper.html#buildRegistries">buildRegistries</a></li>
             
                 <li data-name="plastic.helper.msg"><a href="plastic.helper.html#msg">msg</a></li>
             
@@ -132,9 +132,30 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.dataParser">
+        <li class="item" data-name="plastic.modules.api">
             <span class="title">
-                <a href="plastic.modules.dataParser.html">plastic.modules.dataParser</a>
+                <a href="plastic.modules.api.html">plastic.modules.api</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.data">
+            <span class="title">
+                <a href="plastic.modules.data.html">plastic.modules.data</a>
                 
                 <span class="static">static</span>
                 
@@ -143,9 +164,9 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.dataParser.askJson"><a href="plastic.modules.dataParser.html#askJson">askJson</a></li>
+                <li data-name="plastic.modules.data.askJson"><a href="plastic.modules.data.html#askJson">askJson</a></li>
             
-                <li data-name="plastic.modules.dataParser.sparqlJson"><a href="plastic.modules.dataParser.html#sparqlJson">sparqlJson</a></li>
+                <li data-name="plastic.modules.data.sparqlJson"><a href="plastic.modules.data.html#sparqlJson">sparqlJson</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -168,9 +189,26 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
+            </ul>
+            <ul class="typedefs itemMembers">
             
-                <li data-name="plastic.modules.display.table"><a href="plastic.modules.display.html#table">table</a></li>
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.display.simpleTable">
+            <span class="title">
+                <a href="plastic.modules.display.simpleTable.html">plastic.modules.display.simpleTable</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -184,9 +222,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.queryParser">
+        <li class="item" data-name="plastic.modules.query">
             <span class="title">
-                <a href="plastic.modules.queryParser.html">plastic.modules.queryParser</a>
+                <a href="plastic.modules.query.html">plastic.modules.query</a>
                 
                 <span class="static">static</span>
                 
@@ -195,9 +233,9 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.queryParser.ask"><a href="plastic.modules.queryParser.html#ask">ask</a></li>
+                <li data-name="plastic.modules.query.ask"><a href="plastic.modules.query.html#ask">ask</a></li>
             
-                <li data-name="plastic.modules.queryParser.sparql"><a href="plastic.modules.queryParser.html#sparql">sparql</a></li>
+                <li data-name="plastic.modules.query.sparql"><a href="plastic.modules.query.html#sparql">sparql</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -211,11 +249,108 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.schemaParser">
+        <li class="item" data-name="plastic.options">
             <span class="title">
-                <a href="plastic.modules.schemaParser.html">plastic.modules.schemaParser</a>
+                <a href="plastic.options.html">plastic.options</a>
                 
                 <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.options.debug"><a href="plastic.options.html#debug">debug</a></li>
+            
+                <li data-name="plastic.options.width"><a href="plastic.options.html#width">width</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.Element">
+            <span class="title">
+                <a href="plastic.Element.html">plastic.Element</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.Element#attr"><a href="plastic.Element.html#attr">attr</a></li>
+            
+                <li data-name="plastic.Element#attributes"><a href="plastic.Element.html#attributes">attributes</a></li>
+            
+                <li data-name="plastic.Element#el"><a href="plastic.Element.html#el">el</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.Element#callDataParser"><a href="plastic.Element.html#callDataParser">callDataParser</a></li>
+            
+                <li data-name="plastic.Element#callDisplayModule"><a href="plastic.Element.html#callDisplayModule">callDisplayModule</a></li>
+            
+                <li data-name="plastic.Element#callQueryParser"><a href="plastic.Element.html#callQueryParser">callQueryParser</a></li>
+            
+                <li data-name="plastic.Element#getAttr"><a href="plastic.Element.html#getAttr">getAttr</a></li>
+            
+                <li data-name="plastic.Element#getEl"><a href="plastic.Element.html#getEl">getEl</a></li>
+            
+                <li data-name="plastic.Element#process"><a href="plastic.Element.html#process">process</a></li>
+            
+                <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
+            
+                <li data-name="plastic.Element#validateDataStructure"><a href="plastic.Element.html#validateDataStructure">validateDataStructure</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.ElementAttributes">
+            <span class="title">
+                <a href="plastic.ElementAttributes.html">plastic.ElementAttributes</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.ElementAttributes#getAttr"><a href="plastic.ElementAttributes.html#getAttr">getAttr</a></li>
+            
+                <li data-name="plastic.ElementAttributes#parseAttr"><a href="plastic.ElementAttributes.html#parseAttr">parseAttr</a></li>
+            
+                <li data-name="plastic.ElementAttributes#validate"><a href="plastic.ElementAttributes.html#validate">validate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.Module">
+            <span class="title">
+                <a href="plastic.modules.Module.html">plastic.modules.Module</a>
                 
             </span>
             <ul class="members itemMembers">
@@ -245,13 +380,18 @@
             <pre class="prettyprint source"><code>/* global plastic */
 
 /**
- * Plastic.js (default) Options
+ * plastic.js (default) general ptions
  * Written in JSON Notation
  *
- * @type {{}}
+ * @namespace
+ * @type {Object}
  */
 plastic.options = {
+
+    /** Debug Mode @type {boolean} */
     debug: true,
+
+    /** Width of Canvas, if not given {string} */
     width: '100%'
 };
 </code></pre>
@@ -265,7 +405,7 @@ plastic.options = {
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri May 02 2014 18:21:48 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat May 03 2014 11:51:27 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

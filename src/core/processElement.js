@@ -12,6 +12,8 @@
  *  4 ALWAYS                    Calling the Data Parser
  *  5 ALWAYS                    Calling the Display Module
  *
+ * @static
+ * @function
  */
 plastic.processElement = (function () {
 
@@ -157,9 +159,6 @@ plastic.processElement = (function () {
         } else {
             plastic.helper.msg('Query Parser Module for Type ' + elData.query.type + ' not found. (Registry)', 'error', el);
         }
-
-
-
 
         return newElData;
     };

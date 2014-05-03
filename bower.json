@@ -1,14 +1,15 @@
 {
-    "name": "plasticjs",
-    "version": "0.0.1",
-    "dependencies": {
-        "jquery": "~2.1.0",
-        "d3": "~3.4.5"
-    },
-    "devDependencies": {
-        "jquery": "~2.1.0",
-        "d3": "~3.4.5",
-        "yepnope": "~1.5.4",
-        "jjv": "~1.0.0"
-    }
+  "name": "plasticjs",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "d3": "~3.4.5"
+  },
+  "devDependencies": {
+    "jquery": "~2.1.0",
+    "d3": "~3.4.5",
+    "yepnope": "~1.5.4",
+    "jjv": "~1.0.0",
+    "requirejs": "~2.1.11"
+  }
 }
