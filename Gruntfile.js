@@ -23,7 +23,10 @@ module.exports = function (grunt) {
 
         /** Cleaning up old files / directories */
         clean: {
-            files: ['dist']
+            files: [
+                'dist',
+                'docs/api'
+            ]
         },
 
         /** Concatnation of multiple files into a single one */

@@ -63,14 +63,7 @@ var plastic = {
          */
         display: {}
 
-    },
-
-    /**
-     * Helper Functions
-     * @namespace
-     */
-    helper: {}
-
+    }
 
 };
 

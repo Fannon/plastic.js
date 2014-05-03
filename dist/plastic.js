@@ -10,11 +10,15 @@
  */
 var plastic = {
 
-    /** type String */
+    /**
+     * Version Number
+     * @type String
+     */
     version: '0.0.4',
 
     /**
-     * This holds all the plastic jQuery elements
+     * Array which holds all the plastic.js Elements
+     *
      * @type Array
      */
     elements: [],
@@ -49,18 +53,16 @@ var plastic = {
          */
         display: {}
 
-    },
-
-    /**
-     * Helper Functions
-     * @namespace
-     */
-    helper: {}
-
+    }
 
 };
 
-plastic.run = function() {
+/**
+ * Executes plastic.js
+ *
+ * This is done automatically on the DOM Ready Event
+ */
+plastic.execute = function() {
     "use strict";
 
     console.info('plastic.js version v' + plastic.version);
@@ -85,7 +87,7 @@ plastic.run = function() {
 };
 
 $(document).ready(function() {
-    plastic.run();
+    plastic.execute();
 });
 
 // yepnope.js
