@@ -107,9 +107,9 @@ plastic.Element.prototype = {
                 .done(function(data) {
                     try {
                         if (data !== null && typeof data === 'object') {
-                            elAttr.data.object = data;
+                            elAttr.data.raw = data;
                         } else {
-                            elAttr.data.object = $.parseJSON(data);
+                            elAttr.data.raw = $.parseJSON(data);
                         }
                     } catch(e) {
                         plastic.helper.msg(e, 'error', el);
@@ -243,20 +243,26 @@ plastic.Element.prototype = {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.data._registry[elAttr.data.parser];
-        var parser = plastic.modules.data[moduleInfo.fileName];
+        var moduleInfo = plastic.modules.registry.get('data',[elAttr.data.parser]);
+        var Module = plastic.modules.data[moduleInfo.className];
 
-        if (parser) {
+        if (Module) {
 
-            console.log('Using Parser: ' + parser.name);
+            console.log('Using Parser: ' + moduleInfo.className);
 
-            try {
-                this.validateDataStructure(parser, elAttr.data.object);
-                parser.validate(elAttr.data.object);
-                elAttr.data.object = parser.parse(elAttr.data.object);
-            } catch(e) {
-                plastic.helper.msg(e, 'error', el);
-            }
+            console.dir(elAttr);
+
+            this.dataModule = new Module(elAttr.data.raw);
+            this.validateModule(this.dataModule, elAttr.data.raw);
+            elAttr.data.processed = this.dataModule.parse();
+
+//            try {
+//                this.validateDataStructure(parser, elAttr.data.object);
+//                parser.validate(elAttr.data.object);
+//                elAttr.data.object = parser.parse(elAttr.data.object);
+//            } catch(e) {
+//                plastic.helper.msg(e, 'error', el);
+//            }
 
         } else {
             plastic.helper.msg('Data Parser Module ' + elAttr.data.parser + ' not found.', 'error', el);
@@ -271,27 +277,33 @@ plastic.Element.prototype = {
      */
     callDisplayModule: function(el, elAttr) {
 
-        console.info('processElement.callDataParser()');
+        console.info('plastic.Element.callDisplayModule()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.display._registry[elAttr.options.display.module];
-        var displayModule = plastic.modules.display[moduleInfo.fileName];
+        var moduleInfo = plastic.modules.registry.get('display',[elAttr.options.display.module]);
+        var Module = plastic.modules.display[moduleInfo.className];
 
-        if (displayModule) {
+        if (Module) {
 
-            console.log('Using Display Module: ' + displayModule.name);
+            console.log('Using Display Module: ' + moduleInfo.className);
 
-            if (plastic.options.debug) {
-                displayModule.validate(elAttr);
-                displayModule.render(el, elAttr);
-            } else {
-                try {
-                    displayModule.validate(elAttr);
-                    displayModule.render(el, elAttr);
-                } catch(e) {
-                    plastic.helper.msg(e, 'error', this.el);
-                }
-            }
+            // @todo: Manage Dependencies
+
+            this.displayModule = new Module(el, elAttr);
+            this.validateModule(this.displayModule, elAttr.options.display);
+            this.displayModule.render();
+
+//            if (plastic.options.debug) {
+//                displayModule.validate(elAttr);
+//                displayModule.render(el, elAttr);
+//            } else {
+//                try {
+//                    displayModule.validate(elAttr);
+//                    displayModule.render(el, elAttr);
+//                } catch(e) {
+//                    plastic.helper.msg(e, 'error', this.el);
+//                }
+//            }
 
 
         } else {
@@ -302,20 +314,41 @@ plastic.Element.prototype = {
     },
 
     /**
-     * Validates the Data Structure of the incoming data according to the module validation schema
+     * Validation Helper Function
+     *
+     * This calls two kinds of validations:
+     * * General Validation: Validates custom Logic
+     * * Schema Validation: Validates the Data Structure of the incoming data
      *
      * @param {{}} module   plastic.js Module
      * @param {{}} data     Data Object that is to be validated
      */
-    validateDataStructure: function(module, data) {
-        if (module.dataStructure) {
-            var env = jjv();
-            env.addSchema('data', module.dataStructure);
-            var errors = env.validate('data', data);
+    validateModule: function(module, data) {
+
+        console.warn(module);
+        console.warn(data);
+
+        if (module.validate) {
+            var validationErrors = module.validate();
 
             // validation was successful
-            if (errors) {
-                console.dir(errors);
+            if (validationErrors) {
+                console.dir(validationErrors);
+                throw new Error('Validation Error!');
+            }
+        }
+
+        if (module.validationSchema) {
+
+            console.log('Schema Validation');
+
+            var env = jjv();
+            env.addSchema('data', module.validationSchema);
+            var schemaErrors = env.validate('data', data);
+
+            // validation was successful
+            if (schemaErrors) {
+                console.dir(schemaErrors);
                 throw new Error('Data Structure invalid!');
             }
         }

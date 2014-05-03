@@ -22,6 +22,7 @@ plastic.ElementAttributes = function(el) {
      */
     this.attr = this.parseAttr(el);
 
+    // Validate the final Attributes Object
     this.validate(this.attr);
 };
 
@@ -223,7 +224,7 @@ plastic.ElementAttributes.prototype = {
                 var dataString = dataElement[0].text;
 
                 if (dataString && dataString !== '') {
-                    data.object = $.parseJSON(dataString);
+                    data.raw = $.parseJSON(dataString);
                 } else {
                     plastic.helper.msg('Empty Data Element!', 'error', el);
                 }
@@ -244,6 +245,12 @@ plastic.ElementAttributes.prototype = {
     validate: function(attr) {
         "use strict";
 
+        /**
+         * JSON Schema for validation
+         *
+         * @url http://json-schema.org/
+         * @type {{}}
+         */
         var schema = {
             "$schema": "http://json-schema.org/draft-04/schema#",
             "type": "object",
@@ -297,7 +304,8 @@ plastic.ElementAttributes.prototype = {
                     "type": "object",
                     "properties": {
                         "parser": {"type": "string"},
-                        "object": {"type": "array"},
+                        "raw": {"type": ["object", "array", "string"]},
+                        "processed": {"type": "array"},
                         "url": {"type": "string"}
                     },
                     // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)

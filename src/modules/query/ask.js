@@ -11,7 +11,7 @@ plastic.modules.query.ask = (function () {
 
     var validate = function(queryObj) {
         console.info('query.ask.validate();');
-        return true;
+        return false;
     };
 
     var parse = function(queryObj) {

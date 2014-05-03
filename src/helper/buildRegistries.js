@@ -30,7 +30,7 @@ plastic.helper.buildRegistries = (function () {
 
         for (var obj in plastic.modules[moduleType]) {
             var module = plastic.modules[moduleType][obj];
-            if(plastic.modules[moduleType].hasOwnProperty(obj) && module.apiName){
+            if(module.apiName){
                 moduleTypeRegistry[module.apiName] = {
                     name: module.name,
                     fileName: module.fileName,
