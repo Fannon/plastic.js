@@ -10,10 +10,21 @@
  */
 plastic.ElementAttributes = function(el) {
 
+    /**
+     * plastic.js DOM Element
+     * @type {{}}
+     */
     this.el = el;
+
+    /**
+     * plastic.js Element Attributes
+     * @type {Object}
+     */
     this.attr = this.parseAttr(el);
 
+    this.validate(this.attr);
 };
+
 plastic.ElementAttributes.prototype = {
 
     /**
@@ -27,9 +38,9 @@ plastic.ElementAttributes.prototype = {
     },
 
     /**
+     * Parses all Attributes of the plastic.js element
      *
      * @param {Object} [el]     Plastic.js DOM Element
-     *
      * @returns {Object}
      */
     parseAttr: function(el) {
@@ -37,25 +48,64 @@ plastic.ElementAttributes.prototype = {
 
         console.info('plastic.getElementAttributes();');
 
-
         /**
-         * Element Data Object.
+         * ElementAttributes Object.
          * This contains all information that is read from the plastic HTML element
          */
         var elAttr = {};
 
-
         elAttr.style = this.getStyle(el);
 
+        elAttr.options = this.getOptions(el);
 
+        var queryAttr = this.getQuery(el);
+        if (queryAttr) {
+            elAttr.query = queryAttr;
+        }
 
+        var schemaAttr = this.getSchema(el);
+        if (schemaAttr) {
+            elAttr.schema = schemaAttr;
+        }
 
-        //////////////////////////////////////////
-        // GET OPTIONS DATA                     //
-        //////////////////////////////////////////
+        var dataAttr = this.getData(el);
+        if (dataAttr) {
+            elAttr.data = dataAttr;
+        }
 
+        console.log(elAttr);
+        return elAttr;
+    },
+
+    /**
+     * Gets all Style Attributes
+     * They are calculated directly from the DOM Element style
+     *
+     * @param {{}} el   plastic.js DOM element
+     * @returns {Object|boolean}
+     */
+    getStyle: function(el) {
+        "use strict";
+
+        /** Element CSS Style (Contains Width and Height) */
+        var style = {};
+
+        style.height = el.height();
+        style.width = el.width();
+
+        return style;
+    },
+
+    /**
+     * Gets all Option Attributes
+     *
+     * @param {{}} el   plastic.js DOM element
+     * @returns {Object|boolean}
+     */
+    getOptions: function(el) {
+        "use strict";
         /** Element Options */
-        elAttr.options = {}; // mandatory!
+        var options = {}; // mandatory!
 
         var optionsObject = el.find(".plastic-options");
 
@@ -66,135 +116,207 @@ plastic.ElementAttributes.prototype = {
             if (optionsString && optionsString !== '') {
 
                 try {
-                    elAttr.options = $.parseJSON(optionsString);
+                    options = $.parseJSON(optionsString);
+                    return options;
+
                 } catch(e) {
                     plastic.helper.msg('Invalid JSON in the Options Object!');
+                    return false;
                 }
 
             } else {
                 plastic.helper.msg('Empty Obptions Element!', 'error', el);
+                return false;
             }
 
         } else {
             plastic.helper.msg('No options provided!', 'error', el);
+            return false;
         }
+    },
 
-
-        //////////////////////////////////////////
-        // GET QUERY DATA                       //
-        //////////////////////////////////////////
-
-        // Get Data-URL
+    /**
+     * Gets all Query Attributes
+     *
+     * @param {{}} el   plastic.js DOM element
+     * @returns {Object|boolean}
+     */
+    getQuery: function(el) {
+        "use strict";
         var queryElement = el.find(".plastic-query");
 
         if (queryElement.length > 0)  {
 
             /** Element Query Data */
-            elAttr.query = {};
+            var query = {};
 
-            elAttr.query.url = queryElement.attr('data-query-url');
-            elAttr.query.type = queryElement.attr('type');
+            query.url = queryElement.attr('data-query-url');
+            query.type = queryElement.attr('type');
 
             var queryString = queryElement[0].text;
 
             if (queryString && queryString !== '') {
-                elAttr.query.text = queryString;
+                query.text = queryString;
+                return query;
             } else {
                 plastic.helper.msg('Empty Query Element!', 'error', el);
+                return false;
             }
 
         }
+    },
 
-
-        //////////////////////////////////////////
-        // GET SCHEMA DATA                      //
-        //////////////////////////////////////////
-
+    /**
+     * Gets all Schema Attributes
+     *
+     * @param {{}} el   plastic.js DOM element
+     * @returns {Object|boolean}
+     */
+    getSchema: function(el) {
+        "use strict";
         // Get Data-URL
         var schemaElement = el.find(".plastic-schema");
 
         if (schemaElement.length > 0)  {
 
             /** Element Schema Data */
-            elAttr.schema = {};
+            var schema = {};
 
-            elAttr.schema.type = schemaElement.attr('data-schema-format');
+            schema.type = schemaElement.attr('data-schema-format');
 
             var schemaString = schemaElement[0].text;
 
             if (schemaString && schemaString !== '') {
-                elAttr.schema.text = $.parseJSON(schemaString);
+                schema.text = $.parseJSON(schemaString);
+                return schema;
             } else {
                 plastic.helper.msg('Empty Schema Element!', 'error', el);
+                return false;
             }
 
         }
+    },
 
+    /**
+     * Gets all Data Attributes
+     *
+     * @param {{}} el   plastic.js DOM element
+     * @returns {Object|boolean}
+     */
+    getData: function(el) {
+        "use strict";
 
-        //////////////////////////////////////////
-        // GET DATA DATA                        //
-        //////////////////////////////////////////
+        /** Element Data */
+        var data = {};
 
         // Get Data-URL
         var dataElement = el.find(".plastic-data");
 
         if (dataElement.length > 0) {
 
-            /** Element Data */
-            elAttr.data = {};
-
-            elAttr.data.url = dataElement.attr('data-url');
-            elAttr.data.parser = dataElement.attr('data-format');
+            data.url = dataElement.attr('data-url');
+            data.parser = dataElement.attr('data-format');
 
             // If no Data URL given, read Data Object
-            if (!elAttr.data.url) {
+            if (!data.url) {
 
                 var dataString = dataElement[0].text;
 
                 if (dataString && dataString !== '') {
-                    elAttr.data.object = $.parseJSON(dataString);
+                    data.object = $.parseJSON(dataString);
                 } else {
                     plastic.helper.msg('Empty Data Element!', 'error', el);
                 }
-
             }
 
+            return data;
+
+        } else {
+            return false;
         }
-
-
-
-        //////////////////////////////////////////
-        // RETURN ELEMENT DATA                  //
-        //////////////////////////////////////////
-
-        console.log(elAttr);
-        return elAttr;
-    },
-
-    getStyle: function(el) {
-        "use strict";
-
-        /** Element CSS Style (Contains Width and Height) */
-        var style = {};
-        //////////////////////////////////////////
-        // GET ELEMENT STYLE                    //
-        //////////////////////////////////////////
-
-        // TODO: Case handling if size was not defined (could be 0 height)
-
-        style.height = 12;
-        style.width = 12;
-
-        return style;
     },
 
     /**
      * Validates the parsed ElementAttributes Data
+     * @param {{}} attr ElementAttributes
      * @returns {Object|boolean}
      */
-    validate: function() {
+    validate: function(attr) {
         "use strict";
-        return true;
+
+        var schema = {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "type": "object",
+
+            "properties": {
+                "style": {
+                    "type": "object",
+                    "properties": {
+                        "width": {
+                            "type": "number"
+                        },
+                        "height": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "general": {
+                            type: "object"
+                        },
+                        "display": {
+                            "type": "object",
+                            "properties": {
+                                "module": {"type": "string"},
+                                "options": {"type": "object"}
+                            },
+                            required: ['module', "options"]
+                        }
+                    },
+                    "required": ["general", "display"]
+                },
+                "query": {
+                    "type": "object",
+                    "properties": {
+                        "text": {"type": "string"},
+                        "type": {"type": "string"},
+                        "url": {"type": "string"}
+                    },
+                    "required": ["text", "type", "url"]
+                },
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "text": {"type": "string"}
+                    },
+                    "required": ["text"]
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "parser": {"type": "string"},
+                        "object": {"type": "array"},
+                        "url": {"type": "string"}
+                    },
+                    // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
+                    "required": ["parser"] }
+            },
+            "required": ["style", "options"]
+        };
+
+        var env = jjv();
+        env.addSchema('schema', schema);
+        var errors = env.validate('schema', attr);
+
+        // validation was successful
+        if (errors) {
+            console.dir(errors);
+            throw new Error('Data Structure invalid!');
+        } else {
+            return true;
+        }
     }
 
 

@@ -283,11 +283,11 @@ plastic.Element.prototype = {
 
             if (plastic.options.debug) {
                 displayModule.validate(elAttr);
-                elAttr.data = displayModule.render(el, elAttr);
+                displayModule.render(el, elAttr);
             } else {
                 try {
                     displayModule.validate(elAttr);
-                    elAttr.data = displayModule.render(el, elAttr);
+                    displayModule.render(el, elAttr);
                 } catch(e) {
                     plastic.helper.msg(e, 'error', this.el);
                 }
