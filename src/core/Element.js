@@ -29,6 +29,10 @@ plastic.Element = function(el) {
      */
     this.attr = this.attributes.attr;
 
+    this.queryModule = false;
+    this.dataModule = false;
+    this.displayModule = false;
+
     this.process(this.el, this.attr);
 
 };
@@ -75,7 +79,8 @@ plastic.Element.prototype = {
         var request;
         var self = this;
 
-        plastic.prepareCanvas(el);
+        this.createMsgContainer(el);
+        this.createDisplayContainer(el);
 
 
         //////////////////////////////////////////
@@ -158,6 +163,31 @@ plastic.Element.prototype = {
         }
 
 
+    },
+
+    createMsgContainer: function(el) {
+        "use strict";
+
+        el.css('position', 'relative');
+
+        el.append('<div class="plastic-js-msg"></div>');
+        var msgEl = el.find('.plastic-js-msg');
+        msgEl
+            .height(el.height())
+            .width(el.width())
+        ;
+    },
+
+    createDisplayContainer: function(el) {
+        "use strict";
+        console.info('plastic.prepareCanvas();');
+
+        el.append('<div class="plastic-js-display"></div>');
+        var displayEl = el.find('.plastic-js-display');
+        displayEl
+            .height(el.height())
+            .width(el.width())
+        ;
     },
 
     /**

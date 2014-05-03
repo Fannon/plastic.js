@@ -45,17 +45,9 @@ plastic.ElementAttributes.prototype = {
         var elAttr = {};
 
 
-        //////////////////////////////////////////
-        // GET ELEMENT STYLE                    //
-        //////////////////////////////////////////
+        elAttr.style = this.getStyle(el);
 
-        // TODO: Case handling if size was not defined (could be 0 height)
 
-        /** Element CSS Style (Contains Width and Height) */
-        elAttr.style = {};
-
-        elAttr.style.height = 12;
-        elAttr.style.width = 12;
 
 
         //////////////////////////////////////////
@@ -177,6 +169,23 @@ plastic.ElementAttributes.prototype = {
 
         console.log(elAttr);
         return elAttr;
+    },
+
+    getStyle: function(el) {
+        "use strict";
+
+        /** Element CSS Style (Contains Width and Height) */
+        var style = {};
+        //////////////////////////////////////////
+        // GET ELEMENT STYLE                    //
+        //////////////////////////////////////////
+
+        // TODO: Case handling if size was not defined (could be 0 height)
+
+        style.height = 12;
+        style.width = 12;
+
+        return style;
     },
 
     /**
