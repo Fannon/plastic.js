@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/query/Ask.js</title>
+    <title>Namespace: data</title>
     
     
     
@@ -518,83 +518,91 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Ask.js.html">Source: modules/query/Ask.js</h1>
+        <h1 class="page-title" data-filename="plastic.modules.data.html">Namespace: data</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>// Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+<header>
+    <h2>
+        <span class="ancestors"><a href="plastic.html">plastic</a><a href="plastic.modules.html">.modules</a>.</span>
+    
+    data
+    </h2>
+    
+</header>  
 
-/**
- * Parses tabular data from an ASK Semantic MediaWiki API
- *
- * @constructor
- */
-plastic.modules.query.Ask = function(queryObj) {
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description"><p>Data Parser Modules</p></div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
 
-    /**
-     * Incoming Raw Data
-     * @type {{}}
-     */
-    this.queryObj = queryObj;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-};
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Classes</h3>
+        
+        <dl>
+            <dt><a href="plastic.modules.data.AskJson.html">AskJson</a></dt>
+            <dd></dd>
+        
+            <dt><a href="plastic.modules.data.SparqlJson.html">SparqlJson</a></dt>
+            <dd></dd>
+        </dl>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</article>
 
-plastic.modules.query.Ask.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} queryObj
-     */
-    setQueryObj: function(queryObj) {
-        "use strict";
-
-        this.queryObj = queryObj;
-    },
-
-    /**
-     * Custom Validation
-     *
-     * @returns {boolean}
-     */
-    validate: function() {
-        "use strict";
-        return false;
-    },
-
-    /**
-     * Parses the data into an internal used data format
-     *
-     * @returns {{}}
-     */
-    parse: function() {
-
-        console.info('query.ask.parse();');
-
-        // Set Data Parser Module
-        var dataObj = {
-            parser: 'ask-json'
-        };
-
-        var url = this.queryObj.url;
-        var query = this.queryObj.text;
-
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-        var queryEncoded = encodeURIComponent(queryTrimmed);
-
-        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
-
-        return dataObj;
-    }
-
-};
-</code></pre>
-        </article>
-    </section>
+</section>  
 
 
 

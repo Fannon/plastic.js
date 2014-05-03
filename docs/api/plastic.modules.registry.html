@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/query/Ask.js</title>
+    <title>Namespace: registry</title>
     
     
     
@@ -518,83 +518,462 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Ask.js.html">Source: modules/query/Ask.js</h1>
+        <h1 class="page-title" data-filename="plastic.modules.registry.html">Namespace: registry</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>// Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+<header>
+    <h2>
+        <span class="ancestors"><a href="plastic.html">plastic</a><a href="plastic.modules.html">.modules</a>.</span>
+    
+    registry
+    </h2>
+    
+</header>  
 
-/**
- * Parses tabular data from an ASK Semantic MediaWiki API
- *
- * @constructor
- */
-plastic.modules.query.Ask = function(queryObj) {
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description"><p>plastic.js Module Registry Prototype</p></div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
 
-    /**
-     * Incoming Raw Data
-     * @type {{}}
-     */
-    this.queryObj = queryObj;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-};
+        
+        
+            <h3>Examples</h3>
+            
 
-plastic.modules.query.Ask.prototype = {
+    
+    <pre class="prettyprint"><code><p>plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', [&quot;d3&quot;]);</p></code></pre>
+    
 
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} queryObj
-     */
-    setQueryObj: function(queryObj) {
-        "use strict";
 
-        this.queryObj = queryObj;
-    },
+    
+    <pre class="prettyprint"><code><p>var moduleInfo = plastic.modules.registry.add('display', 'simple-table');</p></code></pre>
+    
 
-    /**
-     * Custom Validation
-     *
-     * @returns {boolean}
-     */
-    validate: function() {
-        "use strict";
-        return false;
-    },
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="modules"><span class="type-signature static">static</span>plastic.modules.registry.modules<span class="type-signature type object">Object</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Module Registry Object</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-    /**
-     * Parses the data into an internal used data format
-     *
-     * @returns {{}}
-     */
-    parse: function() {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-        console.info('query.ask.parse();');
+    
+    
+</dd>
 
-        // Set Data Parser Module
-        var dataObj = {
-            parser: 'ask-json'
-        };
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="add">
+            
+            <span class="type-signature static">static</span>plastic.modules.registry.add<span class="signature">(moduleType, apiName, className, dependencies)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="registry.js.html">modules/registry.js</a>, <a href="registry.js.html#line36">line 36</a>
+        </div>
+        
+    </div>
 
-        var url = this.queryObj.url;
-        var query = this.queryObj.text;
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Register Modules to the Registry.</p>
+<p>Every Module has to register itself here, or it won't be found and exectuted!</p>
+    </div>
+    
 
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-        var queryEncoded = encodeURIComponent(queryTrimmed);
+    
+    
+    
+    
+    
+        
 
-        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>moduleType</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
-        return dataObj;
-    }
 
-};
-</code></pre>
-        </article>
-    </section>
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>apiName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>className</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>dependencies</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Array with all dependencies. All Dependencies have to be listed dependencies.js</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="get">
+            
+            <span class="type-signature static">static</span>plastic.modules.registry.get<span class="signature">(moduleType, apiName)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="registry.js.html">modules/registry.js</a>, <a href="registry.js.html#line56">line 56</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets a Module by Type and Api Name</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>moduleType</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>apiName</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
 
 
 

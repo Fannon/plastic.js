@@ -1,20 +1,51 @@
+// Register Module and define dependencies:
+plastic.modules.registry.add('query', 'application/sparql-query', 'Sparql', []);
+
 /**
  * This is a SPARQL Query Parser
  * It turns the Query into a SPARQL Endpoint URL
+ *
+ * @constructor
  */
-plastic.modules.query.sparql = (function () {
+plastic.modules.query.Sparql = function(queryObj) {
 
-    var name = 'SPARQL Query Parser';
-    var apiName = 'application/sparql-query';
-    var fileName = 'sparql';
-    var dependencies = [];
+    /**
+     * Incoming Raw Data
+     * @type {{}}
+     */
+    this.queryObj = queryObj;
 
-    var validate = function(queryObj) {
-        console.info('query.sparql.validate();');
-        return true;
-    };
+};
 
-    var parse = function(queryObj) {
+plastic.modules.query.Sparql.prototype = {
+
+    /**
+     * Sets Raw Data Object after Instanciation
+     *
+     * @param {{}} queryObj
+     */
+    setQueryObj: function(queryObj) {
+        "use strict";
+
+        this.queryObj = queryObj;
+    },
+
+    /**
+     * Custom Validation
+     *
+     * @returns {boolean}
+     */
+    validate: function() {
+        "use strict";
+        return false;
+    },
+
+    /**
+     * Parses the data into an internal used data format
+     *
+     * @returns {{}}
+     */
+    parse: function() {
 
         console.info('query.sparql.parse();');
 
@@ -23,8 +54,8 @@ plastic.modules.query.sparql = (function () {
             parser: 'sparql-json'
         };
 
-        var url = queryObj.url;
-        var query = queryObj.text;
+        var url = this.queryObj.url;
+        var query = this.queryObj.text;
 
         // Trim all Whitespace
         var queryTrimmed = $.trim(query.replace(/\s+/g, ' '));
@@ -34,16 +65,7 @@ plastic.modules.query.sparql = (function () {
         dataObj.url = url + '?query=' + queryEncoded + '&output=json&callback=?';
 
         return dataObj;
-    };
 
-    // Make Functions public
-    return {
-        name: name,
-        apiName: apiName,
-        fileName: fileName,
-        dependencies: dependencies,
-        validate: validate,
-        parse: parse
-    };
+    }
 
-})();
+};

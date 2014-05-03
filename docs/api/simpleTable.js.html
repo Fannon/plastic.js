@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/query/Ask.js</title>
+    <title>Source: modules/display/SimpleTable.js</title>
     
     
     
@@ -518,7 +518,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Ask.js.html">Source: modules/query/Ask.js</h1>
+        <h1 class="page-title" data-filename="SimpleTable.js.html">Source: modules/display/SimpleTable.js</h1>
         
 
 
@@ -526,69 +526,129 @@
     <section>
         <article>
             <pre class="prettyprint source"><code>// Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
 
 /**
- * Parses tabular data from an ASK Semantic MediaWiki API
+ * Table Display Module
  *
  * @constructor
  */
-plastic.modules.query.Ask = function(queryObj) {
+plastic.modules.display.SimpleTable = function(el, elAttr) {
+    "use strict";
 
     /**
-     * Incoming Raw Data
+     * plastic.js DOM Element
+     */
+    this.el = el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Validation Schema
      * @type {{}}
      */
-    this.queryObj = queryObj;
+    this.validationSchema = {};
+
+    /**
+     * Display Element that is rendered
+     * @type {{}}
+     */
+    this.displayEl = undefined;
 
 };
 
-plastic.modules.query.Ask.prototype = {
+plastic.modules.display.SimpleTable.prototype = {
 
     /**
-     * Sets Raw Data Object after Instanciation
+     * Validates ElementAttributes
      *
-     * @param {{}} queryObj
-     */
-    setQueryObj: function(queryObj) {
-        "use strict";
-
-        this.queryObj = queryObj;
-    },
-
-    /**
-     * Custom Validation
-     *
-     * @returns {boolean}
+     * @returns {Object|boolean}
      */
     validate: function() {
         "use strict";
-        return false;
+        return false; // No Errors
     },
 
     /**
-     * Parses the data into an internal used data format
-     *
-     * @returns {{}}
+     * Set / Update elAttr by Hand
+     * @param elAttr
      */
-    parse: function() {
+    setElAttr: function(elAttr) {
+        "use strict";
+        this.elAttr = elAttr;
+    },
 
-        console.info('query.ask.parse();');
+    /**
+     * Renders the Table
+     *
+     * @returns {*}
+     */
+    render: function() {
+        console.info('plastic.modules.display.table();');
 
-        // Set Data Parser Module
-        var dataObj = {
-            parser: 'ask-json'
-        };
+        var $el = this.el.find('.plastic-js-display')[0];
+        console.dir($el);
 
-        var url = this.queryObj.url;
-        var query = this.queryObj.text;
+        var data = this.elAttr.data.processed;
+        var vis = d3.select($el);
 
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-        var queryEncoded = encodeURIComponent(queryTrimmed);
+        var table = vis.append("table");
+        var thead = table.append("thead");
+        var tbody = table.append("tbody");
 
-        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
+        // Get Columns from Data
+        var columns = [];
+        for (var o in data[0]) {
+            if (data[0].hasOwnProperty(o)) {
+                columns.push(o);
+            }
+        }
 
-        return dataObj;
+        // Create Header Row (TH)
+        thead.append("tr")
+            .selectAll("th")
+            .data(columns)
+            .enter()
+            .append("th")
+            .text(function(column) {
+                return column;
+            });
+
+        // Create a row for each object in the data
+        var rows = tbody.selectAll("tr")
+            .data(data)
+            .enter()
+            .append("tr");
+
+        // Create a cell in each row for each column
+        var cells = rows.selectAll("td")
+            .data(function(row) {
+                return columns.map(function(column) {
+                    return {
+                        column: column,
+                        value: row[column]
+                    };
+                });
+            })
+            .enter()
+            .append("td")
+            .html(function(d) {
+                return d.value;
+            });
+
+        // Twitter Bootstrap Classes
+        $('table').addClass('table table-condensed');
+
+        this.displayEl = table;
+
+    },
+
+    update: function() {
+        "use strict";
+        this.render(); // TODO: Write Update function
     }
 
 };

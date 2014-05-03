@@ -2,11 +2,12 @@
  * Global Message Function
  * Should be used instead of console.logs
  *
- * TODO: Make this visible as an overlay in front of the visualisation
- * TODO: Make it closeable
+ * @todo Improve Case Handling
+ * @todo Add an Close Button?
  *
+ * @function
  */
-plastic.helper.msg = (function () {
+plastic.msg = (function () {
 
     /**
      *

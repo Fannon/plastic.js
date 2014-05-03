@@ -1,60 +1,113 @@
+// Register Module and define dependencies:
+plastic.modules.registry.add('data', 'sparql-json', 'SparqlJson', []);
+
 /**
  * Parses tabular data from SPARQL Endpoints
  *
+ * @author Simon Heimler
+ * @constructor
  */
-plastic.modules.data.sparqlJson = (function () {
-
-    var name = 'SPARQL JSON Parser';
-    var apiName = 'sparql-json';
-    var fileName = 'sparqlJson';
-    var dependencies = [];
+plastic.modules.data.SparqlJson = function(dataObj) {
 
     /**
-     * Validate this specific data format
-     * Returns true if valid, false if not.
+     * Incoming Raw Data
+     * @type {{}}
+     */
+    this.dataObj = dataObj;
+
+    /**
+     * SPARQL Result Format Schema
      *
-     * @param data
+     * @todo: Not 100% done
+     * @type {{}}
+     */
+    this.validationSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+
+        "properties": {
+            "head": {
+                "type": "object",
+                "properties": {
+                    "link": {"type": "array"},
+                    "vars": {"type": "array"}
+                },
+                "required": ["vars"]
+            },
+            "results": {
+                "type": "object",
+                "properties": {
+                    "bindings": {
+                        type: "array",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "datatype": {"type": "string"},
+                                    "type": {"type": "string"},
+                                    "value": {"type": "string"}
+                                },
+                                "required": ["datatype", "type", "value"]
+                            }
+                        }
+                    },
+                    "required": ["bindings"]
+                }
+            }
+        },
+        "required": ["head", "results"]
+    };
+
+};
+
+plastic.modules.data.SparqlJson.prototype = {
+
+    /**
+     * Sets Raw Data Object after Instanciation
+     *
+     * @param {{}} dataObj
+     */
+    setDataObj: function(dataObj) {
+        "use strict";
+
+        this.dataObj = dataObj;
+    },
+
+    /**
+     * Custom Validation
+     *
      * @returns {boolean}
      */
-    var validate = function(data) {
-        return true;
-    };
+    validate: function() {
+        "use strict";
+        return false;
+    },
 
     /**
      * Parses the data into an internal used data format
      *
-     * @param data
-     * @returns {Array}
+     * @returns {{}}
      */
-    var parse = function(data) {
+    parse: function() {
 
         console.info('plastic.modules.data.sparqlJson();');
 
-        var processedData = [];
+        this.dataObj.processed = [];
 
-        for (var i = 0; i < data.results.bindings.length; i++) {
+        for (var i = 0; i < this.dataObj.raw.results.bindings.length; i++) {
 
-            processedData[i] = {};
+            this.dataObj.processed[i] = {};
 
-            var row = data.results.bindings[i];
+            var row = this.dataObj.raw.results.bindings[i];
 
             for (var o in row) {
-                processedData[i][o] = row[o].value;
+                this.dataObj.processed[i][o] = row[o].value;
             }
         }
 
-        return processedData;
+        return this.dataObj;
 
-    };
+    }
 
-    // Make public
-    return {
-        name: name,
-        apiName: apiName,
-        fileName: fileName,
-        dependencies: dependencies,
-        validate: validate,
-        parse: parse
-    };
-
-})();
+};

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/query/Ask.js</title>
+    <title>Source: modules/registry.js</title>
     
     
     
@@ -518,78 +518,77 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Ask.js.html">Source: modules/query/Ask.js</h1>
+        <h1 class="page-title" data-filename="registry.js.html">Source: modules/registry.js</h1>
         
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source"><code>// Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
-
-/**
- * Parses tabular data from an ASK Semantic MediaWiki API
+            <pre class="prettyprint source"><code>/**
+ * plastic.js Module Registry Prototype
  *
- * @constructor
+ * @example
+ * plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
+ * @example
+ * var moduleInfo = plastic.modules.registry.add('display', 'simple-table');
+ *
+ * @singleton
+ * @namespace
  */
-plastic.modules.query.Ask = function(queryObj) {
+plastic.modules.registry = {
 
     /**
-     * Incoming Raw Data
+     * Module Registry Object
+     *
      * @type {{}}
      */
-    this.queryObj = queryObj;
-
-};
-
-plastic.modules.query.Ask.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} queryObj
-     */
-    setQueryObj: function(queryObj) {
-        "use strict";
-
-        this.queryObj = queryObj;
+    modules: {
+        api: {},
+        data: {},
+        display: {},
+        query: {}
     },
 
     /**
-     * Custom Validation
+     * Register Modules to the Registry.
      *
-     * @returns {boolean}
+     * Every Module has to register itself here, or it won't be found and exectuted!
+     *
+     * @param {string}   moduleType
+     * @param {string}   apiName
+     * @param {string}   className
+     * @param {Array}    dependencies    Array with all dependencies. All Dependencies have to be listed dependencies.js
      */
-    validate: function() {
+    add: function(moduleType, apiName, className, dependencies) {
         "use strict";
-        return false;
+        try {
+            this.modules[moduleType][apiName] = {
+                "className": className,
+                "apiName": apiName,
+                "dependencies": dependencies
+            };
+        } catch(e) {
+            console.log(e);
+            console.error('Wrong usage of Module Registry!');
+        }
     },
 
     /**
-     * Parses the data into an internal used data format
+     * Gets a Module by Type and Api Name
      *
-     * @returns {{}}
+     * @param moduleType
+     * @param apiName
      */
-    parse: function() {
-
-        console.info('query.ask.parse();');
-
-        // Set Data Parser Module
-        var dataObj = {
-            parser: 'ask-json'
-        };
-
-        var url = this.queryObj.url;
-        var query = this.queryObj.text;
-
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-        var queryEncoded = encodeURIComponent(queryTrimmed);
-
-        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
-
-        return dataObj;
+    get: function(moduleType, apiName) {
+        "use strict";
+        if (this.modules[moduleType][apiName]) {
+            return this.modules[moduleType][apiName];
+        } else {
+            return false;
+        }
     }
+
 
 };
 </code></pre>

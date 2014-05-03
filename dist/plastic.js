@@ -62,37 +62,20 @@ var plastic = {
 
 plastic.run = function() {
     "use strict";
-    console.info('plastic.js version v' + plastic.version);
 
-    // Build registry of all available Modules
-    plastic.helper.buildRegistries();
+    console.info('plastic.js version v' + plastic.version);
 
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
     plastic.elements = $('plastic, .plastic-js');
 
-    // Iterate all <plastic> Elements
-    var plasticCounter = 0;
+    // Iterate all plastic.js elements on the page
     plastic.elements.each(function() {
 
         var el = $(this);
 
-        plastic.elements[plasticCounter] = new plastic.Element(el);
+        plastic.elements.push(new plastic.Element(el));
 
         try {
-
-//            plastic.elements[plasticCounter] = new plastic.Element(el);
-
-//            // Get Element Data
-//            var elData = plastic.getElementAttributes(el);
-//
-//            // Check if Element Data is valid
-//            var valid = plastic.validateElementAttributes(elData);
-//
-//            if (valid) {
-//                plastic.processElement($(this), elData);
-//            } else {
-//                console.error('Invalid Element Data!');
-//            }
 
         } catch(e) {
             console.error('plastic.js Element Crash');
@@ -783,17 +766,17 @@ plastic.Element.prototype = {
                 .done(function(data) {
                     try {
                         if (data !== null && typeof data === 'object') {
-                            elAttr.data.object = data;
+                            elAttr.data.raw = data;
                         } else {
-                            elAttr.data.object = $.parseJSON(data);
+                            elAttr.data.raw = $.parseJSON(data);
                         }
                     } catch(e) {
-                        plastic.helper.msg(e, 'error', el);
+                        plastic.msg(e, 'error', el);
                     }
 
                 })
                 .fail(function() {
-                    plastic.helper.msg('Could not get Data from URL <a href="' + elAttr.data.url + '">' + elAttr.data.url + '</a>', "error", el );
+                    plastic.msg('Could not get Data from URL <a href="' + elAttr.data.url + '">' + elAttr.data.url + '</a>', "error", el );
                     error = true;
                 })
                 .always(function() {
@@ -873,40 +856,28 @@ plastic.Element.prototype = {
      */
     callQueryParser: function(el, elAttr) {
 
-        console.info('processElement.callQueryParser();');
-
-        var newElData = elAttr;
+        console.info('processElement.callQueryParser(); ' + elAttr.query.type);
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.query._registry[elAttr.query.type];
+        var moduleInfo = plastic.modules.registry.get('query',[elAttr.query.type]);
+        var Module = plastic.modules.query[moduleInfo.className];
 
-        if (moduleInfo) {
-            var parser = plastic.modules.query[moduleInfo.fileName];
+        if (Module) {
 
-            if (parser) {
+            console.log('Using Parser: ' + moduleInfo.className);
 
-                if (plastic.options.debug) {
-                    parser.validate(elAttr.query);
-                    newElData.data = parser.parse(elAttr.query);
-                } else {
-                    try {
-                        parser.validate(elAttr.query);
-                        newElData.data = parser.parse(elAttr.query);
-                    } catch(e) {
-                        plastic.helper.msg(e, 'error', this.el);
-                    }
-                }
+            this.queryModule = new Module(elAttr.query);
+            this.validateModule(this.queryModule, elAttr.query);
+            elAttr.data = this.queryModule.parse();
 
-
-            } else {
-                plastic.helper.msg('Query Parser Module for Type ' + elAttr.query.type + ' not found. (Module)', 'error', el);
-            }
+            // TODO: Try 'n' Catch
 
         } else {
-            plastic.helper.msg('Query Parser Module for Type ' + elAttr.query.type + ' not found. (Registry)', 'error', el);
+            plastic.msg('Query Parser Module ' + elAttr.query.type + ' not found.', 'error', el);
         }
 
-        return newElData;
+        return elAttr;
+
     },
 
     /**
@@ -919,23 +890,23 @@ plastic.Element.prototype = {
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.data._registry[elAttr.data.parser];
-        var parser = plastic.modules.data[moduleInfo.fileName];
+        var moduleInfo = plastic.modules.registry.get('data',[elAttr.data.parser]);
+        var Module = plastic.modules.data[moduleInfo.className];
 
-        if (parser) {
+        if (Module) {
 
-            console.log('Using Parser: ' + parser.name);
+            console.log('Using Parser: ' + moduleInfo.className);
 
-            try {
-                this.validateDataStructure(parser, elAttr.data.object);
-                parser.validate(elAttr.data.object);
-                elAttr.data.object = parser.parse(elAttr.data.object);
-            } catch(e) {
-                plastic.helper.msg(e, 'error', el);
-            }
+            console.dir(elAttr);
+
+            this.dataModule = new Module(elAttr.data);
+            this.validateModule(this.dataModule, elAttr.data.raw);
+            elAttr.data = this.dataModule.parse();
+
+            // TODO: Try 'n' Catch
 
         } else {
-            plastic.helper.msg('Data Parser Module ' + elAttr.data.parser + ' not found.', 'error', el);
+            plastic.msg('Data Parser Module ' + elAttr.data.parser + ' not found.', 'error', el);
         }
 
     },
@@ -947,51 +918,64 @@ plastic.Element.prototype = {
      */
     callDisplayModule: function(el, elAttr) {
 
-        console.info('processElement.callDataParser()');
+        console.info('plastic.Element.callDisplayModule()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.display._registry[elAttr.options.display.module];
-        var displayModule = plastic.modules.display[moduleInfo.fileName];
+        var moduleInfo = plastic.modules.registry.get('display',[elAttr.options.display.module]);
+        var Module = plastic.modules.display[moduleInfo.className];
 
-        if (displayModule) {
+        if (Module) {
 
-            console.log('Using Display Module: ' + displayModule.name);
+            console.log('Using Display Module: ' + moduleInfo.className);
 
-            if (plastic.options.debug) {
-                displayModule.validate(elAttr);
-                displayModule.render(el, elAttr);
-            } else {
-                try {
-                    displayModule.validate(elAttr);
-                    displayModule.render(el, elAttr);
-                } catch(e) {
-                    plastic.helper.msg(e, 'error', this.el);
-                }
-            }
+            // @todo: Manage Dependencies
 
+            this.displayModule = new Module(el, elAttr);
+            this.validateModule(this.displayModule, elAttr.options.display);
+            this.displayModule.render();
+
+            // TODO: Try 'n' Catch
 
         } else {
-            plastic.helper.msg('Display Module ' + elAttr.data.parser + ' not found.', 'error', el);
+            plastic.msg('Display Module ' + elAttr.data.parser + ' not found.', 'error', el);
         }
 
 
     },
 
     /**
-     * Validates the Data Structure of the incoming data according to the module validation schema
+     * Validation Helper Function
+     *
+     * This calls two kinds of validations:
+     * * General Validation: Validates custom Logic
+     * * Schema Validation: Validates the Data Structure of the incoming data
      *
      * @param {{}} module   plastic.js Module
      * @param {{}} data     Data Object that is to be validated
      */
-    validateDataStructure: function(module, data) {
-        if (module.dataStructure) {
-            var env = jjv();
-            env.addSchema('data', module.dataStructure);
-            var errors = env.validate('data', data);
+    validateModule: function(module, data) {
+
+        if (module.validate) {
+            var validationErrors = module.validate();
 
             // validation was successful
-            if (errors) {
-                console.dir(errors);
+            if (validationErrors) {
+                console.dir(validationErrors);
+                throw new Error('Validation Error!');
+            }
+        }
+
+        if (module.validationSchema) {
+
+            console.log('Schema Validation');
+
+            var env = jjv();
+            env.addSchema('data', module.validationSchema);
+            var schemaErrors = env.validate('data', data);
+
+            // validation was successful
+            if (schemaErrors) {
+                console.dir(schemaErrors);
                 throw new Error('Data Structure invalid!');
             }
         }
@@ -1013,6 +997,7 @@ plastic.ElementAttributes = function(el) {
      */
     this.attr = this.parseAttr(el);
 
+    // Validate the final Attributes Object
     this.validate(this.attr);
 };
 
@@ -1111,17 +1096,17 @@ plastic.ElementAttributes.prototype = {
                     return options;
 
                 } catch(e) {
-                    plastic.helper.msg('Invalid JSON in the Options Object!');
+                    plastic.msg('Invalid JSON in the Options Object!');
                     return false;
                 }
 
             } else {
-                plastic.helper.msg('Empty Obptions Element!', 'error', el);
+                plastic.msg('Empty Obptions Element!', 'error', el);
                 return false;
             }
 
         } else {
-            plastic.helper.msg('No options provided!', 'error', el);
+            plastic.msg('No options provided!', 'error', el);
             return false;
         }
     },
@@ -1150,7 +1135,7 @@ plastic.ElementAttributes.prototype = {
                 query.text = queryString;
                 return query;
             } else {
-                plastic.helper.msg('Empty Query Element!', 'error', el);
+                plastic.msg('Empty Query Element!', 'error', el);
                 return false;
             }
 
@@ -1181,7 +1166,7 @@ plastic.ElementAttributes.prototype = {
                 schema.text = $.parseJSON(schemaString);
                 return schema;
             } else {
-                plastic.helper.msg('Empty Schema Element!', 'error', el);
+                plastic.msg('Empty Schema Element!', 'error', el);
                 return false;
             }
 
@@ -1214,9 +1199,9 @@ plastic.ElementAttributes.prototype = {
                 var dataString = dataElement[0].text;
 
                 if (dataString && dataString !== '') {
-                    data.object = $.parseJSON(dataString);
+                    data.raw = $.parseJSON(dataString);
                 } else {
-                    plastic.helper.msg('Empty Data Element!', 'error', el);
+                    plastic.msg('Empty Data Element!', 'error', el);
                 }
             }
 
@@ -1235,6 +1220,12 @@ plastic.ElementAttributes.prototype = {
     validate: function(attr) {
         "use strict";
 
+        /**
+         * JSON Schema for validation
+         *
+         * @url http://json-schema.org/
+         * @type {{}}
+         */
         var schema = {
             "$schema": "http://json-schema.org/draft-04/schema#",
             "type": "object",
@@ -1288,7 +1279,8 @@ plastic.ElementAttributes.prototype = {
                     "type": "object",
                     "properties": {
                         "parser": {"type": "string"},
-                        "object": {"type": "array"},
+                        "raw": {"type": ["object", "array", "string"]},
+                        "processed": {"type": "array"},
                         "url": {"type": "string"}
                     },
                     // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
@@ -1313,52 +1305,7 @@ plastic.ElementAttributes.prototype = {
 
 };
 
-plastic.helper.buildRegistries = (function () {
-
-    /**
-     * Build dynamically Registries of all available Modules for each Module Type
-     * The registry includes some basic informations about the Module
-     */
-    var builder = function() {
-
-        console.info('plastic.helper.buildRegistries();');
-
-        // Build Registry of all Module Types
-        buildModuleRegistry('query');
-        buildModuleRegistry('data');
-        buildModuleRegistry('display');
-        buildModuleRegistry('api');
-
-    };
-
-    /**
-     * Private Helper Function that does the actual work
-     *
-     * @param moduleType    Name of the Module Type
-     */
-    var buildModuleRegistry = function(moduleType) {
-
-        var moduleTypeRegistry = {};
-
-        for (var obj in plastic.modules[moduleType]) {
-            var module = plastic.modules[moduleType][obj];
-            if(plastic.modules[moduleType].hasOwnProperty(obj) && module.apiName){
-                moduleTypeRegistry[module.apiName] = {
-                    name: module.name,
-                    fileName: module.fileName,
-                    dependencies: module.dependencies
-                };
-            }
-        }
-
-        plastic.modules[moduleType]._registry = moduleTypeRegistry;
-    };
-
-    return builder;
-
-})();
-
-plastic.helper.msg = (function () {
+plastic.msg = (function () {
 
     /**
      *

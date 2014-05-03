@@ -1,20 +1,50 @@
+// Register Module and define dependencies:
+plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+
 /**
- * This is a ASK Query Parser
- * It turns the Query into a ASK API URL
+ * Parses tabular data from an ASK Semantic MediaWiki API
+ *
+ * @constructor
  */
-plastic.modules.query.ask = (function () {
+plastic.modules.query.Ask = function(queryObj) {
 
-    var name = 'ASK Query Parser (SMW)';
-    var apiName = 'application/ask-query';
-    var fileName = 'ask';
-    var dependencies = [];
+    /**
+     * Incoming Raw Data
+     * @type {{}}
+     */
+    this.queryObj = queryObj;
 
-    var validate = function(queryObj) {
-        console.info('query.ask.validate();');
+};
+
+plastic.modules.query.Ask.prototype = {
+
+    /**
+     * Sets Raw Data Object after Instanciation
+     *
+     * @param {{}} queryObj
+     */
+    setQueryObj: function(queryObj) {
+        "use strict";
+
+        this.queryObj = queryObj;
+    },
+
+    /**
+     * Custom Validation
+     *
+     * @returns {boolean}
+     */
+    validate: function() {
+        "use strict";
         return false;
-    };
+    },
 
-    var parse = function(queryObj) {
+    /**
+     * Parses the data into an internal used data format
+     *
+     * @returns {{}}
+     */
+    parse: function() {
 
         console.info('query.ask.parse();');
 
@@ -23,8 +53,8 @@ plastic.modules.query.ask = (function () {
             parser: 'ask-json'
         };
 
-        var url = queryObj.url;
-        var query = queryObj.text;
+        var url = this.queryObj.url;
+        var query = this.queryObj.text;
 
         var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
         var queryEncoded = encodeURIComponent(queryTrimmed);
@@ -32,16 +62,6 @@ plastic.modules.query.ask = (function () {
         dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
 
         return dataObj;
-    };
+    }
 
-    // Make Functions public
-    return {
-        name: name,
-        apiName: apiName,
-        fileName: fileName,
-        dependencies: dependencies,
-        validate: validate,
-        parse: parse
-    };
-
-})();
+};

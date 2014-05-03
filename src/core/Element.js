@@ -112,12 +112,12 @@ plastic.Element.prototype = {
                             elAttr.data.raw = $.parseJSON(data);
                         }
                     } catch(e) {
-                        plastic.helper.msg(e, 'error', el);
+                        plastic.msg(e, 'error', el);
                     }
 
                 })
                 .fail(function() {
-                    plastic.helper.msg('Could not get Data from URL <a href="' + elAttr.data.url + '">' + elAttr.data.url + '</a>', "error", el );
+                    plastic.msg('Could not get Data from URL <a href="' + elAttr.data.url + '">' + elAttr.data.url + '</a>', "error", el );
                     error = true;
                 })
                 .always(function() {
@@ -197,40 +197,28 @@ plastic.Element.prototype = {
      */
     callQueryParser: function(el, elAttr) {
 
-        console.info('processElement.callQueryParser();');
-
-        var newElData = elAttr;
+        console.info('processElement.callQueryParser(); ' + elAttr.query.type);
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.query._registry[elAttr.query.type];
+        var moduleInfo = plastic.modules.registry.get('query',[elAttr.query.type]);
+        var Module = plastic.modules.query[moduleInfo.className];
 
-        if (moduleInfo) {
-            var parser = plastic.modules.query[moduleInfo.fileName];
+        if (Module) {
 
-            if (parser) {
+            console.log('Using Parser: ' + moduleInfo.className);
 
-                if (plastic.options.debug) {
-                    parser.validate(elAttr.query);
-                    newElData.data = parser.parse(elAttr.query);
-                } else {
-                    try {
-                        parser.validate(elAttr.query);
-                        newElData.data = parser.parse(elAttr.query);
-                    } catch(e) {
-                        plastic.helper.msg(e, 'error', this.el);
-                    }
-                }
+            this.queryModule = new Module(elAttr.query);
+            this.validateModule(this.queryModule, elAttr.query);
+            elAttr.data = this.queryModule.parse();
 
-
-            } else {
-                plastic.helper.msg('Query Parser Module for Type ' + elAttr.query.type + ' not found. (Module)', 'error', el);
-            }
+            // TODO: Try 'n' Catch
 
         } else {
-            plastic.helper.msg('Query Parser Module for Type ' + elAttr.query.type + ' not found. (Registry)', 'error', el);
+            plastic.msg('Query Parser Module ' + elAttr.query.type + ' not found.', 'error', el);
         }
 
-        return newElData;
+        return elAttr;
+
     },
 
     /**
@@ -252,20 +240,14 @@ plastic.Element.prototype = {
 
             console.dir(elAttr);
 
-            this.dataModule = new Module(elAttr.data.raw);
+            this.dataModule = new Module(elAttr.data);
             this.validateModule(this.dataModule, elAttr.data.raw);
-            elAttr.data.processed = this.dataModule.parse();
+            elAttr.data = this.dataModule.parse();
 
-//            try {
-//                this.validateDataStructure(parser, elAttr.data.object);
-//                parser.validate(elAttr.data.object);
-//                elAttr.data.object = parser.parse(elAttr.data.object);
-//            } catch(e) {
-//                plastic.helper.msg(e, 'error', el);
-//            }
+            // TODO: Try 'n' Catch
 
         } else {
-            plastic.helper.msg('Data Parser Module ' + elAttr.data.parser + ' not found.', 'error', el);
+            plastic.msg('Data Parser Module ' + elAttr.data.parser + ' not found.', 'error', el);
         }
 
     },
@@ -293,21 +275,10 @@ plastic.Element.prototype = {
             this.validateModule(this.displayModule, elAttr.options.display);
             this.displayModule.render();
 
-//            if (plastic.options.debug) {
-//                displayModule.validate(elAttr);
-//                displayModule.render(el, elAttr);
-//            } else {
-//                try {
-//                    displayModule.validate(elAttr);
-//                    displayModule.render(el, elAttr);
-//                } catch(e) {
-//                    plastic.helper.msg(e, 'error', this.el);
-//                }
-//            }
-
+            // TODO: Try 'n' Catch
 
         } else {
-            plastic.helper.msg('Display Module ' + elAttr.data.parser + ' not found.', 'error', el);
+            plastic.msg('Display Module ' + elAttr.data.parser + ' not found.', 'error', el);
         }
 
 
@@ -324,9 +295,6 @@ plastic.Element.prototype = {
      * @param {{}} data     Data Object that is to be validated
      */
     validateModule: function(module, data) {
-
-        console.warn(module);
-        console.warn(data);
 
         if (module.validate) {
             var validationErrors = module.validate();

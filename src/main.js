@@ -20,11 +20,15 @@
  */
 var plastic = {
 
-    /** type String */
+    /**
+     * Version Number
+     * @type String
+     */
     version: '0.0.4',
 
     /**
-     * This holds all the plastic jQuery elements
+     * Array which holds all the plastic.js Elements
+     *
      * @type Array
      */
     elements: [],
@@ -70,39 +74,27 @@ var plastic = {
 
 };
 
-plastic.run = function() {
+/**
+ * Executes plastic.js
+ *
+ * This is done automatically on the DOM Ready Event
+ */
+plastic.execute = function() {
     "use strict";
-    console.info('plastic.js version v' + plastic.version);
 
-    // Build registry of all available Modules
-    plastic.helper.buildRegistries();
+    console.info('plastic.js version v' + plastic.version);
 
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
     plastic.elements = $('plastic, .plastic-js');
 
-    // Iterate all <plastic> Elements
-    var plasticCounter = 0;
+    // Iterate all plastic.js elements on the page
     plastic.elements.each(function() {
 
         var el = $(this);
 
-        plastic.elements[plasticCounter] = new plastic.Element(el);
+        plastic.elements.push(new plastic.Element(el));
 
         try {
-
-//            plastic.elements[plasticCounter] = new plastic.Element(el);
-
-//            // Get Element Data
-//            var elData = plastic.getElementAttributes(el);
-//
-//            // Check if Element Data is valid
-//            var valid = plastic.validateElementAttributes(elData);
-//
-//            if (valid) {
-//                plastic.processElement($(this), elData);
-//            } else {
-//                console.error('Invalid Element Data!');
-//            }
 
         } catch(e) {
             console.error('plastic.js Element Crash');
@@ -112,5 +104,5 @@ plastic.run = function() {
 };
 
 $(document).ready(function() {
-    plastic.run();
+    plastic.execute();
 });

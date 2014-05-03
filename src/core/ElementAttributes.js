@@ -121,17 +121,17 @@ plastic.ElementAttributes.prototype = {
                     return options;
 
                 } catch(e) {
-                    plastic.helper.msg('Invalid JSON in the Options Object!');
+                    plastic.msg('Invalid JSON in the Options Object!');
                     return false;
                 }
 
             } else {
-                plastic.helper.msg('Empty Obptions Element!', 'error', el);
+                plastic.msg('Empty Obptions Element!', 'error', el);
                 return false;
             }
 
         } else {
-            plastic.helper.msg('No options provided!', 'error', el);
+            plastic.msg('No options provided!', 'error', el);
             return false;
         }
     },
@@ -160,7 +160,7 @@ plastic.ElementAttributes.prototype = {
                 query.text = queryString;
                 return query;
             } else {
-                plastic.helper.msg('Empty Query Element!', 'error', el);
+                plastic.msg('Empty Query Element!', 'error', el);
                 return false;
             }
 
@@ -191,7 +191,7 @@ plastic.ElementAttributes.prototype = {
                 schema.text = $.parseJSON(schemaString);
                 return schema;
             } else {
-                plastic.helper.msg('Empty Schema Element!', 'error', el);
+                plastic.msg('Empty Schema Element!', 'error', el);
                 return false;
             }
 
@@ -226,7 +226,7 @@ plastic.ElementAttributes.prototype = {
                 if (dataString && dataString !== '') {
                     data.raw = $.parseJSON(dataString);
                 } else {
-                    plastic.helper.msg('Empty Data Element!', 'error', el);
+                    plastic.msg('Empty Data Element!', 'error', el);
                 }
             }
 

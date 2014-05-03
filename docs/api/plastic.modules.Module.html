@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/query/Ask.js</title>
+    <title>Class: Module</title>
     
     
     
@@ -66,9 +66,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.execute"><a href="plastic.html#execute">execute</a></li>
+                <li data-name="plastic.getElementAttributes"><a href="plastic.html#getElementAttributes">getElementAttributes</a></li>
             
-                <li data-name="plastic.msg"><a href="plastic.html#msg">msg</a></li>
+                <li data-name="plastic.prepareCanvas"><a href="plastic.html#prepareCanvas">prepareCanvas</a></li>
+            
+                <li data-name="plastic.processElement"><a href="plastic.html#processElement">processElement</a></li>
+            
+                <li data-name="plastic.validateElementAttributes"><a href="plastic.html#validateElementAttributes">validateElementAttributes</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -84,6 +88,12 @@
                 
             </span>
             <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.helper.buildRegistries"><a href="plastic.helper.html#buildRegistries">buildRegistries</a></li>
+            
+                <li data-name="plastic.helper.msg"><a href="plastic.helper.html#msg">msg</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -152,6 +162,12 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.data.askJson"><a href="plastic.modules.data.html#askJson">askJson</a></li>
+            
+                <li data-name="plastic.modules.data.sparqlJson"><a href="plastic.modules.data.html#sparqlJson">sparqlJson</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -185,9 +201,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.query">
+        <li class="item" data-name="plastic.modules.display.simpleTable">
             <span class="title">
-                <a href="plastic.modules.query.html">plastic.modules.query</a>
+                <a href="plastic.modules.display.simpleTable.html">plastic.modules.display.simpleTable</a>
                 
                 <span class="static">static</span>
                 
@@ -206,9 +222,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.registry">
+        <li class="item" data-name="plastic.modules.query">
             <span class="title">
-                <a href="plastic.modules.registry.html">plastic.modules.registry</a>
+                <a href="plastic.modules.query.html">plastic.modules.query</a>
                 
                 <span class="static">static</span>
                 
@@ -217,19 +233,15 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.registry.modules"><a href="plastic.modules.registry.html#modules">modules</a></li>
+                <li data-name="plastic.modules.query.ask"><a href="plastic.modules.query.html#ask">ask</a></li>
+            
+                <li data-name="plastic.modules.query.sparql"><a href="plastic.modules.query.html#sparql">sparql</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="plastic.modules.registry.add"><a href="plastic.modules.registry.html#add">add</a></li>
-            
-                <li data-name="plastic.modules.registry.get"><a href="plastic.modules.registry.html#get">get</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -301,7 +313,7 @@
             
                 <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
             
-                <li data-name="plastic.Element#validateModule"><a href="plastic.Element.html#validateModule">validateModule</a></li>
+                <li data-name="plastic.Element#validateDataStructure"><a href="plastic.Element.html#validateDataStructure">validateDataStructure</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -316,12 +328,6 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="plastic.ElementAttributes#attr"><a href="plastic.ElementAttributes.html#attr">attr</a></li>
-            
-                <li data-name="plastic.ElementAttributes#el"><a href="plastic.ElementAttributes.html#el">el</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -331,16 +337,6 @@
             <span class="subtitle">Methods</span>
             
                 <li data-name="plastic.ElementAttributes#getAttr"><a href="plastic.ElementAttributes.html#getAttr">getAttr</a></li>
-            
-                <li data-name="plastic.ElementAttributes#getData"><a href="plastic.ElementAttributes.html#getData">getData</a></li>
-            
-                <li data-name="plastic.ElementAttributes#getOptions"><a href="plastic.ElementAttributes.html#getOptions">getOptions</a></li>
-            
-                <li data-name="plastic.ElementAttributes#getQuery"><a href="plastic.ElementAttributes.html#getQuery">getQuery</a></li>
-            
-                <li data-name="plastic.ElementAttributes#getSchema"><a href="plastic.ElementAttributes.html#getSchema">getSchema</a></li>
-            
-                <li data-name="plastic.ElementAttributes#getStyle"><a href="plastic.ElementAttributes.html#getStyle">getStyle</a></li>
             
                 <li data-name="plastic.ElementAttributes#parseAttr"><a href="plastic.ElementAttributes.html#parseAttr">parseAttr</a></li>
             
@@ -352,162 +348,18 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.data.AskJson">
+        <li class="item" data-name="plastic.modules.Module">
             <span class="title">
-                <a href="plastic.modules.data.AskJson.html">plastic.modules.data.AskJson</a>
+                <a href="plastic.modules.Module.html">plastic.modules.Module</a>
                 
             </span>
             <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="plastic.modules.data.AskJson#dataObj"><a href="plastic.modules.data.AskJson.html#dataObj">dataObj</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="plastic.modules.data.AskJson#parse"><a href="plastic.modules.data.AskJson.html#parse">parse</a></li>
-            
-                <li data-name="plastic.modules.data.AskJson#setDataObj"><a href="plastic.modules.data.AskJson.html#setDataObj">setDataObj</a></li>
-            
-                <li data-name="plastic.modules.data.AskJson#validate"><a href="plastic.modules.data.AskJson.html#validate">validate</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="plastic.modules.data.SparqlJson">
-            <span class="title">
-                <a href="plastic.modules.data.SparqlJson.html">plastic.modules.data.SparqlJson</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="plastic.modules.data.SparqlJson#dataObj"><a href="plastic.modules.data.SparqlJson.html#dataObj">dataObj</a></li>
-            
-                <li data-name="plastic.modules.data.SparqlJson#validationSchema"><a href="plastic.modules.data.SparqlJson.html#validationSchema">validationSchema</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="plastic.modules.data.SparqlJson#parse"><a href="plastic.modules.data.SparqlJson.html#parse">parse</a></li>
-            
-                <li data-name="plastic.modules.data.SparqlJson#setDataObj"><a href="plastic.modules.data.SparqlJson.html#setDataObj">setDataObj</a></li>
-            
-                <li data-name="plastic.modules.data.SparqlJson#validate"><a href="plastic.modules.data.SparqlJson.html#validate">validate</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="plastic.modules.display.SimpleTable">
-            <span class="title">
-                <a href="plastic.modules.display.SimpleTable.html">plastic.modules.display.SimpleTable</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="plastic.modules.display.SimpleTable#displayEl"><a href="plastic.modules.display.SimpleTable.html#displayEl">displayEl</a></li>
-            
-                <li data-name="plastic.modules.display.SimpleTable#el"><a href="plastic.modules.display.SimpleTable.html#el">el</a></li>
-            
-                <li data-name="plastic.modules.display.SimpleTable#elAttr"><a href="plastic.modules.display.SimpleTable.html#elAttr">elAttr</a></li>
-            
-                <li data-name="plastic.modules.display.SimpleTable#validationSchema"><a href="plastic.modules.display.SimpleTable.html#validationSchema">validationSchema</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="plastic.modules.display.SimpleTable#render"><a href="plastic.modules.display.SimpleTable.html#render">render</a></li>
-            
-                <li data-name="plastic.modules.display.SimpleTable#setElAttr"><a href="plastic.modules.display.SimpleTable.html#setElAttr">setElAttr</a></li>
-            
-                <li data-name="plastic.modules.display.SimpleTable#validate"><a href="plastic.modules.display.SimpleTable.html#validate">validate</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="plastic.modules.query.Ask">
-            <span class="title">
-                <a href="plastic.modules.query.Ask.html">plastic.modules.query.Ask</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="plastic.modules.query.Ask#queryObj"><a href="plastic.modules.query.Ask.html#queryObj">queryObj</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="plastic.modules.query.Ask#parse"><a href="plastic.modules.query.Ask.html#parse">parse</a></li>
-            
-                <li data-name="plastic.modules.query.Ask#setQueryObj"><a href="plastic.modules.query.Ask.html#setQueryObj">setQueryObj</a></li>
-            
-                <li data-name="plastic.modules.query.Ask#validate"><a href="plastic.modules.query.Ask.html#validate">validate</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="plastic.modules.query.Sparql">
-            <span class="title">
-                <a href="plastic.modules.query.Sparql.html">plastic.modules.query.Sparql</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="plastic.modules.query.Sparql#queryObj"><a href="plastic.modules.query.Sparql.html#queryObj">queryObj</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="plastic.modules.query.Sparql#parse"><a href="plastic.modules.query.Sparql.html#parse">parse</a></li>
-            
-                <li data-name="plastic.modules.query.Sparql#setQueryObj"><a href="plastic.modules.query.Sparql.html#setQueryObj">setQueryObj</a></li>
-            
-                <li data-name="plastic.modules.query.Sparql#validate"><a href="plastic.modules.query.Sparql.html#validate">validate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -518,83 +370,160 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Ask.js.html">Source: modules/query/Ask.js</h1>
+        <h1 class="page-title" data-filename="plastic.modules.Module.html">Class: Module</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>// Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+<header>
+    <h2>
+        <span class="ancestors"><a href="plastic.html">plastic</a><a href="plastic.modules.html">.modules</a>.</span>
+    
+    Module
+    </h2>
+    
+</header>  
 
-/**
- * Parses tabular data from an ASK Semantic MediaWiki API
- *
- * @constructor
- */
-plastic.modules.query.Ask = function(queryObj) {
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="Module">
+            
+            new plastic.modules.Module<span class="signature">(options)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="Module.js.html">modules/Module.js</a>, <a href="Module.js.html#line7">line 7</a>
+        </div>
+        
+    </div>
 
-    /**
-     * Incoming Raw Data
-     * @type {{}}
-     */
-    this.queryObj = queryObj;
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>plastic Module Prototype</p>
+    </div>
+    
 
-};
+    
+    
+    
+    
+    
+        
 
-plastic.modules.query.Ask.prototype = {
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} queryObj
-     */
-    setQueryObj: function(queryObj) {
-        "use strict";
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-        this.queryObj = queryObj;
-    },
+    
+    
 
-    /**
-     * Custom Validation
-     *
-     * @returns {boolean}
-     */
-    validate: function() {
-        "use strict";
-        return false;
-    },
+    
 
-    /**
-     * Parses the data into an internal used data format
-     *
-     * @returns {{}}
-     */
-    parse: function() {
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-        console.info('query.ask.parse();');
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</article>
 
-        // Set Data Parser Module
-        var dataObj = {
-            parser: 'ask-json'
-        };
-
-        var url = this.queryObj.url;
-        var query = this.queryObj.text;
-
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-        var queryEncoded = encodeURIComponent(queryTrimmed);
-
-        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
-
-        return dataObj;
-    }
-
-};
-</code></pre>
-        </article>
-    </section>
+</section>  
 
 
 
@@ -603,7 +532,7 @@ plastic.modules.query.Ask.prototype = {
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat May 03 2014 17:30:52 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat May 03 2014 11:51:27 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

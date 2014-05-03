@@ -1,40 +1,71 @@
+// Register Module and define dependencies:
+plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
+
 /**
  * Table Display Module
  *
- * Revealing Module Pattern
- * http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript
- * @namespace
+ * @constructor
  */
-plastic.modules.display.simpleTable = (function () {
-
-    var name = 'Simple Table Display Module';
-    var apiName = 'simple-table';
-    var fileName = 'simpleTable';
-    var dependencies = ['d3'];
+plastic.modules.display.SimpleTable = function(el, elAttr) {
+    "use strict";
 
     /**
-     * Validate
-     * @param elData
-     * @returns {boolean}
+     * plastic.js DOM Element
      */
-    var validate = function(elData) {
-        return true;
-    };
+    this.el = el;
 
     /**
-     * Render
-     * @param el
-     * @param elData
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Validation Schema
+     * @type {{}}
+     */
+    this.validationSchema = {};
+
+    /**
+     * Display Element that is rendered
+     * @type {{}}
+     */
+    this.displayEl = undefined;
+
+};
+
+plastic.modules.display.SimpleTable.prototype = {
+
+    /**
+     * Validates ElementAttributes
+     *
+     * @returns {Object|boolean}
+     */
+    validate: function() {
+        "use strict";
+        return false; // No Errors
+    },
+
+    /**
+     * Set / Update elAttr by Hand
+     * @param elAttr
+     */
+    setElAttr: function(elAttr) {
+        "use strict";
+        this.elAttr = elAttr;
+    },
+
+    /**
+     * Renders the Table
+     *
      * @returns {*}
      */
-    var render = function(el, elData) {
-
+    render: function() {
         console.info('plastic.modules.display.table();');
 
-        var $el = el.find('.plastic-js-display')[0];
+        var $el = this.el.find('.plastic-js-display')[0];
         console.dir($el);
 
-        var data = elData.data.object;
+        var data = this.elAttr.data.processed;
         var vis = d3.select($el);
 
         var table = vis.append("table");
@@ -84,26 +115,13 @@ plastic.modules.display.simpleTable = (function () {
         // Twitter Bootstrap Classes
         $('table').addClass('table table-condensed');
 
-//        throw new Error('test');
+        this.displayEl = table;
 
-        return table;
+    },
 
-    };
+    update: function() {
+        "use strict";
+        this.render(); // TODO: Write Update function
+    }
 
-
-    // Make Functions public
-    return {
-        name: name,
-        apiName: apiName,
-        fileName: fileName,
-        dependencies: dependencies,
-
-        /**
-         * Validate
-         */
-        validate: validate,
-        render: render,
-        update: render // TODO: Write Update Function
-    };
-
-})();
+};

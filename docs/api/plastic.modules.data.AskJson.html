@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/query/Ask.js</title>
+    <title>Class: AskJson</title>
     
     
     
@@ -518,83 +518,441 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Ask.js.html">Source: modules/query/Ask.js</h1>
+        <h1 class="page-title" data-filename="plastic.modules.data.AskJson.html">Class: AskJson</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>// Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+<header>
+    <h2>
+        <span class="ancestors"><a href="plastic.html">plastic</a><a href="plastic.modules.html">.modules</a><a href="plastic.modules.data.html">.data</a>.</span>
+    
+    AskJson
+    </h2>
+    
+</header>  
 
-/**
- * Parses tabular data from an ASK Semantic MediaWiki API
- *
- * @constructor
- */
-plastic.modules.query.Ask = function(queryObj) {
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="AskJson">
+            
+            new plastic.modules.data.AskJson<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="AskJson.js.html">modules/data/AskJson.js</a>, <a href="AskJson.js.html#line9">line 9</a>
+        </div>
+        
+    </div>
 
-    /**
-     * Incoming Raw Data
-     * @type {{}}
-     */
-    this.queryObj = queryObj;
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Parses tabular data from an ASK Semantic MediaWiki API</p>
+    </div>
+    
 
-};
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-plastic.modules.query.Ask.prototype = {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} queryObj
-     */
-    setQueryObj: function(queryObj) {
-        "use strict";
+    
+    
 
-        this.queryObj = queryObj;
-    },
+    
 
-    /**
-     * Custom Validation
-     *
-     * @returns {boolean}
-     */
-    validate: function() {
-        "use strict";
-        return false;
-    },
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-    /**
-     * Parses the data into an internal used data format
-     *
-     * @returns {{}}
-     */
-    parse: function() {
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="dataObj">dataObj<span class="type-signature type object">Object</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Incoming Raw Data</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-        console.info('query.ask.parse();');
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-        // Set Data Parser Module
-        var dataObj = {
-            parser: 'ask-json'
-        };
+    
+    
+</dd>
 
-        var url = this.queryObj.url;
-        var query = this.queryObj.text;
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="parse">
+            
+            parse<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Object}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="AskJson.js.html">modules/data/AskJson.js</a>, <a href="AskJson.js.html#line83">line 83</a>
+        </div>
+        
+    </div>
 
-        var queryTrimmed = $.trim(query.replace(/\s+/g, ''));
-        var queryEncoded = encodeURIComponent(queryTrimmed);
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Parses the data into an internal used data format</p>
+    </div>
+    
 
-        dataObj.url = url + '?action=ask&query=' + queryEncoded + '&format=json&callback=?';
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-        return dataObj;
-    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-};
-</code></pre>
-        </article>
-    </section>
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="setDataObj">
+            
+            setDataObj<span class="signature">(dataObj)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="AskJson.js.html">modules/data/AskJson.js</a>, <a href="AskJson.js.html#line62">line 62</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets Raw Data Object after Instanciation</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>dataObj</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="validate">
+            
+            validate<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{boolean}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="AskJson.js.html">modules/data/AskJson.js</a>, <a href="AskJson.js.html#line73">line 73</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Custom Validation</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
 
 
 

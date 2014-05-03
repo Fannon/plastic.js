@@ -1,22 +1,20 @@
-/**
- * Parses tabular data from SPARQL Endpoints
- *
- */
-plastic.modules.data.askJson = (function () {
+// Register Module and define dependencies:
+plastic.modules.registry.add('data', 'ask-json', 'AskJson', []);
 
-    var name = 'ASK (basic) JSON Parser';
-    var apiName = 'ask-json';
-    var fileName = 'askJson';
-    var dependencies = [];
+/**
+ * Parses tabular data from an ASK Semantic MediaWiki API
+ *
+ * @constructor
+ */
+plastic.modules.data.AskJson = function(dataObj) {
 
     /**
-     * Provides a JSON-Schema to validate the incoming Data
-     *
-     * Uses json-schema
-     *
+     * Incoming Raw Data
      * @type {{}}
      */
-    var dataStructure = {
+    this.dataObj = dataObj;
+
+    this.validationSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 
@@ -52,54 +50,51 @@ plastic.modules.data.askJson = (function () {
         "required": ["query"]
     };
 
+};
+
+plastic.modules.data.AskJson.prototype = {
+
     /**
-     * Validate this specific data format
-     * Returns true if valid, false if not.
+     * Sets Raw Data Object after Instanciation
      *
-     * @param data
+     * @param {{}} dataObj
+     */
+    setDataObj: function(dataObj) {
+        "use strict";
+
+        this.dataObj = dataObj;
+    },
+
+    /**
+     * Custom Validation
+     *
      * @returns {boolean}
      */
-    var validate = function(data) {
-
-        return true;
-
-    };
-
+    validate: function() {
+        "use strict";
+        return false;
+    },
 
     /**
      * Parses the data into an internal used data format
      *
-     * @param data
-     * @returns {Array}
+     * @returns {Object}
      */
-    var parse = function(data) {
+    parse: function() {
 
-        console.info('plastic.modules.data.askJson();');
+        console.info('plastic.modules.data.AskJson.parse();');
 
-        console.dir(data);
+        console.dir(this.rawData);
 
-        var processedData = [];
+        this.dataObj.processed = [];
 
-        for (var obj in data.query.results) {
-
-            var row = data.query.results[obj];
-            processedData.push(row.printouts);
+        for (var obj in this.dataObj.raw.query.results) {
+            var row = this.dataObj.raw.query.results[obj];
+            this.dataObj.processed.push(row.printouts);
         }
 
-        return processedData;
+        return this.dataObj;
 
-    };
+    }
 
-
-    // Make public
-    return {
-        name: name,
-        apiName: apiName,
-        fileName: fileName,
-        dependencies: dependencies,
-        dataStructure: dataStructure,
-        validate: validate,
-        parse: parse
-    };
-
-})();
+};
