@@ -38,14 +38,15 @@ module.exports = function (grunt) {
             js: {
                 src: [
                     'src/main.js',
-                    'bower_components/yepnope/yepnope.js',
                     'src/options.js',
                     'src/core/**/*.js',
                     'src/data/**/*.js',
                     'src/query/**/*.js',
                     'src/schemaParser/**/*.js',
                     'src/display/**/*.js',
-                    'src/helper/**/*.js'
+                    'src/helper/**/*.js',
+                    'bower_components/yepnope/yepnope.js',
+                    'bower_components/jjv/lib/jjv.js'
                 ],
                 dest: 'dist/plastic.js'
             },

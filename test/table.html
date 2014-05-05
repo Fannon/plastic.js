@@ -18,6 +18,7 @@
     <!-- 3rd Party Dependencies -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
     <script src="../bower_components/d3/d3.js"></script>
+    <script src="../bower_components/yepnope/yepnope.js"></script>
     <script src="../bower_components/jjv/lib/jjv.js"></script>
 
     <!-- App JavaScript -->
@@ -27,6 +28,8 @@
     <!-- Core Functions -->
     <script src="../src/core/Element.js"></script>
     <script src="../src/core/ElementAttributes.js"></script>
+    <script src="../src/core/events.js"></script>
+    <script src="../src/modules/dependencies.js"></script>
     <script src="../src/modules/registry.js"></script>
 
     <!-- Data Parser Modules -->
@@ -105,15 +108,17 @@
                 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
                 PREFIX dbo: <http://dbpedia.org/ontology/>
 
-                SELECT ?name ?birth ?description ?person WHERE {
-                    ?person dbo:birthPlace :Berlin .
-                    ?person <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:German_musicians> .
-                    ?person dbo:birthDate ?birth .
-                    ?person foaf:name ?name .
-                    ?person rdfs:comment ?description .
-                FILTER (LANG(?description) = 'en') .
+                PREFIX dbo: <http://dbpedia.org/ontology/>
+
+                SELECT ?name ?birth ?death ?person WHERE {
+                     ?person dbo:birthPlace :Berlin .
+                     ?person dbo:birthDate ?birth .
+                     ?person foaf:name ?name .
+                     ?person dbo:deathDate ?death .
+                     FILTER (?birth < "1900-01-01"^^xsd:date) .
                 }
                 ORDER BY ?name
+                LIMIT 16
             </script>
 
             <script class="plastic-options" type="application/json">

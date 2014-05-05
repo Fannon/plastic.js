@@ -28,7 +28,10 @@ plastic.ElementAttributes = function(el) {
     this.parse();
 
     // Validate the final Attributes Object
-    this.validate(this.attr);
+    this.validate();
+
+    // Register all necessary dependencies
+    this.registerDependencies();
 };
 
 plastic.ElementAttributes.prototype = {
@@ -119,17 +122,17 @@ plastic.ElementAttributes.prototype = {
                 } catch(e) {
                     console.dir(e);
                     plastic.msg('Invalid JSON in the Options Object!');
-                    return false;
+                    throw new Error(e);
                 }
 
             } else {
                 plastic.msg('Empty Obptions Element!', 'error', this.el);
-                return false;
+                throw new Error(e);
             }
 
         } else {
             plastic.msg('No options provided!', 'error', this.el);
-            return false;
+            throw new Error(e);
         }
     },
 
@@ -157,10 +160,12 @@ plastic.ElementAttributes.prototype = {
                 return query;
             } else {
                 plastic.msg('Empty Query Element!', 'error', this.el);
-                return false;
+                throw new Error('Empty Query Element!');
             }
 
         }
+
+        return false;
     },
 
     /**
@@ -319,7 +324,13 @@ plastic.ElementAttributes.prototype = {
         } else {
             return true;
         }
-    }
 
+    },
+
+    registerDependencies: function() {
+        "use strict";
+        var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
+        plastic.modules.dependencies.add(moduleInfo.dependencies);
+    }
 
 };

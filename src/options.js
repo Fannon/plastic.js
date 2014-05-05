@@ -15,7 +15,7 @@ plastic.options = {
      * Debug Mode
      * @type {boolean}
      */
-    debug: true,
+    debug: false,
 
     /**
      * Width of Canvas, if not given
@@ -33,5 +33,5 @@ plastic.options = {
      * Default AJAX Timeout (in ms)
      * @type {number}
      */
-    timeout: 3000
+    timeout: 5000
 };

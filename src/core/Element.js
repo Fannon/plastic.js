@@ -10,6 +10,11 @@
  */
 plastic.Element = function(el) {
 
+
+    //////////////////////////////////////////
+    // Element Attributes                   //
+    //////////////////////////////////////////
+
     /**
      * DOM Element
      *
@@ -22,7 +27,7 @@ plastic.Element = function(el) {
      *
      * @type {plastic.ElementAttributes}
      */
-    this.attributes = new plastic.ElementAttributes(el);
+    this.attributes = {};
 
     /**
      * Link to Attributes Object
@@ -54,10 +59,20 @@ plastic.Element = function(el) {
      */
     this.displayModule = undefined;
 
-    // Auto Execute Process
-    this.exec();
+
+    //////////////////////////////////////////
+    // Element Bootstrap                    //
+    //////////////////////////////////////////
+
+    this.getAttribues();
+
+
 
 };
+
+//////////////////////////////////////////
+// Element Methods                      //
+//////////////////////////////////////////
 
 plastic.Element.prototype = {
 
@@ -85,13 +100,18 @@ plastic.Element.prototype = {
         return this.attr;
     },
 
+    getAttribues: function() {
+        "use strict";
+        this.attr = new plastic.ElementAttributes(this.el);
+    },
+
     /**
      * Executes the processing of the plastic.element
      * This starts
      *
      * @todo Introduce Error State: Stop further Processing if there are Exceptions
      */
-    exec: function() {
+    execute: function() {
 
         console.info('plastic.processElement();');
 
@@ -131,7 +151,11 @@ plastic.Element.prototype = {
                 timeout: plastic.options.timeout,
                 success: function(data) {
                     "use strict";
-                    self.setRawData(data);
+                    if (data !== null && typeof data === 'object') {
+                        self.attr.data.raw = data;
+                    } else {
+                        self.attr.data.raw = $.parseJSON(data);
+                    }
                 },
                 error: function() {
                     plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.el );
@@ -172,23 +196,6 @@ plastic.Element.prototype = {
 
         }
 
-
-    },
-
-
-    /**
-     * Sets the Raw Data
-     *
-     * @param data
-     */
-    setRawData: function(data) {
-        "use strict";
-
-        if (data !== null && typeof data === 'object') {
-            this.attr.data.raw = data;
-        } else {
-            this.attr.data.raw = $.parseJSON(data);
-        }
 
     },
 
@@ -282,6 +289,8 @@ plastic.Element.prototype = {
      */
     callDisplayModule: function() {
 
+        var self = this;
+
         console.info('plastic.Element.callDisplayModule()');
 
         // Look for data parser module in the registry
@@ -291,10 +300,37 @@ plastic.Element.prototype = {
         if (Module) {
 
             console.log('Using Display Module: ' + moduleInfo.className);
+            console.log(moduleInfo.dependencies);
 
-            this.displayModule = new Module(this.el, this.attr);
-            this.validateModule(this.displayModule, this.attr.options.display);
-            this.displayModule.execute();
+            plastic.modules.dependencies.add(moduleInfo.dependencies);
+
+//            if (moduleInfo.dependencies && moduleInfo.dependencies.length > 0) {
+//
+//                console.log('Loading Dependencies');
+//                for (var i = 0; i < moduleInfo.dependencies.length; i++) {
+//                    var depInfo = moduleInfo.dependencies[i];
+//                    var dep = plastic.modules.dependencies.registry[depInfo];
+//                    console.dir(dep);
+//
+//                    yepnope({
+//                        load: dep,
+//                        complete: function() {
+//                            "use strict";
+//
+//                            self.displayModule = new Module(self.el, self.attr);
+//                            self.validateModule(self.displayModule, self.attr.options.display);
+//                            self.displayModule.execute();
+//                        }
+//                    });
+//
+//                }
+//            }
+
+            return false;
+
+
+
+
 
         } else {
             plastic.msg('Display Module ' + this.attr.data.parser + ' not found.', 'error', this.el);

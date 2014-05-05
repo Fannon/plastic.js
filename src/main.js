@@ -86,25 +86,54 @@ plastic.execute = function() {
     console.info('plastic.js version v' + plastic.version);
 
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
-    plastic.elements = $('plastic, .plastic-js');
+    var $plasticElements = $('plastic, .plastic-js');
 
-    // Iterate all plastic.js elements on the page
-    plastic.elements.each(function() {
 
-        var el = $(this);
+    // Create new plastic.Elements
+    $plasticElements.each(function() {
 
         // If Debug Mode is activated: Do not use Exception handling (let it crash)
         if (plastic.options.debug) {
-            plastic.elements.push(new plastic.Element(el));
+            plastic.elements.push(new plastic.Element($(this)));
         } else {
             try {
-                plastic.elements.push(new plastic.Element(el));
+                plastic.elements.push(new plastic.Element($(this)));
             } catch(e) {
                 console.error('plastic.js Element Crash');
             }
         }
 
     });
+
+    console.log(plastic.modules.dependencies.collectedDeps);
+    console.log(plastic.modules.dependencies.collectedUrls);
+
+    plastic.modules.dependencies.fetch(function() {
+        $.each(plastic.elements, function(i, el) {
+//            console.dir(el);
+//        el.execute();
+        });
+    });
+
+
+
+//    // Iterate all plastic.js elements on the page
+//    plastic.elements.each(function() {
+//
+//        var el = $(this);
+//
+//        // If Debug Mode is activated: Do not use Exception handling (let it crash)
+//        if (plastic.options.debug) {
+//            plastic.elements.push(new plastic.Element(el));
+//        } else {
+//            try {
+//                plastic.elements.push(new plastic.Element(el));
+//            } catch(e) {
+//                console.error('plastic.js Element Crash');
+//            }
+//        }
+//
+//    });
 };
 
 $(document).ready(function() {
