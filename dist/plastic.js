@@ -1,7 +1,7 @@
 /*! plastic - v0.0.4 - 2014-05-05
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
-/*jshint -W079 */ // Ignores Redefinition of plastic
+/* jshint -W079 */ /* Ignores Redefinition of plastic */
 
 /**
  * plastic.js Namespace
@@ -24,32 +24,40 @@ var plastic = {
     elements: [],
 
     /**
-     * plastic.js modules
+     * Module Namespace
+     *
+     * This includes module and depencency handling and of course all available modules
+     *
+     *
      * @namespace
      */
     modules: {
 
         /**
-         * Query Parser Modules
+         * Query Parser Modules Namespace
          * @namespace
+         * @ignore
          */
         query: {},
 
         /**
-         * API Parser Modules
+         * API Parser Modules Namespace
          * @namespace
+         * @ignore
          */
         api: {},
 
         /**
-         * Data Parser Modules
+         * Data Parser Modules Namespace
          * @namespace
+         * @ignore
          */
         data: {},
 
         /**
-         * Display Modules
+         * Display Modules Namespace
          * @namespace
+         * @ignore
          */
         display: {}
 
@@ -75,12 +83,15 @@ plastic.execute = function() {
 
         var el = $(this);
 
-        plastic.elements.push(new plastic.Element(el));
-
-        try {
-
-        } catch(e) {
-            console.error('plastic.js Element Crash');
+        // If Debug Mode is activated: Do not use Exception handling (let it crash)
+        if (plastic.options.debug) {
+            plastic.elements.push(new plastic.Element(el));
+        } else {
+            try {
+                plastic.elements.push(new plastic.Element(el));
+            } catch(e) {
+                console.error('plastic.js Element Crash');
+            }
         }
 
     });
