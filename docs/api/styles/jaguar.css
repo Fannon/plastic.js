@@ -25,7 +25,7 @@ li {
 .navigation {
   position: fixed;
   float: left;
-  width: 280px;
+  width: 250px;
   height: 100%;
   background-color: #1a1a1a;
 }
@@ -101,7 +101,7 @@ li {
 }
 .main {
   padding: 20px 20px;
-  margin-left: 280px;
+  margin-left: 250px;
 }
 .main .page-title {
   display: none;

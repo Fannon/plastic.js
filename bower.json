@@ -10,6 +10,6 @@
     "d3": "~3.4.5",
     "yepnope": "~1.5.4",
     "jjv": "~1.0.0",
-    "requirejs": "~2.1.11"
+    "jaguarjs-jsdoc": "davidshimjs/jaguarjs-jsdoc"
   }
 }

@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-05-03
+/*! plastic - v0.0.4 - 2014-05-05
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /*jshint -W079 */ // Ignores Redefinition of plastic
@@ -654,7 +654,9 @@ var docElement            = doc.documentElement,
 })( this, document );
 
 /**
- * plastic.js (default) general ptions
+ * plastic.js default options
+ *
+ * All options can be overwritten by the specific plastic options
  * Written in JSON Notation
  *
  * @namespace
@@ -662,39 +664,79 @@ var docElement            = doc.documentElement,
  */
 plastic.options = {
 
-    /** Debug Mode @type {boolean} */
+    /**
+     * Debug Mode
+     * @type {boolean}
+     */
     debug: true,
 
-    /** Width of Canvas, if not given {string} */
-    width: '100%'
+    /**
+     * Width of Canvas, if not given
+     * @type {string}
+     */
+    width: '100%',
+
+    /**
+     * Height of Canvas, if not given
+     * @type {string}
+     */
+    height: 'auto',
+
+    /**
+     * Default AJAX Timeout (in ms)
+     * @type {number}
+     */
+    timeout: 3000
 };
 
 plastic.Element = function(el) {
 
     /**
      * DOM Element
+     *
      * @type {{}}
      */
     this.el = el;
 
     /**
      * plastic.js ElementAttibutes Object (Instance)
+     *
      * @type {plastic.ElementAttributes}
      */
     this.attributes = new plastic.ElementAttributes(el);
 
     /**
      * Link to Attributes Object
+     *
      * If you need easy access to the current Attributes Object, use this.
+     *
      * @type {{}}
      */
     this.attr = this.attributes.attr;
 
-    this.queryModule = false;
-    this.dataModule = false;
-    this.displayModule = false;
+    /**
+     * Element Query Module Instance
+     *
+     * @type {{}}
+     */
+    this.queryModule = undefined;
 
-    this.process(this.el, this.attr);
+    /**
+     * Element Data Module Instance
+     *
+     * @type {{}}
+     */
+    this.dataModule = undefined;
+
+    /**
+     * Element Display Module Instance
+     *
+     * @type {{}}
+     */
+    this.displayModule = undefined;
+
+    // Auto Execute Process
+    this.exec();
 
 };
 
@@ -725,12 +767,12 @@ plastic.Element.prototype = {
     },
 
     /**
-     * TODO: Introduce Error State: Stop further Processing if there are Exceptions
+     * Executes the processing of the plastic.element
+     * This starts
      *
-     * @param {{}} el       plastic.js DOM Element
-     * @param {{}} elAttr   ElementAttributes Object
+     * @todo Introduce Error State: Stop further Processing if there are Exceptions
      */
-    process: function(el, elAttr) {
+    exec: function() {
 
         console.info('plastic.processElement();');
 
@@ -740,16 +782,16 @@ plastic.Element.prototype = {
         var request;
         var self = this;
 
-        this.createMsgContainer(el);
-        this.createDisplayContainer(el);
+        this.createMsgContainer(this.el);
+        this.createDisplayContainer(this.el);
 
 
         //////////////////////////////////////////
         // CALLING QUERY PARSER                 //
         //////////////////////////////////////////
 
-        if (elAttr.query) { // OPTIONAL
-            elAttr = this.callQueryParser(el, elAttr);
+        if (this.attr.query) { // OPTIONAL
+            this.callQueryParser();
         }
 
 
@@ -757,42 +799,32 @@ plastic.Element.prototype = {
         // GETTING DATA VIA URL                 //
         //////////////////////////////////////////
 
-        if (elAttr.data && elAttr.data.url) { // OPTIONAL: Get Data asyncronally from URL (if given)
+        if (this.attr.data && this.attr.data.url) {
 
             var start = (new Date()).getTime();
             async = true;
 
-            console.log('Getting Data from URL via AJAX: ' + elAttr.data.url);
+            console.log('Getting Data from URL via AJAX: ' + this.attr.data.url);
 
-            request = $.getJSON(elAttr.data.url)
-                .done(function(data) {
-                    try {
-                        if (data !== null && typeof data === 'object') {
-                            elAttr.data.raw = data;
-                        } else {
-                            elAttr.data.raw = $.parseJSON(data);
-                        }
-                    } catch(e) {
-                        plastic.msg(e, 'error', el);
-                    }
-
-                })
-                .fail(function() {
-                    plastic.msg('Could not get Data from URL <a href="' + elAttr.data.url + '">' + elAttr.data.url + '</a>', "error", el );
+            request = $.ajax({
+                url: this.attr.data.url,
+                dataType: 'json',
+                timeout: plastic.options.timeout,
+                success: function(data) {
+                    "use strict";
+                    self.setRawData(data);
+                },
+                error: function() {
+                    plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.el );
                     error = true;
-                })
-                .always(function() {
-                    var diff = (new Date()).getTime() - start;
-                    console.log("Request completed in " + diff + 'ms');
-                })
-            ;
+                }
+            });
 
         }
 
 
-
         //////////////////////////////////////////
-        // CALLING THE DATA & DISPLAX MODULE    //
+        // CALLING THE DATA & DISPLAY MODULE    //
         //////////////////////////////////////////
 
         if (async) {
@@ -801,12 +833,14 @@ plastic.Element.prototype = {
             request.complete(function(data) {
 
                 console.log('Received asynchronous data.');
+                var diff = (new Date()).getTime() - start;
+                console.log("Request completed in " + diff + 'ms');
 
                 if (!error) {
-                    self.callDataParser(el, elAttr);
+                    self.callDataParser();
                 }
                 if (!error) {
-                    self.callDisplayModule(el, elAttr);
+                    self.callDisplayModule();
                 }
             });
 
@@ -814,134 +848,138 @@ plastic.Element.prototype = {
 
             console.log('Received Synchronous Data');
 
-            if (!error) {
-                self.callDataParser(el, elAttr);
-            }
-            if (!error) {
-                self.callDisplayModule(el, elAttr);
-            }
+            self.callDataParser();
+            self.callDisplayModule();
 
         }
 
 
     },
 
-    createMsgContainer: function(el) {
+
+    /**
+     * Sets the Raw Data
+     *
+     * @param data
+     */
+    setRawData: function(data) {
         "use strict";
 
-        el.css('position', 'relative');
+        if (data !== null && typeof data === 'object') {
+            this.attr.data.raw = data;
+        } else {
+            this.attr.data.raw = $.parseJSON(data);
+        }
 
-        el.append('<div class="plastic-js-msg"></div>');
-        var msgEl = el.find('.plastic-js-msg');
+    },
+
+    /**
+     * Helper Functin which creates a HTML Element for use as a Message Container
+     */
+    createMsgContainer: function() {
+        "use strict";
+
+        this.el.css('position', 'relative');
+
+        this.el.append('<div class="plastic-js-msg"></div>');
+        var msgEl = this.el.find('.plastic-js-msg');
         msgEl
-            .height(el.height())
-            .width(el.width())
+            .height(this.el.height())
+            .width(this.el.width())
         ;
     },
 
-    createDisplayContainer: function(el) {
+    /**
+     * Helper Functin which creates a HTML Element for use as a Display Container
+     */
+    createDisplayContainer: function() {
         "use strict";
         console.info('plastic.prepareCanvas();');
 
-        el.append('<div class="plastic-js-display"></div>');
-        var displayEl = el.find('.plastic-js-display');
+        this.el.append('<div class="plastic-js-display"></div>');
+        var displayEl = this.el.find('.plastic-js-display');
         displayEl
-            .height(el.height())
-            .width(el.width())
+            .height(this.el.height())
+            .width(this.el.width())
         ;
     },
 
     /**
      * Helper Function to call the Query Parser Module
-     * @param {{}} el       plastic.js DOM Element
-     * @param {{}} elAttr   ElementAttributes Object
      */
-    callQueryParser: function(el, elAttr) {
+    callQueryParser: function() {
 
-        console.info('processElement.callQueryParser(); ' + elAttr.query.type);
+        console.info('processElement.callQueryParser(); ' + this.attr.query.type);
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('query',[elAttr.query.type]);
+        var moduleInfo = plastic.modules.registry.get('query',[this.attr.query.type]);
         var Module = plastic.modules.query[moduleInfo.className];
 
         if (Module) {
 
             console.log('Using Parser: ' + moduleInfo.className);
 
-            this.queryModule = new Module(elAttr.query);
-            this.validateModule(this.queryModule, elAttr.query);
-            elAttr.data = this.queryModule.parse();
-
-            // TODO: Try 'n' Catch
+            this.queryModule = new Module(this.attr.query);
+            this.validateModule(this.queryModule, this.attr.query);
+            this.attr.data = this.queryModule.execute();
 
         } else {
-            plastic.msg('Query Parser Module ' + elAttr.query.type + ' not found.', 'error', el);
+            plastic.msg('Query Parser Module ' + this.attr.query.type + ' not found.', 'error', this.el);
         }
-
-        return elAttr;
 
     },
 
     /**
      * Helper Function to call the Data Parser Module
-     * @param {{}} el       plastic.js DOM Element
-     * @param {{}} elAttr   ElementAttributes Object
      */
-    callDataParser: function(el, elAttr) {
+    callDataParser: function() {
 
         console.info('processElement.callDataParser()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('data',[elAttr.data.parser]);
+        var moduleInfo = plastic.modules.registry.get('data',[this.attr.data.parser]);
         var Module = plastic.modules.data[moduleInfo.className];
 
         if (Module) {
 
             console.log('Using Parser: ' + moduleInfo.className);
 
-            console.dir(elAttr);
+            console.dir(this.attr);
 
-            this.dataModule = new Module(elAttr.data);
-            this.validateModule(this.dataModule, elAttr.data.raw);
-            elAttr.data = this.dataModule.parse();
-
-            // TODO: Try 'n' Catch
+            this.dataModule = new Module(this.attr.data);
+            this.validateModule(this.dataModule, this.attr.data.raw);
+            this.attr.data = this.dataModule.execute();
 
         } else {
-            plastic.msg('Data Parser Module ' + elAttr.data.parser + ' not found.', 'error', el);
+            plastic.msg('Data Parser Module ' + this.attr.data.parser + ' not found.', 'error', this.el);
         }
 
     },
 
     /**
      * Helper Function to call the Display Module
-     * @param {{}} el       plastic.js DOM Element
-     * @param {{}} elAttr   ElementAttributes Object
+     *
+     * @todo: Manage Dependencies
      */
-    callDisplayModule: function(el, elAttr) {
+    callDisplayModule: function() {
 
         console.info('plastic.Element.callDisplayModule()');
 
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('display',[elAttr.options.display.module]);
+        var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
         var Module = plastic.modules.display[moduleInfo.className];
 
         if (Module) {
 
             console.log('Using Display Module: ' + moduleInfo.className);
 
-            // @todo: Manage Dependencies
-
-            this.displayModule = new Module(el, elAttr);
-            this.validateModule(this.displayModule, elAttr.options.display);
-            this.displayModule.render();
-
-            // TODO: Try 'n' Catch
+            this.displayModule = new Module(this.el, this.attr);
+            this.validateModule(this.displayModule, this.attr.options.display);
+            this.displayModule.execute();
 
         } else {
-            plastic.msg('Display Module ' + elAttr.data.parser + ' not found.', 'error', el);
+            plastic.msg('Display Module ' + this.attr.data.parser + ' not found.', 'error', this.el);
         }
-
 
     },
 
@@ -989,15 +1027,20 @@ plastic.ElementAttributes = function(el) {
 
     /**
      * plastic.js DOM Element
+     *
      * @type {{}}
      */
     this.el = el;
 
     /**
      * plastic.js Element Attributes
+     *
      * @type {Object}
      */
-    this.attr = this.parseAttr(el);
+    this.attr = {};
+
+    // Parse all Attributes of the current plastic.element
+    this.parse();
 
     // Validate the final Attributes Object
     this.validate(this.attr);
@@ -1018,58 +1061,49 @@ plastic.ElementAttributes.prototype = {
     /**
      * Parses all Attributes of the plastic.js element
      *
-     * @param {Object} [el]     Plastic.js DOM Element
      * @returns {Object}
      */
-    parseAttr: function(el) {
+    parse: function() {
         "use strict";
 
         console.info('plastic.getElementAttributes();');
 
-        /**
-         * ElementAttributes Object.
-         * This contains all information that is read from the plastic HTML element
-         */
-        var elAttr = {};
+        this.attr.style = this.getStyle();
 
-        elAttr.style = this.getStyle(el);
+        this.attr.options = this.getOptions();
 
-        elAttr.options = this.getOptions(el);
-
-        var queryAttr = this.getQuery(el);
+        var queryAttr = this.getQuery();
         if (queryAttr) {
-            elAttr.query = queryAttr;
+            this.attr.query = queryAttr;
         }
 
-        var schemaAttr = this.getSchema(el);
+        var schemaAttr = this.getSchema();
         if (schemaAttr) {
-            elAttr.schema = schemaAttr;
+            this.attr.schema = schemaAttr;
         }
 
-        var dataAttr = this.getData(el);
+        var dataAttr = this.getData();
         if (dataAttr) {
-            elAttr.data = dataAttr;
+            this.attr.data = dataAttr;
         }
 
-        console.log(elAttr);
-        return elAttr;
+        console.log(this.attr);
     },
 
     /**
      * Gets all Style Attributes
      * They are calculated directly from the DOM Element style
      *
-     * @param {{}} el   plastic.js DOM element
      * @returns {Object|boolean}
      */
-    getStyle: function(el) {
+    getStyle: function() {
         "use strict";
 
         /** Element CSS Style (Contains Width and Height) */
         var style = {};
 
-        style.height = el.height();
-        style.width = el.width();
+        style.height = this.el.height();
+        style.width = this.el.width();
 
         return style;
     },
@@ -1077,15 +1111,15 @@ plastic.ElementAttributes.prototype = {
     /**
      * Gets all Option Attributes
      *
-     * @param {{}} el   plastic.js DOM element
      * @returns {Object|boolean}
      */
-    getOptions: function(el) {
+    getOptions: function() {
         "use strict";
+
         /** Element Options */
         var options = {}; // mandatory!
 
-        var optionsObject = el.find(".plastic-options");
+        var optionsObject = this.el.find(".plastic-options");
 
         if (optionsObject.length > 0) {
 
@@ -1098,17 +1132,18 @@ plastic.ElementAttributes.prototype = {
                     return options;
 
                 } catch(e) {
+                    console.dir(e);
                     plastic.msg('Invalid JSON in the Options Object!');
                     return false;
                 }
 
             } else {
-                plastic.msg('Empty Obptions Element!', 'error', el);
+                plastic.msg('Empty Obptions Element!', 'error', this.el);
                 return false;
             }
 
         } else {
-            plastic.msg('No options provided!', 'error', el);
+            plastic.msg('No options provided!', 'error', this.el);
             return false;
         }
     },
@@ -1116,12 +1151,11 @@ plastic.ElementAttributes.prototype = {
     /**
      * Gets all Query Attributes
      *
-     * @param {{}} el   plastic.js DOM element
      * @returns {Object|boolean}
      */
-    getQuery: function(el) {
+    getQuery: function() {
         "use strict";
-        var queryElement = el.find(".plastic-query");
+        var queryElement = this.el.find(".plastic-query");
 
         if (queryElement.length > 0)  {
 
@@ -1137,7 +1171,7 @@ plastic.ElementAttributes.prototype = {
                 query.text = queryString;
                 return query;
             } else {
-                plastic.msg('Empty Query Element!', 'error', el);
+                plastic.msg('Empty Query Element!', 'error', this.el);
                 return false;
             }
 
@@ -1147,13 +1181,12 @@ plastic.ElementAttributes.prototype = {
     /**
      * Gets all Schema Attributes
      *
-     * @param {{}} el   plastic.js DOM element
      * @returns {Object|boolean}
      */
-    getSchema: function(el) {
+    getSchema: function() {
         "use strict";
         // Get Data-URL
-        var schemaElement = el.find(".plastic-schema");
+        var schemaElement = this.el.find(".plastic-schema");
 
         if (schemaElement.length > 0)  {
 
@@ -1168,7 +1201,7 @@ plastic.ElementAttributes.prototype = {
                 schema.text = $.parseJSON(schemaString);
                 return schema;
             } else {
-                plastic.msg('Empty Schema Element!', 'error', el);
+                plastic.msg('Empty Schema Element!', 'error', this.el);
                 return false;
             }
 
@@ -1178,17 +1211,16 @@ plastic.ElementAttributes.prototype = {
     /**
      * Gets all Data Attributes
      *
-     * @param {{}} el   plastic.js DOM element
      * @returns {Object|boolean}
      */
-    getData: function(el) {
+    getData: function() {
         "use strict";
 
         /** Element Data */
         var data = {};
 
         // Get Data-URL
-        var dataElement = el.find(".plastic-data");
+        var dataElement = this.el.find(".plastic-data");
 
         if (dataElement.length > 0) {
 
@@ -1203,7 +1235,7 @@ plastic.ElementAttributes.prototype = {
                 if (dataString && dataString !== '') {
                     data.raw = $.parseJSON(dataString);
                 } else {
-                    plastic.msg('Empty Data Element!', 'error', el);
+                    plastic.msg('Empty Data Element!', 'error', this.el);
                 }
             }
 
@@ -1216,10 +1248,10 @@ plastic.ElementAttributes.prototype = {
 
     /**
      * Validates the parsed ElementAttributes Data
-     * @param {{}} attr ElementAttributes
+     *
      * @returns {Object|boolean}
      */
-    validate: function(attr) {
+    validate: function() {
         "use strict";
 
         /**
@@ -1293,7 +1325,7 @@ plastic.ElementAttributes.prototype = {
 
         var env = jjv();
         env.addSchema('schema', schema);
-        var errors = env.validate('schema', attr);
+        var errors = env.validate('schema', this.attr);
 
         // validation was successful
         if (errors) {

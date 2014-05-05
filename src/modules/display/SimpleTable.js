@@ -59,7 +59,7 @@ plastic.modules.display.SimpleTable.prototype = {
      *
      * @returns {*}
      */
-    render: function() {
+    execute: function() {
         console.info('plastic.modules.display.table();');
 
         var $el = this.el.find('.plastic-js-display')[0];
@@ -121,7 +121,7 @@ plastic.modules.display.SimpleTable.prototype = {
 
     update: function() {
         "use strict";
-        this.render(); // TODO: Write Update function
+        this.execute(); // TODO: Write Update function
     }
 
 };

@@ -1587,7 +1587,7 @@ getJasmineRequireObj().SpyStrategy = function() {
       return identity;
     };
 
-    this.exec = function() {
+    this.execute = function() {
       return plan.apply(this, arguments);
     };
 

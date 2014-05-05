@@ -80,9 +80,9 @@ plastic.modules.data.AskJson.prototype = {
      *
      * @returns {Object}
      */
-    parse: function() {
+    execute: function() {
 
-        console.info('plastic.modules.data.AskJson.parse();');
+        console.info('plastic.modules.data.AskJson.execute();');
 
         console.dir(this.rawData);
 

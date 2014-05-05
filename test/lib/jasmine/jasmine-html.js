@@ -344,7 +344,7 @@ jasmineRequire.QueryString = function() {
           var p = params[i].split('=');
           var value = decodeURIComponent(p[1]);
           if (value === "true" || value === "false") {
-            value = JSON.parse(value);
+            value = JSON.execute(value);
           }
           paramMap[decodeURIComponent(p[0])] = value;
         }

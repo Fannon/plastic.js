@@ -89,7 +89,7 @@ plastic.modules.data.SparqlJson.prototype = {
      *
      * @returns {{}}
      */
-    parse: function() {
+    execute: function() {
 
         console.info('plastic.modules.data.sparqlJson();');
 

@@ -76,27 +76,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.helper">
-            <span class="title">
-                <a href="plastic.helper.html">plastic.helper</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="plastic.modules">
             <span class="title">
                 <a href="plastic.modules.html">plastic.modules</a>
@@ -250,6 +229,10 @@
             
                 <li data-name="plastic.options.debug"><a href="plastic.options.html#debug">debug</a></li>
             
+                <li data-name="plastic.options.height"><a href="plastic.options.html#height">height</a></li>
+            
+                <li data-name="plastic.options.timeout"><a href="plastic.options.html#timeout">timeout</a></li>
+            
                 <li data-name="plastic.options.width"><a href="plastic.options.html#width">width</a></li>
             
             </ul>
@@ -277,7 +260,13 @@
             
                 <li data-name="plastic.Element#attributes"><a href="plastic.Element.html#attributes">attributes</a></li>
             
+                <li data-name="plastic.Element#dataModule"><a href="plastic.Element.html#dataModule">dataModule</a></li>
+            
+                <li data-name="plastic.Element#displayModule"><a href="plastic.Element.html#displayModule">displayModule</a></li>
+            
                 <li data-name="plastic.Element#el"><a href="plastic.Element.html#el">el</a></li>
+            
+                <li data-name="plastic.Element#queryModule"><a href="plastic.Element.html#queryModule">queryModule</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -293,13 +282,19 @@
             
                 <li data-name="plastic.Element#callQueryParser"><a href="plastic.Element.html#callQueryParser">callQueryParser</a></li>
             
+                <li data-name="plastic.Element#createDisplayContainer"><a href="plastic.Element.html#createDisplayContainer">createDisplayContainer</a></li>
+            
+                <li data-name="plastic.Element#createMsgContainer"><a href="plastic.Element.html#createMsgContainer">createMsgContainer</a></li>
+            
+                <li data-name="plastic.Element#exec"><a href="plastic.Element.html#exec">exec</a></li>
+            
                 <li data-name="plastic.Element#getAttr"><a href="plastic.Element.html#getAttr">getAttr</a></li>
             
                 <li data-name="plastic.Element#getEl"><a href="plastic.Element.html#getEl">getEl</a></li>
             
-                <li data-name="plastic.Element#process"><a href="plastic.Element.html#process">process</a></li>
-            
                 <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
+            
+                <li data-name="plastic.Element#setRawData"><a href="plastic.Element.html#setRawData">setRawData</a></li>
             
                 <li data-name="plastic.Element#validateModule"><a href="plastic.Element.html#validateModule">validateModule</a></li>
             
@@ -342,7 +337,7 @@
             
                 <li data-name="plastic.ElementAttributes#getStyle"><a href="plastic.ElementAttributes.html#getStyle">getStyle</a></li>
             
-                <li data-name="plastic.ElementAttributes#parseAttr"><a href="plastic.ElementAttributes.html#parseAttr">parseAttr</a></li>
+                <li data-name="plastic.ElementAttributes#parse"><a href="plastic.ElementAttributes.html#parse">parse</a></li>
             
                 <li data-name="plastic.ElementAttributes#validate"><a href="plastic.ElementAttributes.html#validate">validate</a></li>
             
@@ -371,7 +366,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.data.AskJson#parse"><a href="plastic.modules.data.AskJson.html#parse">parse</a></li>
+                <li data-name="plastic.modules.data.AskJson#execute"><a href="plastic.modules.data.AskJson.html#execute">execute</a></li>
             
                 <li data-name="plastic.modules.data.AskJson#setDataObj"><a href="plastic.modules.data.AskJson.html#setDataObj">setDataObj</a></li>
             
@@ -404,7 +399,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.data.SparqlJson#parse"><a href="plastic.modules.data.SparqlJson.html#parse">parse</a></li>
+                <li data-name="plastic.modules.data.SparqlJson#execute"><a href="plastic.modules.data.SparqlJson.html#execute">execute</a></li>
             
                 <li data-name="plastic.modules.data.SparqlJson#setDataObj"><a href="plastic.modules.data.SparqlJson.html#setDataObj">setDataObj</a></li>
             
@@ -441,7 +436,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.display.SimpleTable#render"><a href="plastic.modules.display.SimpleTable.html#render">render</a></li>
+                <li data-name="plastic.modules.display.SimpleTable#execute"><a href="plastic.modules.display.SimpleTable.html#execute">execute</a></li>
             
                 <li data-name="plastic.modules.display.SimpleTable#setElAttr"><a href="plastic.modules.display.SimpleTable.html#setElAttr">setElAttr</a></li>
             
@@ -472,7 +467,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.query.Ask#parse"><a href="plastic.modules.query.Ask.html#parse">parse</a></li>
+                <li data-name="plastic.modules.query.Ask#execute"><a href="plastic.modules.query.Ask.html#execute">execute</a></li>
             
                 <li data-name="plastic.modules.query.Ask#setQueryObj"><a href="plastic.modules.query.Ask.html#setQueryObj">setQueryObj</a></li>
             
@@ -503,7 +498,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.query.Sparql#parse"><a href="plastic.modules.query.Sparql.html#parse">parse</a></li>
+                <li data-name="plastic.modules.query.Sparql#execute"><a href="plastic.modules.query.Sparql.html#execute">execute</a></li>
             
                 <li data-name="plastic.modules.query.Sparql#setQueryObj"><a href="plastic.modules.query.Sparql.html#setQueryObj">setQueryObj</a></li>
             
@@ -586,7 +581,7 @@ plastic.modules.display.SimpleTable.prototype = {
      *
      * @returns {*}
      */
-    render: function() {
+    execute: function() {
         console.info('plastic.modules.display.table();');
 
         var $el = this.el.find('.plastic-js-display')[0];
@@ -648,7 +643,7 @@ plastic.modules.display.SimpleTable.prototype = {
 
     update: function() {
         "use strict";
-        this.render(); // TODO: Write Update function
+        this.execute(); // TODO: Write Update function
     }
 
 };
@@ -663,7 +658,7 @@ plastic.modules.display.SimpleTable.prototype = {
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat May 03 2014 17:30:52 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon May 05 2014 14:40:31 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

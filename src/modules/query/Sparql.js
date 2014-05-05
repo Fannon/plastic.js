@@ -45,9 +45,9 @@ plastic.modules.query.Sparql.prototype = {
      *
      * @returns {{}}
      */
-    parse: function() {
+    execute: function() {
 
-        console.info('query.sparql.parse();');
+        console.info('query.sparql.execute();');
 
         // Set Data Parser Module
         var dataObj = {
