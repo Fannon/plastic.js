@@ -84,11 +84,10 @@ plastic.modules.dependencies = {
         "use strict";
 
         var cssComplete = function() {
-            console.log('CSS LazyLoad complete.');
+
         };
 
         var jsComplete = function() {
-            console.log('JS LazyLoad complete.');
             plastic.events.pub('loaded-' + depName);
         };
 

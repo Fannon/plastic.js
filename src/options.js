@@ -11,6 +11,10 @@ plastic.options = {
 
     /**
      * Debug Mode
+     *
+     * This enables logging of some informations and benchmarks to the console
+     * This also ignores Exception handiling. If an error occurs it will crash hard and precice.
+     *
      * @type {boolean}
      */
     debug: true,

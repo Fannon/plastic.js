@@ -109,10 +109,6 @@ plastic.modules.data.AskJson.prototype = {
      */
     execute: function() {
 
-        console.info('plastic.modules.data.AskJson.execute();');
-
-        console.dir(this.dataObj);
-
         this.parseSchema();
         this.parseData();
 
@@ -125,16 +121,11 @@ plastic.modules.data.AskJson.prototype = {
 
         if (!this.dataObj.description) {
 
-            console.info('AskJson.parseSchema();');
-
-            console.dir(this.dataObj);
-
             var schema = this.dataObj.raw.query.printrequests;
 
             for (var i = 0; i < schema.length; i++) {
 
                 var o = schema[i];
-                console.warn(o);
 
                 var mappedType = this.schemaMap[o.typeid];
                 if (mappedType) {
@@ -151,8 +142,6 @@ plastic.modules.data.AskJson.prototype = {
         }
 
         this.dataObj.descriptionSchema = this.descriptionSchema;
-
-        console.warn(this.descriptionSchema);
     },
 
     parseData: function() {
@@ -161,18 +150,15 @@ plastic.modules.data.AskJson.prototype = {
         this.dataObj.processed = [];
         var self = this;
 
-        console.info(self.schemaMap);
-
         // Parse Data without additional Schema Informations
         for (var obj in this.dataObj.raw.query.results) {
             var row = this.dataObj.raw.query.results[obj];
             this.dataObj.processed.push(row.printouts);
         }
 
+        // Enrich processed data by appling the descriptionSchema to it.
         this.dataObj.processedHtml = plastic.schemaParser.getHtmlData(this.dataObj.processed, this.descriptionSchema);
 
-        console.warn(this.dataObj.processed);
-        console.warn(this.dataObj.processedHtml);
     }
 
 };

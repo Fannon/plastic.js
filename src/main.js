@@ -24,7 +24,7 @@ var plastic = {
      * Version Number
      * @type String
      */
-    version: '0.0.4',
+    version: '0.0.5',
 
     /**
      * Array which holds all the plastic.js Elements
@@ -90,7 +90,10 @@ var plastic = {
 plastic.execute = function() {
     "use strict";
 
-    console.info('plastic.js version v' + plastic.version);
+    if (this.options.debug) {
+        console.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
+    }
+
 
     /**
      * Global plastic events

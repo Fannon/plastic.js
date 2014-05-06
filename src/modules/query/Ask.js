@@ -46,8 +46,6 @@ plastic.modules.query.Ask.prototype = {
      */
     execute: function() {
 
-        console.info('query.ask.execute();');
-
         // Set Data Parser Module
         var dataObj = {
             parser: 'ask-json'

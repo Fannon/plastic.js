@@ -46,8 +46,6 @@ plastic.schemaParser = {
             for (var cellType in row) {
 
                 var cellValue = row[cellType];
-                console.info(cellType);
-
                 var format = descriptionSchema.properties[cellType].format;
 
                 // TODO: Case-Handling: value could be no array

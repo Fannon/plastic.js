@@ -91,8 +91,6 @@ plastic.modules.data.SparqlJson.prototype = {
      */
     execute: function() {
 
-        console.info('plastic.modules.data.sparqlJson();');
-
         this.dataObj.processed = [];
 
         for (var i = 0; i < this.dataObj.raw.results.bindings.length; i++) {

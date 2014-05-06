@@ -12,7 +12,7 @@ plastic.modules.display.SimpleTable = function(el, elAttr) {
     /**
      * plastic.js DOM Element
      */
-    this.el = el;
+    this.$el = el;
 
     /**
      * plastic.js ElementAttributes
@@ -60,9 +60,8 @@ plastic.modules.display.SimpleTable.prototype = {
      * @returns {*}
      */
     execute: function() {
-        console.info('plastic.modules.display.table();');
 
-        var $el = this.el.find('.plastic-js-display')[0];
+        var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
 
         if (this.elAttr.data.processedHtml) {
