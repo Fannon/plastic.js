@@ -98,15 +98,22 @@ plastic.execute = function() {
     // Create new plastic.Elements
     $plasticElements.each(function() {
 
+        var el = $(this);
+
         // If Debug Mode is activated: Do not use Exception handling (let it crash)
         if (plastic.options.debug) {
-            plastic.elements.push(new plastic.Element($(this)));
+            plastic.elements.push(new plastic.Element(el));
         } else {
-            try {
-                plastic.elements.push(new plastic.Element($(this)));
-            } catch(e) {
-                console.error('plastic.js Element Crash');
+            if (plastic.options.debug) {
+                plastic.elements.push(new plastic.Element(el));
+            } else {
+                try {
+                    plastic.elements.push(new plastic.Element(el));
+                } catch(e) {
+                    plastic.msg('plastic element crashed while init', 'error', el);
+                }
             }
+
         }
 
     });
@@ -115,7 +122,16 @@ plastic.execute = function() {
     plastic.modules.dependencies.fetch();
 
     $.each(plastic.elements, function(i, el ) {
-        el.execute();
+        if (el.options.debug) {
+            el.execute();
+        } else {
+            try {
+                el.execute();
+            } catch(e) {
+                console.error('plastic.js Element Crash on init');
+            }
+        }
+
     });
 
 };
@@ -130,7 +146,7 @@ plastic.options = {
      * Debug Mode
      * @type {boolean}
      */
-    debug: false,
+    debug: true,
 
     /**
      * Width of Canvas, if not given
@@ -430,7 +446,10 @@ plastic.Element.prototype = {
             this.callDataParser();
             this.callDisplayModule();
 
-            this.displayBenchmark();
+            if (this.options.debug) {
+                this.displayBenchmark();
+            }
+
         }
     },
 
@@ -526,9 +545,6 @@ plastic.Element.prototype = {
         var Module = plastic.modules.display[moduleInfo.className];
 
         if (Module) {
-
-            console.log('Using Display Module: ' + moduleInfo.className);
-            console.log(moduleInfo.dependencies);
 
             self.displayModule = new Module(self.el, self.attr);
             self.validateModule(self.displayModule, self.attr.options.display);
@@ -647,14 +663,15 @@ plastic.ElementAttributes.prototype = {
             this.attr.query = queryAttr;
         }
 
-        var schemaAttr = this.getSchema();
-        if (schemaAttr) {
-            this.attr.schema = schemaAttr;
-        }
 
         var dataAttr = this.getData();
         if (dataAttr) {
             this.attr.data = dataAttr;
+            var dataDescription =  this.getDataDescription();
+            if (dataDescription) {
+                this.attr.data.description = dataDescription;
+            }
+
         }
 
         console.log(this.attr);
@@ -755,25 +772,19 @@ plastic.ElementAttributes.prototype = {
      *
      * @returns {Object|boolean}
      */
-    getSchema: function() {
+    getDataDescription: function() {
         "use strict";
         // Get Data-URL
         var schemaElement = this.el.find(".plastic-schema");
 
         if (schemaElement.length > 0)  {
 
-            /** Element Schema Data */
-            var schema = {};
-
-            schema.type = schemaElement.attr('data-schema-format');
-
             var schemaString = schemaElement[0].text;
 
             if (schemaString && schemaString !== '') {
-                schema.text = $.parseJSON(schemaString);
-                return schema;
+                return $.parseJSON(schemaString);
             } else {
-                plastic.msg('Empty Schema Element!', 'error', this.el);
+                plastic.msg('Data Description Element provided, but empty!', 'error', this.el);
                 return false;
             }
 
@@ -874,20 +885,14 @@ plastic.ElementAttributes.prototype = {
                     },
                     "required": ["text", "type", "url"]
                 },
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "text": {"type": "string"}
-                    },
-                    "required": ["text"]
-                },
                 "data": {
                     "type": "object",
                     "properties": {
                         "parser": {"type": "string"},
                         "raw": {"type": ["object", "array", "string"]},
                         "processed": {"type": "array"},
-                        "url": {"type": "string"}
+                        "url": {"type": "string"},
+                        "description": {"type": "object"} // TODO: Define Description SCHEMA
                     },
                     // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
                     "required": ["parser"] }
@@ -917,9 +922,15 @@ plastic.ElementAttributes.prototype = {
      */
     registerDependencies: function() {
         "use strict";
-        var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
-        plastic.modules.dependencies.add(moduleInfo.dependencies);
-        this.dependencies = (this.dependencies.concat(moduleInfo.dependencies));
+        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.options.display.module);
+        plastic.modules.dependencies.add(displayModuleInfo.dependencies);
+
+        if (this.attr.data && this.attr.data.parser) {
+            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.parser);
+            plastic.modules.dependencies.add(dataModuleInfo.dependencies);
+        }
+
+        this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
     }
 
 };
@@ -971,6 +982,66 @@ plastic.msg = (function () {
 })();
 
 
+plastic.schemaParser = {
+
+    /**
+     * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
+     *
+     * @type {{}}
+     */
+    htmlMap: {
+        "email": function(val) {
+            "use strict";
+            var strippedVal = val.replace('mailto:','');
+            return '<a href="' + val + '">' + strippedVal + '</a>';
+        },
+        "uri": function(val) {
+            "use strict";
+            return '<a href="' + val + '">' + val + '</a>';
+        }
+    },
+
+    /**
+     * Calculates processed Data (HTML'ified) with the descriptionSchema applied
+     *
+     * @todo (Optionally) validate data against the descriptionSchema
+     *
+     * @param processedData
+     * @param descriptionSchema
+     *
+     * @returns {[]}
+     */
+    getHtmlData: function(processedData, descriptionSchema) {
+        "use strict";
+
+        var self = this;
+        var processedHtml = $.extend(true, [], processedData); // Deep Copy
+
+        for (var i = 0; i < processedHtml.length; i++) {
+
+            var row = processedHtml[i];
+
+            for (var cellType in row) {
+
+                var cellValue = row[cellType];
+                console.info(cellType);
+
+                var format = descriptionSchema.properties[cellType].format;
+
+                // TODO: Case-Handling: value could be no array
+                for (var j = 0; j < cellValue.length; j++) {
+
+                    if (format) {
+                        cellValue[j] = self.htmlMap[format](cellValue[j]);
+                    }
+                }
+            }
+
+        }
+
+        return processedHtml;
+    }
+};
 plastic.helper.Events = function() {
     "use strict";
 

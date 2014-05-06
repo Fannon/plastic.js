@@ -287,7 +287,10 @@ plastic.Element.prototype = {
             this.callDataParser();
             this.callDisplayModule();
 
-            this.displayBenchmark();
+            if (this.options.debug) {
+                this.displayBenchmark();
+            }
+
         }
     },
 
@@ -383,9 +386,6 @@ plastic.Element.prototype = {
         var Module = plastic.modules.display[moduleInfo.className];
 
         if (Module) {
-
-            console.log('Using Display Module: ' + moduleInfo.className);
-            console.log(moduleInfo.dependencies);
 
             self.displayModule = new Module(self.el, self.attr);
             self.validateModule(self.displayModule, self.attr.options.display);

@@ -14,6 +14,13 @@ plastic.modules.data.AskJson = function(dataObj) {
      */
     this.dataObj = dataObj;
 
+    // TODO: Generate this via schemaParser Helper
+    this.descriptionSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+    };
+
     this.validationSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
@@ -50,6 +57,26 @@ plastic.modules.data.AskJson = function(dataObj) {
         "required": ["query"]
     };
 
+    /**
+     * Maps ASK-Result-Format Schema to JSON-Schema
+     *
+     * @type {{}}
+     */
+    this.schemaMap = {
+        "_txt": {
+            "type": "string"
+        },
+        "_ema": {
+            "type": "string",
+            "format": "email"
+        },
+        "_tel": {
+            "type": "string",
+            "format": "uri"
+        }
+    };
+
+
 };
 
 plastic.modules.data.AskJson.prototype = {
@@ -84,17 +111,68 @@ plastic.modules.data.AskJson.prototype = {
 
         console.info('plastic.modules.data.AskJson.execute();');
 
-        console.dir(this.rawData);
+        console.dir(this.dataObj);
+
+        this.parseSchema();
+        this.parseData();
+
+        return this.dataObj;
+
+    },
+
+    parseSchema: function() {
+        "use strict";
+
+        if (!this.dataObj.description) {
+
+            console.info('AskJson.parseSchema();');
+
+            console.dir(this.dataObj);
+
+            var schema = this.dataObj.raw.query.printrequests;
+
+            for (var i = 0; i < schema.length; i++) {
+
+                var o = schema[i];
+                console.warn(o);
+
+                var mappedType = this.schemaMap[o.typeid];
+                if (mappedType) {
+                    this.descriptionSchema.properties[o.label] = mappedType;
+                }
+
+            }
+
+
+        } else {
+
+            // Description provided within the tag, will overwrite default schema
+            this.descriptionSchema.properties = this.dataObj.description;
+        }
+
+        this.dataObj.descriptionSchema = this.descriptionSchema;
+
+        console.warn(this.descriptionSchema);
+    },
+
+    parseData: function() {
+        "use strict";
 
         this.dataObj.processed = [];
+        var self = this;
 
+        console.info(self.schemaMap);
+
+        // Parse Data without additional Schema Informations
         for (var obj in this.dataObj.raw.query.results) {
             var row = this.dataObj.raw.query.results[obj];
             this.dataObj.processed.push(row.printouts);
         }
 
-        return this.dataObj;
+        this.dataObj.processedHtml = plastic.schemaParser.getHtmlData(this.dataObj.processed, this.descriptionSchema);
 
+        console.warn(this.dataObj.processed);
+        console.warn(this.dataObj.processedHtml);
     }
 
 };

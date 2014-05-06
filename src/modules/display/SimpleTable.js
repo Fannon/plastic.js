@@ -63,9 +63,15 @@ plastic.modules.display.SimpleTable.prototype = {
         console.info('plastic.modules.display.table();');
 
         var $el = this.el.find('.plastic-js-display')[0];
-        console.dir($el);
+        var data = [];
 
-        var data = this.elAttr.data.processed;
+        if (this.elAttr.data.processedHtml) {
+            data = this.elAttr.data.processedHtml;
+        } else {
+            data = this.elAttr.data.processed;
+        }
+
+
         var vis = d3.select($el);
 
         var table = vis.append("table");

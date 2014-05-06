@@ -13,7 +13,7 @@ plastic.options = {
      * Debug Mode
      * @type {boolean}
      */
-    debug: false,
+    debug: true,
 
     /**
      * Width of Canvas, if not given

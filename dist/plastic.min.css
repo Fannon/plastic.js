@@ -1,3 +1,3 @@
 /*! plastic - v0.0.4 - 2014-05-06
 * https://github.com/Fannon/plasticjs
-* Copyright (c) 2014 Simon Heimler; Licensed MIT */.plastic-js,plastic{position:relative}.plastic-js-display{overflow:scroll}.plastic-js-msg{position:absolute;top:0;left:0}.plastic-msg{display:block;padding:2px 4px;margin:8px 24px 8px 8px;overflow:hidden;border-radius:3px;font-size:.85em}.plastic-msg-error{background:#F6CECE;color:#B31818;border:1px solid #B31818}
+* Copyright (c) 2014 Simon Heimler; Licensed MIT */.plastic-js,plastic{position:relative}.plastic-js-display{overflow:scroll}.plastic-js-msg{position:absolute;top:0;left:0}.plastic-msg{display:block;height:auto;padding:2px 4px;margin:8px 24px 8px 8px;overflow:hidden;border-radius:3px;font-size:.85em}.plastic-msg-error{background:#F6CECE;color:#B31818;border:1px solid #B31818}

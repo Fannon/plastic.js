@@ -108,15 +108,22 @@ plastic.execute = function() {
     // Create new plastic.Elements
     $plasticElements.each(function() {
 
+        var el = $(this);
+
         // If Debug Mode is activated: Do not use Exception handling (let it crash)
         if (plastic.options.debug) {
-            plastic.elements.push(new plastic.Element($(this)));
+            plastic.elements.push(new plastic.Element(el));
         } else {
-            try {
-                plastic.elements.push(new plastic.Element($(this)));
-            } catch(e) {
-                console.error('plastic.js Element Crash');
+            if (plastic.options.debug) {
+                plastic.elements.push(new plastic.Element(el));
+            } else {
+                try {
+                    plastic.elements.push(new plastic.Element(el));
+                } catch(e) {
+                    plastic.msg('plastic element crashed while init', 'error', el);
+                }
             }
+
         }
 
     });
@@ -125,7 +132,16 @@ plastic.execute = function() {
     plastic.modules.dependencies.fetch();
 
     $.each(plastic.elements, function(i, el ) {
-        el.execute();
+        if (el.options.debug) {
+            el.execute();
+        } else {
+            try {
+                el.execute();
+            } catch(e) {
+                console.error('plastic.js Element Crash on init');
+            }
+        }
+
     });
 
 };

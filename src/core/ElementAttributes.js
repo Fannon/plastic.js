@@ -73,14 +73,15 @@ plastic.ElementAttributes.prototype = {
             this.attr.query = queryAttr;
         }
 
-        var schemaAttr = this.getSchema();
-        if (schemaAttr) {
-            this.attr.schema = schemaAttr;
-        }
 
         var dataAttr = this.getData();
         if (dataAttr) {
             this.attr.data = dataAttr;
+            var dataDescription =  this.getDataDescription();
+            if (dataDescription) {
+                this.attr.data.description = dataDescription;
+            }
+
         }
 
         console.log(this.attr);
@@ -181,25 +182,19 @@ plastic.ElementAttributes.prototype = {
      *
      * @returns {Object|boolean}
      */
-    getSchema: function() {
+    getDataDescription: function() {
         "use strict";
         // Get Data-URL
         var schemaElement = this.el.find(".plastic-schema");
 
         if (schemaElement.length > 0)  {
 
-            /** Element Schema Data */
-            var schema = {};
-
-            schema.type = schemaElement.attr('data-schema-format');
-
             var schemaString = schemaElement[0].text;
 
             if (schemaString && schemaString !== '') {
-                schema.text = $.parseJSON(schemaString);
-                return schema;
+                return $.parseJSON(schemaString);
             } else {
-                plastic.msg('Empty Schema Element!', 'error', this.el);
+                plastic.msg('Data Description Element provided, but empty!', 'error', this.el);
                 return false;
             }
 
@@ -300,20 +295,14 @@ plastic.ElementAttributes.prototype = {
                     },
                     "required": ["text", "type", "url"]
                 },
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "text": {"type": "string"}
-                    },
-                    "required": ["text"]
-                },
                 "data": {
                     "type": "object",
                     "properties": {
                         "parser": {"type": "string"},
                         "raw": {"type": ["object", "array", "string"]},
                         "processed": {"type": "array"},
-                        "url": {"type": "string"}
+                        "url": {"type": "string"},
+                        "description": {"type": "object"} // TODO: Define Description SCHEMA
                     },
                     // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
                     "required": ["parser"] }
@@ -343,9 +332,15 @@ plastic.ElementAttributes.prototype = {
      */
     registerDependencies: function() {
         "use strict";
-        var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
-        plastic.modules.dependencies.add(moduleInfo.dependencies);
-        this.dependencies = (this.dependencies.concat(moduleInfo.dependencies));
+        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.options.display.module);
+        plastic.modules.dependencies.add(displayModuleInfo.dependencies);
+
+        if (this.attr.data && this.attr.data.parser) {
+            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.parser);
+            plastic.modules.dependencies.add(dataModuleInfo.dependencies);
+        }
+
+        this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
     }
 
 };
