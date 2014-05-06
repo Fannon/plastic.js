@@ -23,8 +23,10 @@ module.exports = function (grunt) {
 
         /** Cleaning up old files / directories */
         clean: {
-            files: [
-                'dist',
+            dist: [
+                'dist'
+            ],
+            apidoc: [
                 'docs/api'
             ]
         },
@@ -240,7 +242,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'test',
-        'content:clean', 'clean',
+        'content:clean', 'clean:dist',
         'content:concat', 'concat',
         'content:uglify', 'uglify',
         'content:cssmin', 'cssmin',

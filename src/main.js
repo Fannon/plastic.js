@@ -71,7 +71,14 @@ var plastic = {
          */
         display: {}
 
-    }
+    },
+
+    /**
+     * Namespace for helper functions
+     * @namespace
+     * @ignore
+     */
+    helper: {}
 
 };
 
@@ -84,6 +91,15 @@ plastic.execute = function() {
     "use strict";
 
     console.info('plastic.js version v' + plastic.version);
+
+    /**
+     * Global plastic events
+     *
+     * PubSub Pattern
+     *
+     * @type {plastic.helper.Events}
+     */
+    plastic.events = new plastic.helper.Events();
 
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
     var $plasticElements = $('plastic, .plastic-js');
@@ -105,35 +121,14 @@ plastic.execute = function() {
 
     });
 
-    console.log(plastic.modules.dependencies.collectedDeps);
-    console.log(plastic.modules.dependencies.collectedUrls);
+    console.log(plastic.modules.dependencies.usedDeps);
 
     plastic.modules.dependencies.fetch(function() {
         $.each(plastic.elements, function(i, el) {
-//            console.dir(el);
-//        el.execute();
+            
         });
     });
 
-
-
-//    // Iterate all plastic.js elements on the page
-//    plastic.elements.each(function() {
-//
-//        var el = $(this);
-//
-//        // If Debug Mode is activated: Do not use Exception handling (let it crash)
-//        if (plastic.options.debug) {
-//            plastic.elements.push(new plastic.Element(el));
-//        } else {
-//            try {
-//                plastic.elements.push(new plastic.Element(el));
-//            } catch(e) {
-//                console.error('plastic.js Element Crash');
-//            }
-//        }
-//
-//    });
 };
 
 $(document).ready(function() {

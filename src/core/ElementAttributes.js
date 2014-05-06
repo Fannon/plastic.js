@@ -247,7 +247,7 @@ plastic.ElementAttributes.prototype = {
         /**
          * JSON Schema for validation
          *
-         * @url http://json-schema.org/
+         * @link http://json-schema.org/|JSON-Schema Site
          * @type {{}}
          */
         var schema = {

@@ -7,68 +7,98 @@
 plastic.modules.dependencies = {
 
     /**
+     * Registry Object that collects all extnal dependencies by name, and ressources
      *
+     * If a module is added that has a new external dependency it can either be added here
+     * or be added via setDependency() at runtime.
      */
     registry: {
-        "d3": [
-            "//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"
-        ]
-//    "nvd3": [
-//        "//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js",
-//        "//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"
-//    ]
+        "d3": {
+            "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"]
+        },
+        "nvd3": {
+            "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
+            "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"]
+        }
     },
-
-    moduleDependencies: {},
 
     /**
      * Object of all Ressources that have to be loaded
      */
-    collectedDeps: {},
+    usedDeps: {},
 
-    collectedUrls: {},
+    /**
+     * Sets a new dependency (that isn'r registered yet)
+     *
+     * @param {string}  depName     Dependency Name
+     * @param {[]}      [jsArray]   Array of JavaScript Files to load (optional)
+     * @param {[]}      [cssArray]  Array of CSS Files to load (optional)
+     */
+    setDependency: function(depName, jsArray, cssArray) {
+        "use strict";
+        this.registry[depName] = {};
 
+        if (jsArray && jsArray instanceof Array) {
+            this.registry.js = jsArray;
+        }
+
+        if (cssArray && cssArray instanceof Array) {
+            this.registry.css = cssArray;
+        }
+    },
+
+    /**
+     * Gets a dependency Object by name
+     *
+     * @param {string}  dep
+     * @returns {{}}
+     */
     getDependency: function(dep) {
         "use strict";
         return this.registry[dep];
     },
 
-    add: function(dependencies) {
+    /**
+     * Add a dependency that has to be loaded
+     *
+     * @param {[]} dependencyArray  Array of dependency names (has to fit with the registry above)
+     */
+    add: function(dependencyArray) {
         "use strict";
-        for (var i = 0; i < dependencies.length; i++) {
-            var depName = dependencies[i];
-            var urls = this.registry[depName];
-
-            this.collectedDeps[depName] = {
-                urls: urls
-            };
-
-            for (var j = 0; j < urls.length; j++) {
-                var url = urls[j];
-                console.log(url);
-                this.collectedUrls[url] = depName;
-            }
-
-
+        for (var i = 0; i < dependencyArray.length; i++) {
+            var depName = dependencyArray[i];
+            this.usedDeps[depName] = this.registry[depName];
         }
 
     },
 
-    fetch: function(callback) {
+    /**
+     * Fetches all external dependencies asyncronally
+     *
+     * Dependencies to load have to be added first via .add(dependencies)
+     * Triggers plastic events (loaded-)
+     * Uses {@link https://github.com/rgrove/lazyload/}
+     */
+    fetch: function() {
+
         "use strict";
 
-        var urls = [];
+        for (var depName in this.usedDeps) {
 
-        for (var i = 0; i < this.collectedUrls.length; i++) {
-            var obj = this.collectedUrls[i];
-            console.warn(obj);
+            var urls = this.usedDeps[depName];
+
+            console.log(urls.js);
+
+            LazyLoad.css(urls.css, function() {
+                console.log('CSS LazyLoad complete.');
+            }, depName);
+
+            LazyLoad.js(urls.js, function() {
+                console.log('JS LazyLoad complete.');
+                plastic.events.pub('loaded-' + depName);
+            }, depName);
 
         }
-
-//        yepnope({
-//            load: this.collectedUrls,
-//            complete: callback
-//        });
     }
 
 };

@@ -39,6 +39,18 @@ plastic.Element = function(el) {
     this.attr = this.attributes.attr;
 
     /**
+     * Element specific Event PubSub
+     */
+    this.events = plastic.helper.Events();
+
+    /**
+     * Inherited (and overwritten) general element options
+     *
+     * @type {Object|plastic.options}
+     */
+    this.options = plastic.options;
+
+    /**
      * Element Query Module Instance
      *
      * @type {{}}
@@ -148,7 +160,7 @@ plastic.Element.prototype = {
             request = $.ajax({
                 url: this.attr.data.url,
                 dataType: 'json',
-                timeout: plastic.options.timeout,
+                timeout: this.options.timeout,
                 success: function(data) {
                     "use strict";
                     if (data !== null && typeof data === 'object') {

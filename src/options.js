@@ -1,9 +1,7 @@
-/* global plastic */
-
 /**
  * plastic.js default options
  *
- * All options can be overwritten by the specific plastic options
+ * All options are inherited (and can be overwritten) by the specific plastic.js element
  * Written in JSON Notation
  *
  * @namespace

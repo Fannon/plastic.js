@@ -1,5 +1,9 @@
 /**
  * Global Message Function
+ *
+ * This draws a visible Error Message into the plastic element,
+ * if a reference to the element is given.
+ *
  * Should be used instead of console.logs
  *
  * @todo Improve Case Handling

@@ -8,8 +8,8 @@
   "devDependencies": {
     "jquery": "~2.1.0",
     "d3": "~3.4.5",
-    "yepnope": "~1.5.4",
     "jjv": "~1.0.0",
-    "jaguarjs-jsdoc": "Fannon/jaguarjs-jsdoc#a346075dc76a2631a9907e7a6e9c6f69212b5df4"
+    "rgrove-lazyload": "*"
+
   }
 }

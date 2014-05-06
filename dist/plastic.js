@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-05-05
+/*! plastic - v0.0.4 - 2014-05-06
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -61,7 +61,14 @@ var plastic = {
          */
         display: {}
 
-    }
+    },
+
+    /**
+     * Namespace for helper functions
+     * @namespace
+     * @ignore
+     */
+    helper: {}
 
 };
 
@@ -74,6 +81,15 @@ plastic.execute = function() {
     "use strict";
 
     console.info('plastic.js version v' + plastic.version);
+
+    /**
+     * Global plastic events
+     *
+     * PubSub Pattern
+     *
+     * @type {plastic.helper.Events}
+     */
+    plastic.events = new plastic.helper.Events();
 
     // Get all <plastic> elements on the page and store them as jQuery DOM Objects
     var $plasticElements = $('plastic, .plastic-js');
@@ -95,50 +111,20 @@ plastic.execute = function() {
 
     });
 
-    console.log(plastic.modules.dependencies.collectedDeps);
-    console.log(plastic.modules.dependencies.collectedUrls);
+    console.log(plastic.modules.dependencies.usedDeps);
 
     plastic.modules.dependencies.fetch(function() {
         $.each(plastic.elements, function(i, el) {
-//            console.dir(el);
-//        el.execute();
+            
         });
     });
 
-
-
-//    // Iterate all plastic.js elements on the page
-//    plastic.elements.each(function() {
-//
-//        var el = $(this);
-//
-//        // If Debug Mode is activated: Do not use Exception handling (let it crash)
-//        if (plastic.options.debug) {
-//            plastic.elements.push(new plastic.Element(el));
-//        } else {
-//            try {
-//                plastic.elements.push(new plastic.Element(el));
-//            } catch(e) {
-//                console.error('plastic.js Element Crash');
-//            }
-//        }
-//
-//    });
 };
 
 $(document).ready(function() {
     plastic.execute();
 });
 
-/**
- * plastic.js default options
- *
- * All options can be overwritten by the specific plastic options
- * Written in JSON Notation
- *
- * @namespace
- * @type {Object}
- */
 plastic.options = {
 
     /**
@@ -195,6 +181,18 @@ plastic.Element = function(el) {
      * @type {{}}
      */
     this.attr = this.attributes.attr;
+
+    /**
+     * Element specific Event PubSub
+     */
+    this.events = plastic.helper.Events();
+
+    /**
+     * Inherited (and overwritten) general element options
+     *
+     * @type {Object|plastic.options}
+     */
+    this.options = plastic.options;
 
     /**
      * Element Query Module Instance
@@ -306,7 +304,7 @@ plastic.Element.prototype = {
             request = $.ajax({
                 url: this.attr.data.url,
                 dataType: 'json',
-                timeout: plastic.options.timeout,
+                timeout: this.options.timeout,
                 success: function(data) {
                     "use strict";
                     if (data !== null && typeof data === 'object') {
@@ -775,7 +773,7 @@ plastic.ElementAttributes.prototype = {
         /**
          * JSON Schema for validation
          *
-         * @url http://json-schema.org/
+         * @link http://json-schema.org/|JSON-Schema Site
          * @type {{}}
          */
         var schema = {
@@ -863,50 +861,6 @@ plastic.ElementAttributes.prototype = {
 
 };
 
-plastic.events = {
-
-    _topics: {},
-
-    subscribe: function mediatorSubscribe( topic, callback ) {
-        if( ! this._topics.hasOwnProperty( topic ) ) {
-            this._topics[ topic ] = [];
-        }
-
-        this._topics[ topic ].push( callback );
-        return true;
-    },
-
-    unsubscribe: function mediatorUnsubscrive( topic, callback ) {
-        if( ! this._topics.hasOwnProperty( topic ) ) {
-            return false;
-        }
-
-        for( var i = 0, len = this._topics[ topic ].length; i < len; i++ ) {
-            if( this._topics[ topic ][ i ] === callback ) {
-                this._topics[ topic ].splice( i, 1 );
-                return true;
-            }
-        }
-
-        return false;
-    },
-
-    publish: function mediatorPublish() {
-        var args = Array.prototype.slice.call( arguments );
-        var topic = args.shift();
-
-        if( ! this._topics.hasOwnProperty( topic ) ) {
-            return false;
-        }
-
-        for( var i = 0, len = this._topics[ topic ].length; i < len; i++ ) {
-            this._topics[ topic ][ i ].apply( undefined, args );
-        }
-        return true;
-    }
-
-
-};
 plastic.msg = (function () {
 
     /**
@@ -953,6 +907,146 @@ plastic.msg = (function () {
 
 })();
 
+
+plastic.helper.Events = function() {
+    "use strict";
+
+};
+
+plastic.helper.Events.prototype = {
+
+    /** @private */
+    _subs: {},
+
+    /**
+     * Publish Event
+     *
+     * @param {string} topic
+     *
+     * @returns {boolean}
+     */
+    pub: function(topic) {
+
+        var slice = [].slice;
+
+        if (typeof topic !== "string") {
+            throw new Error("You must provide a valid topic to publish.");
+        }
+
+        var args = slice.call(arguments, 1), topicSubscriptions, subscription, length, i = 0, ret;
+
+        if (!this._subs[topic]) {
+            return true;
+        }
+
+        topicSubscriptions = this._subs[ topic ].slice();
+        for (length = topicSubscriptions.length; i < length; i++) {
+            subscription = topicSubscriptions[ i ];
+            ret = subscription.callback.apply(subscription.context, args);
+            if (ret === false) {
+                break;
+            }
+        }
+        return ret !== false;
+    },
+
+    /**
+     * Subscribe Event
+     *
+     * @param {string}          topic
+     * @param {Object|Function} context
+     * @param {Function}        callback
+     * @param {number|Function} priority
+     *
+     * @returns {Function}
+     */
+    sub: function(topic, context, callback, priority) {
+        if (typeof topic !== "string") {
+            throw new Error("You must provide a valid topic to create a subscription.");
+        }
+
+        if (arguments.length === 3 && typeof callback === "number") {
+            priority = callback;
+            callback = context;
+            context = null;
+        }
+        if (arguments.length === 2) {
+            callback = context;
+            context = null;
+        }
+        priority = priority || 10;
+
+        var topicIndex = 0,
+            topics = topic.split(/\s/),
+            topicLength = topics.length,
+            added;
+        for (; topicIndex < topicLength; topicIndex++) {
+            topic = topics[ topicIndex ];
+            added = false;
+            if (!this._subs[ topic ]) {
+                this._subs[ topic ] = [];
+            }
+
+            var i = this._subs[ topic ].length - 1,
+                subscriptionInfo = {
+                    callback: callback,
+                    context: context,
+                    priority: priority
+                };
+
+            for (; i >= 0; i--) {
+                if (this._subs[ topic ][ i ].priority <= priority) {
+                    this._subs[ topic ].splice(i + 1, 0, subscriptionInfo);
+                    added = true;
+                    break;
+                }
+            }
+
+            if (!added) {
+                this._subs[ topic ].unshift(subscriptionInfo);
+            }
+        }
+
+        return callback;
+    },
+
+    /**
+     * Unsubscribe Event
+     *
+     * @param {string}          topic
+     * @param {Object|Function} context
+     * @param {Function}        callback
+     */
+    unsub: function(topic, context, callback) {
+        if (typeof topic !== "string") {
+            throw new Error("You must provide a valid topic to remove a subscription.");
+        }
+
+        if (arguments.length === 2) {
+            callback = context;
+            context = null;
+        }
+
+        if (!this._subs[ topic ]) {
+            return;
+        }
+
+        var length = this._subs[ topic ].length,
+            i = 0;
+
+        for (; i < length; i++) {
+            if (this._subs[ topic ][ i ].callback === callback) {
+                if (!context || this._subs[ topic ][ i ].context === context) {
+                    this._subs[ topic ].splice(i, 1);
+
+                    // Adjust counter and length for removed item
+                    i--;
+                    length--;
+                }
+            }
+        }
+    }
+};
 
 // yepnope.js
 // Version - 1.5.4pre
