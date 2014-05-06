@@ -39,12 +39,6 @@ plastic.Element = function(el) {
     this.attr = this.attributes.attr;
 
     /**
-     * Module specific dependencies
-     * @type {{}}
-     */
-    this.dependencies = this.attributes.dependencies;
-
-    /**
      * Element specific Event PubSub
      */
     this.events = new plastic.helper.Events();
@@ -240,11 +234,11 @@ plastic.Element.prototype = {
             this.updateProgress();
         };
 
-        for (var i = 0; i < this.dependencies.length; i++) {
+        for (var i = 0; i < this.attributes.dependencies.length; i++) {
 
            this.eventsTotal += 1;
 
-            plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
+            plastic.events.sub('loaded-' + this.attributes.dependencies[i], self, depLoaded);
         }
 
 
@@ -261,7 +255,6 @@ plastic.Element.prototype = {
         this.el.append('<div class="plastic-js-msg"></div>');
         var msgEl = this.el.find('.plastic-js-msg');
         msgEl
-            .height(this.el.height())
             .width(this.el.width())
         ;
     },
