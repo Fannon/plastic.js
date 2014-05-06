@@ -6,6 +6,8 @@
  * @example
  * this.attr = new plastic.ElementAttributes(el);
  *
+ * @todo Refactoring: Direct access to parent (plasticElement) attributes where it makes sense
+ *
  * @constructor
  */
 plastic.ElementAttributes = function(el) {

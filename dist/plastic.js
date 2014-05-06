@@ -148,12 +148,19 @@ plastic.options = {
     /**
      * Debug Mode
      *
-     * This enables logging of some informations and benchmarks to the console
+     * This enables logging of some informations to the console
      * This also ignores Exception handiling. If an error occurs it will crash hard and precice.
      *
      * @type {boolean}
      */
     debug: true,
+
+    /**
+     * Logs Benchmark Infos to the console
+     *
+     * @type {boolean}
+     */
+    benchmark: true,
 
     /**
      * Width of Canvas, if not given
@@ -194,9 +201,13 @@ plastic.Element = function(el) {
     this.$el = el;
 
     /**
-     * HTML ID if available
+     * HTML ID if available, otherwise Number
      */
     this.id = el[0].id;
+
+    if (!this.id) {
+        this.id = plastic.elements.length + 1;
+    }
 
     /**
      * Element specific Event PubSub
@@ -466,7 +477,7 @@ plastic.Element.prototype = {
             this.callDataParser();
             this.callDisplayModule();
 
-            if (this.options.debug) {
+            if (this.options.benchmark) {
                 this.displayBenchmark();
             }
 

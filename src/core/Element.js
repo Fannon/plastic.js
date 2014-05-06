@@ -28,9 +28,13 @@ plastic.Element = function(el) {
     this.$el = el;
 
     /**
-     * HTML ID if available
+     * HTML ID if available, otherwise Number
      */
     this.id = el[0].id;
+
+    if (!this.id) {
+        this.id = plastic.elements.length + 1;
+    }
 
     /**
      * Element specific Event PubSub
@@ -300,7 +304,7 @@ plastic.Element.prototype = {
             this.callDataParser();
             this.callDisplayModule();
 
-            if (this.options.debug) {
+            if (this.options.benchmark) {
                 this.displayBenchmark();
             }
 
