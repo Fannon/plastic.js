@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: SparqlJson</title>
+    <title>plastic.js API Documentation</title>
     
-    
+    <meta name="description" content="plastic.js API Documentation" />
     
     
     
@@ -26,7 +26,7 @@
     
     
     <script>
-    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"plastic.js API","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"","description":"","keyword":""}};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":false},"applicationName":"plastic.js API","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"plastic.js API Documentation","description":"plastic.js API Documentation","keyword":""}};
     </script>
     
 
@@ -55,6 +55,8 @@
             <span class="subtitle">Members</span>
             
                 <li data-name="plastic.elements"><a href="plastic.html#elements">elements</a></li>
+            
+                <li data-name="plastic.events"><a href="plastic.html#events">events</a></li>
             
                 <li data-name="plastic.version"><a href="plastic.html#version">version</a></li>
             
@@ -85,15 +87,48 @@
             </span>
             <ul class="members itemMembers">
             
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.dependencies">
+            <span class="title">
+                <a href="plastic.modules.dependencies.html">plastic.modules.dependencies</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.dependencies"><a href="plastic.modules.html#dependencies">dependencies</a></li>
+                <li data-name="plastic.modules.dependencies.registry"><a href="plastic.modules.dependencies.html#registry">registry</a></li>
+            
+                <li data-name="plastic.modules.dependencies.usedDeps"><a href="plastic.modules.dependencies.html#usedDeps">usedDeps</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.modules.dependencies.add"><a href="plastic.modules.dependencies.html#add">add</a></li>
+            
+                <li data-name="plastic.modules.dependencies.fetch"><a href="plastic.modules.dependencies.html#fetch">fetch</a></li>
+            
+                <li data-name="plastic.modules.dependencies.getDependency"><a href="plastic.modules.dependencies.html#getDependency">getDependency</a></li>
+            
+                <li data-name="plastic.modules.dependencies.setDependency"><a href="plastic.modules.dependencies.html#setDependency">setDependency</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -176,11 +211,29 @@
             
                 <li data-name="plastic.Element#attributes"><a href="plastic.Element.html#attributes">attributes</a></li>
             
+                <li data-name="plastic.Element#benchmarkCompleted"><a href="plastic.Element.html#benchmarkCompleted">benchmarkCompleted</a></li>
+            
+                <li data-name="plastic.Element#benchmarkDataLoaded"><a href="plastic.Element.html#benchmarkDataLoaded">benchmarkDataLoaded</a></li>
+            
+                <li data-name="plastic.Element#benchmarkModulesLoaded"><a href="plastic.Element.html#benchmarkModulesLoaded">benchmarkModulesLoaded</a></li>
+            
+                <li data-name="plastic.Element#benchmarkStart"><a href="plastic.Element.html#benchmarkStart">benchmarkStart</a></li>
+            
                 <li data-name="plastic.Element#dataModule"><a href="plastic.Element.html#dataModule">dataModule</a></li>
+            
+                <li data-name="plastic.Element#dependencies"><a href="plastic.Element.html#dependencies">dependencies</a></li>
             
                 <li data-name="plastic.Element#displayModule"><a href="plastic.Element.html#displayModule">displayModule</a></li>
             
                 <li data-name="plastic.Element#el"><a href="plastic.Element.html#el">el</a></li>
+            
+                <li data-name="plastic.Element#events"><a href="plastic.Element.html#events">events</a></li>
+            
+                <li data-name="plastic.Element#eventsProgress"><a href="plastic.Element.html#eventsProgress">eventsProgress</a></li>
+            
+                <li data-name="plastic.Element#eventsTotal"><a href="plastic.Element.html#eventsTotal">eventsTotal</a></li>
+            
+                <li data-name="plastic.Element#options"><a href="plastic.Element.html#options">options</a></li>
             
                 <li data-name="plastic.Element#queryModule"><a href="plastic.Element.html#queryModule">queryModule</a></li>
             
@@ -202,15 +255,17 @@
             
                 <li data-name="plastic.Element#createMsgContainer"><a href="plastic.Element.html#createMsgContainer">createMsgContainer</a></li>
             
-                <li data-name="plastic.Element#exec"><a href="plastic.Element.html#exec">exec</a></li>
+                <li data-name="plastic.Element#displayBenchmark"><a href="plastic.Element.html#displayBenchmark">displayBenchmark</a></li>
+            
+                <li data-name="plastic.Element#execute"><a href="plastic.Element.html#execute">execute</a></li>
             
                 <li data-name="plastic.Element#getAttr"><a href="plastic.Element.html#getAttr">getAttr</a></li>
             
                 <li data-name="plastic.Element#getEl"><a href="plastic.Element.html#getEl">getEl</a></li>
             
-                <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
+                <li data-name="plastic.Element#parseAttributes"><a href="plastic.Element.html#parseAttributes">parseAttributes</a></li>
             
-                <li data-name="plastic.Element#setRawData"><a href="plastic.Element.html#setRawData">setRawData</a></li>
+                <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
             
                 <li data-name="plastic.Element#validateModule"><a href="plastic.Element.html#validateModule">validateModule</a></li>
             
@@ -230,6 +285,8 @@
             <span class="subtitle">Members</span>
             
                 <li data-name="plastic.ElementAttributes#attr"><a href="plastic.ElementAttributes.html#attr">attr</a></li>
+            
+                <li data-name="plastic.ElementAttributes#dependencies"><a href="plastic.ElementAttributes.html#dependencies">dependencies</a></li>
             
                 <li data-name="plastic.ElementAttributes#el"><a href="plastic.ElementAttributes.html#el">el</a></li>
             
@@ -255,7 +312,40 @@
             
                 <li data-name="plastic.ElementAttributes#parse"><a href="plastic.ElementAttributes.html#parse">parse</a></li>
             
+                <li data-name="plastic.ElementAttributes#registerDependencies"><a href="plastic.ElementAttributes.html#registerDependencies">registerDependencies</a></li>
+            
                 <li data-name="plastic.ElementAttributes#validate"><a href="plastic.ElementAttributes.html#validate">validate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.helper.Events">
+            <span class="title">
+                <a href="plastic.helper.Events.html">plastic.helper.Events</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.helper.Events#_subs"><a href="plastic.helper.Events.html#_subs">_subs</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.helper.Events#pub"><a href="plastic.helper.Events.html#pub">pub</a></li>
+            
+                <li data-name="plastic.helper.Events#sub"><a href="plastic.helper.Events.html#sub">sub</a></li>
+            
+                <li data-name="plastic.helper.Events#unsub"><a href="plastic.helper.Events.html#unsub">unsub</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -458,7 +548,7 @@
     
         
         <div class="tag-source">
-            <a href="SparqlJson.js.html">modules/data/SparqlJson.js</a>, <a href="SparqlJson.js.html#line10">line 10</a>
+            modules/data/SparqlJson.js, line 10
         </div>
         
     </div>
@@ -648,7 +738,7 @@
     
         
         <div class="tag-source">
-            <a href="SparqlJson.js.html">modules/data/SparqlJson.js</a>, <a href="SparqlJson.js.html#line92">line 92</a>
+            modules/data/SparqlJson.js, line 92
         </div>
         
     </div>
@@ -724,7 +814,7 @@
     
         
         <div class="tag-source">
-            <a href="SparqlJson.js.html">modules/data/SparqlJson.js</a>, <a href="SparqlJson.js.html#line71">line 71</a>
+            modules/data/SparqlJson.js, line 71
         </div>
         
     </div>
@@ -840,7 +930,7 @@
     
         
         <div class="tag-source">
-            <a href="SparqlJson.js.html">modules/data/SparqlJson.js</a>, <a href="SparqlJson.js.html#line82">line 82</a>
+            modules/data/SparqlJson.js, line 82
         </div>
         
     </div>
@@ -922,7 +1012,7 @@
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon May 05 2014 15:04:28 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue May 06 2014 10:49:35 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

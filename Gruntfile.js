@@ -24,10 +24,10 @@ module.exports = function (grunt) {
         /** Cleaning up old files / directories */
         clean: {
             dist: [
-                'dist'
+                'dist/*'
             ],
             apidoc: [
-                'docs/api'
+                'docs/api/*'
             ]
         },
 

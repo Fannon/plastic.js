@@ -28,11 +28,11 @@ plastic.modules.dependencies = {
     usedDeps: {},
 
     /**
-     * Sets a new dependency (that isn'r registered yet)
+     * Sets a new dependency (that isn't registered yet)
      *
      * @param {string}  depName     Dependency Name
-     * @param {[]}      [jsArray]   Array of JavaScript Files to load (optional)
-     * @param {[]}      [cssArray]  Array of CSS Files to load (optional)
+     * @param {Array}      [jsArray]   Array of JavaScript Files to load (optional)
+     * @param {Array}      [cssArray]  Array of CSS Files to load (optional)
      */
     setDependency: function(depName, jsArray, cssArray) {
         "use strict";
@@ -61,7 +61,7 @@ plastic.modules.dependencies = {
     /**
      * Add a dependency that has to be loaded
      *
-     * @param {[]} dependencyArray  Array of dependency names (has to fit with the registry above)
+     * @param {Array} dependencyArray  Array of dependency names (has to fit with the registry above)
      */
     add: function(dependencyArray) {
         "use strict";
@@ -83,20 +83,21 @@ plastic.modules.dependencies = {
 
         "use strict";
 
+        var cssComplete = function() {
+            console.log('CSS LazyLoad complete.');
+        };
+
+        var jsComplete = function() {
+            console.log('JS LazyLoad complete.');
+            plastic.events.pub('loaded-' + depName);
+        };
+
         for (var depName in this.usedDeps) {
 
             var urls = this.usedDeps[depName];
 
-            console.log(urls.js);
-
-            LazyLoad.css(urls.css, function() {
-                console.log('CSS LazyLoad complete.');
-            }, depName);
-
-            LazyLoad.js(urls.js, function() {
-                console.log('JS LazyLoad complete.');
-                plastic.events.pub('loaded-' + depName);
-            }, depName);
+            LazyLoad.css(urls.css, cssComplete, depName);
+            LazyLoad.js(urls.js, jsComplete, depName);
 
         }
     }

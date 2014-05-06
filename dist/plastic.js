@@ -111,12 +111,11 @@ plastic.execute = function() {
 
     });
 
-    console.log(plastic.modules.dependencies.usedDeps);
+    // Fetch all registered Dependencies
+    plastic.modules.dependencies.fetch();
 
-    plastic.modules.dependencies.fetch(function() {
-        $.each(plastic.elements, function(i, el) {
-            
-        });
+    $.each(plastic.elements, function(i, el ) {
+        el.execute();
     });
 
 };
@@ -171,7 +170,7 @@ plastic.Element = function(el) {
      *
      * @type {plastic.ElementAttributes}
      */
-    this.attributes = {};
+    this.attributes = new plastic.ElementAttributes(this.el);
 
     /**
      * Link to Attributes Object
@@ -183,9 +182,54 @@ plastic.Element = function(el) {
     this.attr = this.attributes.attr;
 
     /**
+     * Module specific dependencies
+     * @type {{}}
+     */
+    this.dependencies = this.attributes.dependencies;
+
+    /**
      * Element specific Event PubSub
      */
-    this.events = plastic.helper.Events();
+    this.events = new plastic.helper.Events();
+
+    /**
+     * Total Number of asynchronous Events to wait for
+     *
+     * @type {number}
+     */
+    this.eventsTotal = 0;
+
+    /**
+     * Current Number of asynchronous Events that already happened
+     *
+     * If this equals this.eventsTotal, the Element can be
+     * @type {number}
+     */
+    this.eventsProgress = 0;
+
+    /**
+     * Benchmark Time Start (ms timestamp)
+     * @type {number}
+     */
+    this.benchmarkStart = (new Date()).getTime();
+
+    /**
+     * Benchmark Time Data loaded (ms timestamp)
+     * @type {number}
+     */
+    this.benchmarkDataLoaded = 0;
+
+    /**
+     * Benchmark Time Modules loaded (Array of ms timestamp)
+     * @type {Array}
+     */
+    this.benchmarkModulesLoaded = [];
+
+    /**
+     * Benchmark Time Completed (ms timestamp)
+     * @type {number}
+     */
+    this.benchmarkCompleted = 0;
 
     /**
      * Inherited (and overwritten) general element options
@@ -220,9 +264,6 @@ plastic.Element = function(el) {
     // Element Bootstrap                    //
     //////////////////////////////////////////
 
-    this.getAttribues();
-
-
 
 };
 
@@ -249,16 +290,21 @@ plastic.Element.prototype = {
     },
 
     /**
-     * Get plastic.js Element Attributes
+     * Get plastic.js Element Attributes Object
+     *
      * @returns {Object}
      */
     getAttr:function() {
         return this.attr;
     },
 
-    getAttribues: function() {
+    /**
+     * Creates a new Attributes Object which parses and stores all Attributes of the plastic.js element
+     */
+    parseAttributes: function() {
         "use strict";
-        this.attr = new plastic.ElementAttributes(this.el);
+        this.attributes = new plastic.ElementAttributes(this.el);
+        this.attr = this.attributes.attr;
     },
 
     /**
@@ -272,9 +318,6 @@ plastic.Element.prototype = {
         console.info('plastic.processElement();');
 
         /** Asynchronous Mode */
-        var async = false;
-        var error = false;
-        var request;
         var self = this;
 
         this.createMsgContainer(this.el);
@@ -296,12 +339,11 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
-            var start = (new Date()).getTime();
-            async = true;
+            this.eventsTotal += 1;
 
             console.log('Getting Data from URL via AJAX: ' + this.attr.data.url);
 
-            request = $.ajax({
+            var request = $.ajax({
                 url: this.attr.data.url,
                 dataType: 'json',
                 timeout: this.options.timeout,
@@ -312,10 +354,19 @@ plastic.Element.prototype = {
                     } else {
                         self.attr.data.raw = $.parseJSON(data);
                     }
+                    self.events.pub('data-sucess');
                 },
                 error: function() {
                     plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.el );
-                    error = true;
+                },
+                complete: function(data) {
+
+                    console.log('Received asynchronous data.');
+
+                    self.benchmarkDataLoaded = (new Date()).getTime();
+                    self.attr.raw = data;
+                    self.updateProgress();
+
                 }
             });
 
@@ -323,33 +374,20 @@ plastic.Element.prototype = {
 
 
         //////////////////////////////////////////
-        // CALLING THE DATA & DISPLAY MODULE    //
+        // LOAD ALL EXTERNAL DEPENDENCIES       //
         //////////////////////////////////////////
 
-        if (async) {
+        var depLoaded = function() {
+            "use strict";
+            self.benchmarkModulesLoaded.push((new Date()).getTime());
+            this.updateProgress();
+        };
 
-            // On Request complete
-            request.complete(function(data) {
+        for (var i = 0; i < this.dependencies.length; i++) {
 
-                console.log('Received asynchronous data.');
-                var diff = (new Date()).getTime() - start;
-                console.log("Request completed in " + diff + 'ms');
+           this.eventsTotal += 1;
 
-                if (!error) {
-                    self.callDataParser();
-                }
-                if (!error) {
-                    self.callDisplayModule();
-                }
-            });
-
-        } else {
-
-            console.log('Received Synchronous Data');
-
-            self.callDataParser();
-            self.callDisplayModule();
-
+            plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
         }
 
 
@@ -386,6 +424,47 @@ plastic.Element.prototype = {
         ;
     },
 
+    updateProgress: function() {
+        "use strict";
+
+        this.eventsProgress += 1;
+
+        console.info('Current Progress: ' + this.eventsProgress + '/' + this.eventsTotal);
+
+        if (this.eventsProgress === this.eventsTotal) {
+
+            console.info('Module Loading COMPLETED');
+            this.callDataParser();
+            this.callDisplayModule();
+
+            this.displayBenchmark();
+        }
+    },
+
+    /**
+     * Dumps benchmark data to the console
+     */
+    displayBenchmark: function() {
+        "use strict";
+
+        var dataLoadedDiff = this.benchmarkDataLoaded - this.benchmarkStart;
+        var totalDiff = this.benchmarkCompleted - this.benchmarkStart;
+
+        console.log('>>> BENCHMARK INFO: ' + this.eventsTotal + ' Events total');
+        console.log('>>> DATA:      ' + dataLoadedDiff + 'ms');
+
+        for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
+            var moduleTime = this.benchmarkModulesLoaded[i];
+            var moduleDiff = moduleTime - this.benchmarkStart;
+            console.log('>>> MODULE #' + (i + 1) + ': ' + moduleDiff + 'ms');
+        }
+
+        console.log('>>> TOTAL:     ' + totalDiff + 'ms');
+
+    },
+
+
+
     /**
      * Helper Function to call the Query Parser Module
      */
@@ -418,8 +497,10 @@ plastic.Element.prototype = {
 
         console.info('processElement.callDataParser()');
 
+        console.dir(this.attr);
+
         // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('data',[this.attr.data.parser]);
+        var moduleInfo = plastic.modules.registry.get('data', [this.attr.data.parser]);
         var Module = plastic.modules.data[moduleInfo.className];
 
         if (Module) {
@@ -440,8 +521,6 @@ plastic.Element.prototype = {
 
     /**
      * Helper Function to call the Display Module
-     *
-     * @todo: Manage Dependencies
      */
     callDisplayModule: function() {
 
@@ -458,35 +537,11 @@ plastic.Element.prototype = {
             console.log('Using Display Module: ' + moduleInfo.className);
             console.log(moduleInfo.dependencies);
 
-            plastic.modules.dependencies.add(moduleInfo.dependencies);
+            self.displayModule = new Module(self.el, self.attr);
+            self.validateModule(self.displayModule, self.attr.options.display);
+            self.displayModule.execute();
 
-//            if (moduleInfo.dependencies && moduleInfo.dependencies.length > 0) {
-//
-//                console.log('Loading Dependencies');
-//                for (var i = 0; i < moduleInfo.dependencies.length; i++) {
-//                    var depInfo = moduleInfo.dependencies[i];
-//                    var dep = plastic.modules.dependencies.registry[depInfo];
-//                    console.dir(dep);
-//
-//                    yepnope({
-//                        load: dep,
-//                        complete: function() {
-//                            "use strict";
-//
-//                            self.displayModule = new Module(self.el, self.attr);
-//                            self.validateModule(self.displayModule, self.attr.options.display);
-//                            self.displayModule.execute();
-//                        }
-//                    });
-//
-//                }
-//            }
-
-            return false;
-
-
-
-
+            self.benchmarkCompleted = (new Date()).getTime();
 
         } else {
             plastic.msg('Display Module ' + this.attr.data.parser + ' not found.', 'error', this.el);
@@ -550,6 +605,13 @@ plastic.ElementAttributes = function(el) {
      */
     this.attr = {};
 
+    /**
+     * Array of element specific (collected) dependencies
+     *
+     * @type {Array}
+     */
+    this.dependencies = [];
+
     // Parse all Attributes of the current plastic.element
     this.parse();
 
@@ -558,6 +620,7 @@ plastic.ElementAttributes = function(el) {
 
     // Register all necessary dependencies
     this.registerDependencies();
+
 };
 
 plastic.ElementAttributes.prototype = {
@@ -653,12 +716,12 @@ plastic.ElementAttributes.prototype = {
 
             } else {
                 plastic.msg('Empty Obptions Element!', 'error', this.el);
-                throw new Error(e);
+                throw new Error('Empty Obptions Element!');
             }
 
         } else {
             plastic.msg('No options provided!', 'error', this.el);
-            throw new Error(e);
+            throw new Error('No options provided!');
         }
     },
 
@@ -853,10 +916,17 @@ plastic.ElementAttributes.prototype = {
 
     },
 
+    /**
+     * Looks for all external dependencies that are required by the currently used modules
+     *
+     * Registers all Dependencys for Lazyloading
+     * @todo Use a Set Datastructure?
+     */
     registerDependencies: function() {
         "use strict";
         var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
         plastic.modules.dependencies.add(moduleInfo.dependencies);
+        this.dependencies = (this.dependencies.concat(moduleInfo.dependencies));
     }
 
 };

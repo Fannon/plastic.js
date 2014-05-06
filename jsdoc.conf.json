@@ -4,11 +4,12 @@
 	},
 	"plugins": ["plugins/markdown"],
 	"templates": {
-		"cleverLinks": true,
-		"monospaceLinks": true,
+		"cleverLinks": false,
+		"monospaceLinks": false,
 		"default": {
-			"outputSourceFiles" : true
+			"outputSourceFiles" : false
 		},
+
 		"applicationName": "plastic.js API",
 		"disqus": "",
 		"googleAnalytics": "",
@@ -20,8 +21,8 @@
 			"url": ""
 		},
 		"meta": {
-			"title": "",
-			"description": "",
+			"title": "plastic.js API Documentation",
+			"description": "plastic.js API Documentation",
 			"keyword": ""
 		}
 	},
@@ -29,5 +30,10 @@
 		"parser": "gfm",
 		"hardwrap": true,
 		"tags": ["examples"]
-	}
+	},
+    "opts": {
+        "verbose": true,
+        "lenient": true,
+        "encoding": "utf8"
+    }
 }

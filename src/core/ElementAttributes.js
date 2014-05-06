@@ -24,6 +24,13 @@ plastic.ElementAttributes = function(el) {
      */
     this.attr = {};
 
+    /**
+     * Array of element specific (collected) dependencies
+     *
+     * @type {Array}
+     */
+    this.dependencies = [];
+
     // Parse all Attributes of the current plastic.element
     this.parse();
 
@@ -32,6 +39,7 @@ plastic.ElementAttributes = function(el) {
 
     // Register all necessary dependencies
     this.registerDependencies();
+
 };
 
 plastic.ElementAttributes.prototype = {
@@ -127,12 +135,12 @@ plastic.ElementAttributes.prototype = {
 
             } else {
                 plastic.msg('Empty Obptions Element!', 'error', this.el);
-                throw new Error(e);
+                throw new Error('Empty Obptions Element!');
             }
 
         } else {
             plastic.msg('No options provided!', 'error', this.el);
-            throw new Error(e);
+            throw new Error('No options provided!');
         }
     },
 
@@ -327,10 +335,17 @@ plastic.ElementAttributes.prototype = {
 
     },
 
+    /**
+     * Looks for all external dependencies that are required by the currently used modules
+     *
+     * Registers all Dependencys for Lazyloading
+     * @todo Use a Set Datastructure?
+     */
     registerDependencies: function() {
         "use strict";
         var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
         plastic.modules.dependencies.add(moduleInfo.dependencies);
+        this.dependencies = (this.dependencies.concat(moduleInfo.dependencies));
     }
 
 };

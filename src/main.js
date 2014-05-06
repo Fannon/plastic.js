@@ -121,12 +121,11 @@ plastic.execute = function() {
 
     });
 
-    console.log(plastic.modules.dependencies.usedDeps);
+    // Fetch all registered Dependencies
+    plastic.modules.dependencies.fetch();
 
-    plastic.modules.dependencies.fetch(function() {
-        $.each(plastic.elements, function(i, el) {
-            
-        });
+    $.each(plastic.elements, function(i, el ) {
+        el.execute();
     });
 
 };

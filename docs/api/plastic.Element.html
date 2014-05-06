@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: Element</title>
+    <title>plastic.js API Documentation</title>
     
-    
+    <meta name="description" content="plastic.js API Documentation" />
     
     
     
@@ -26,7 +26,7 @@
     
     
     <script>
-    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"plastic.js API","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"","description":"","keyword":""}};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":false},"applicationName":"plastic.js API","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"plastic.js API Documentation","description":"plastic.js API Documentation","keyword":""}};
     </script>
     
 
@@ -55,6 +55,8 @@
             <span class="subtitle">Members</span>
             
                 <li data-name="plastic.elements"><a href="plastic.html#elements">elements</a></li>
+            
+                <li data-name="plastic.events"><a href="plastic.html#events">events</a></li>
             
                 <li data-name="plastic.version"><a href="plastic.html#version">version</a></li>
             
@@ -85,15 +87,48 @@
             </span>
             <ul class="members itemMembers">
             
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.dependencies">
+            <span class="title">
+                <a href="plastic.modules.dependencies.html">plastic.modules.dependencies</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.dependencies"><a href="plastic.modules.html#dependencies">dependencies</a></li>
+                <li data-name="plastic.modules.dependencies.registry"><a href="plastic.modules.dependencies.html#registry">registry</a></li>
+            
+                <li data-name="plastic.modules.dependencies.usedDeps"><a href="plastic.modules.dependencies.html#usedDeps">usedDeps</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.modules.dependencies.add"><a href="plastic.modules.dependencies.html#add">add</a></li>
+            
+                <li data-name="plastic.modules.dependencies.fetch"><a href="plastic.modules.dependencies.html#fetch">fetch</a></li>
+            
+                <li data-name="plastic.modules.dependencies.getDependency"><a href="plastic.modules.dependencies.html#getDependency">getDependency</a></li>
+            
+                <li data-name="plastic.modules.dependencies.setDependency"><a href="plastic.modules.dependencies.html#setDependency">setDependency</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -176,11 +211,29 @@
             
                 <li data-name="plastic.Element#attributes"><a href="plastic.Element.html#attributes">attributes</a></li>
             
+                <li data-name="plastic.Element#benchmarkCompleted"><a href="plastic.Element.html#benchmarkCompleted">benchmarkCompleted</a></li>
+            
+                <li data-name="plastic.Element#benchmarkDataLoaded"><a href="plastic.Element.html#benchmarkDataLoaded">benchmarkDataLoaded</a></li>
+            
+                <li data-name="plastic.Element#benchmarkModulesLoaded"><a href="plastic.Element.html#benchmarkModulesLoaded">benchmarkModulesLoaded</a></li>
+            
+                <li data-name="plastic.Element#benchmarkStart"><a href="plastic.Element.html#benchmarkStart">benchmarkStart</a></li>
+            
                 <li data-name="plastic.Element#dataModule"><a href="plastic.Element.html#dataModule">dataModule</a></li>
+            
+                <li data-name="plastic.Element#dependencies"><a href="plastic.Element.html#dependencies">dependencies</a></li>
             
                 <li data-name="plastic.Element#displayModule"><a href="plastic.Element.html#displayModule">displayModule</a></li>
             
                 <li data-name="plastic.Element#el"><a href="plastic.Element.html#el">el</a></li>
+            
+                <li data-name="plastic.Element#events"><a href="plastic.Element.html#events">events</a></li>
+            
+                <li data-name="plastic.Element#eventsProgress"><a href="plastic.Element.html#eventsProgress">eventsProgress</a></li>
+            
+                <li data-name="plastic.Element#eventsTotal"><a href="plastic.Element.html#eventsTotal">eventsTotal</a></li>
+            
+                <li data-name="plastic.Element#options"><a href="plastic.Element.html#options">options</a></li>
             
                 <li data-name="plastic.Element#queryModule"><a href="plastic.Element.html#queryModule">queryModule</a></li>
             
@@ -202,15 +255,17 @@
             
                 <li data-name="plastic.Element#createMsgContainer"><a href="plastic.Element.html#createMsgContainer">createMsgContainer</a></li>
             
-                <li data-name="plastic.Element#exec"><a href="plastic.Element.html#exec">exec</a></li>
+                <li data-name="plastic.Element#displayBenchmark"><a href="plastic.Element.html#displayBenchmark">displayBenchmark</a></li>
+            
+                <li data-name="plastic.Element#execute"><a href="plastic.Element.html#execute">execute</a></li>
             
                 <li data-name="plastic.Element#getAttr"><a href="plastic.Element.html#getAttr">getAttr</a></li>
             
                 <li data-name="plastic.Element#getEl"><a href="plastic.Element.html#getEl">getEl</a></li>
             
-                <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
+                <li data-name="plastic.Element#parseAttributes"><a href="plastic.Element.html#parseAttributes">parseAttributes</a></li>
             
-                <li data-name="plastic.Element#setRawData"><a href="plastic.Element.html#setRawData">setRawData</a></li>
+                <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
             
                 <li data-name="plastic.Element#validateModule"><a href="plastic.Element.html#validateModule">validateModule</a></li>
             
@@ -230,6 +285,8 @@
             <span class="subtitle">Members</span>
             
                 <li data-name="plastic.ElementAttributes#attr"><a href="plastic.ElementAttributes.html#attr">attr</a></li>
+            
+                <li data-name="plastic.ElementAttributes#dependencies"><a href="plastic.ElementAttributes.html#dependencies">dependencies</a></li>
             
                 <li data-name="plastic.ElementAttributes#el"><a href="plastic.ElementAttributes.html#el">el</a></li>
             
@@ -255,7 +312,40 @@
             
                 <li data-name="plastic.ElementAttributes#parse"><a href="plastic.ElementAttributes.html#parse">parse</a></li>
             
+                <li data-name="plastic.ElementAttributes#registerDependencies"><a href="plastic.ElementAttributes.html#registerDependencies">registerDependencies</a></li>
+            
                 <li data-name="plastic.ElementAttributes#validate"><a href="plastic.ElementAttributes.html#validate">validate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.helper.Events">
+            <span class="title">
+                <a href="plastic.helper.Events.html">plastic.helper.Events</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.helper.Events#_subs"><a href="plastic.helper.Events.html#_subs">_subs</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.helper.Events#pub"><a href="plastic.helper.Events.html#pub">pub</a></li>
+            
+                <li data-name="plastic.helper.Events#sub"><a href="plastic.helper.Events.html#sub">sub</a></li>
+            
+                <li data-name="plastic.helper.Events#unsub"><a href="plastic.helper.Events.html#unsub">unsub</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -460,7 +550,7 @@
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line11">line 11</a>
+            core/Element.js, line 11
         </div>
         
     </div>
@@ -640,6 +730,186 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="benchmarkCompleted">benchmarkCompleted<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Benchmark Time Completed (ms timestamp)</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="benchmarkDataLoaded">benchmarkDataLoaded<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Benchmark Time Data loaded (ms timestamp)</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="benchmarkModulesLoaded">benchmarkModulesLoaded<span class="type-signature type array">Array</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Benchmark Time Modules loaded (Array of ms timestamp)</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="benchmarkStart">benchmarkStart<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Benchmark Time Start (ms timestamp)</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="dataModule">dataModule<span class="type-signature type object">Object</span> </h4>
     </div>
     
@@ -649,6 +919,51 @@
     
     <div class="description">
         <p>Element Data Module Instance</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="dependencies">dependencies<span class="type-signature type object">Object</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Module specific dependencies</p>
     </div>
     
     
@@ -775,6 +1090,187 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="events">events</h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Element specific Event PubSub</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="eventsProgress">eventsProgress<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Current Number of asynchronous Events that already happened</p>
+<p>If this equals this.eventsTotal, the Element can be</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="eventsTotal">eventsTotal<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Total Number of asynchronous Events to wait for</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="options">options<span class="type-signature type object">Object</span> <span class="type-signature type plastic.options"><a href="plastic.options.html">plastic.options</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Inherited (and overwritten) general element options</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="queryModule">queryModule<span class="type-signature type object">Object</span> </h4>
     </div>
     
@@ -833,7 +1329,7 @@
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line254">line 254</a>
+            core/Element.js, line 353
         </div>
         
     </div>
@@ -904,7 +1400,7 @@
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line283">line 283</a>
+            core/Element.js, line 382
         </div>
         
     </div>
@@ -975,7 +1471,7 @@
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line229">line 229</a>
+            core/Element.js, line 328
         </div>
         
     </div>
@@ -1046,7 +1542,7 @@
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line214">line 214</a>
+            core/Element.js, line 272
         </div>
         
     </div>
@@ -1117,7 +1613,7 @@
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line198">line 198</a>
+            core/Element.js, line 256
         </div>
         
     </div>
@@ -1181,14 +1677,85 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="exec">
+        <h4 class="name" id="displayBenchmark">
             
-            exec<span class="signature">()</span>
+            displayBenchmark<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line94">line 94</a>
+            core/Element.js, line 304
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Dumps benchmark data to the console</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="execute">
+            
+            execute<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            core/Element.js, line 173
         </div>
         
     </div>
@@ -1267,7 +1834,7 @@ This starts</p>
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line84">line 84</a>
+            core/Element.js, line 154
         </div>
         
     </div>
@@ -1278,7 +1845,7 @@ This starts</p>
     
     
     <div class="description">
-        <p>Get plastic.js Element Attributes</p>
+        <p>Get plastic.js Element Attributes Object</p>
     </div>
     
 
@@ -1343,7 +1910,7 @@ This starts</p>
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line68">line 68</a>
+            core/Element.js, line 137
         </div>
         
     </div>
@@ -1412,6 +1979,77 @@ This starts</p>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="parseAttributes">
+            
+            parseAttributes<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            core/Element.js, line 161
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new Attributes Object which parses and stores all Attributes of the plastic.js element</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="setEl">
             
             setEl<span class="signature">(el)</span>
@@ -1419,7 +2057,7 @@ This starts</p>
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line76">line 76</a>
+            core/Element.js, line 145
         </div>
         
     </div>
@@ -1523,117 +2161,6 @@ This starts</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="setRawData">
-            
-            setRawData<span class="signature">(data)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line184">line 184</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets the Raw Data</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="validateModule">
             
             validateModule<span class="signature">(module, data)</span>
@@ -1641,7 +2168,7 @@ This starts</p>
     
         
         <div class="tag-source">
-            <a href="Element.js.html">core/Element.js</a>, <a href="Element.js.html#line315">line 315</a>
+            core/Element.js, line 419
         </div>
         
     </div>
@@ -1789,7 +2316,7 @@ This starts</p>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon May 05 2014 15:04:28 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue May 06 2014 10:49:35 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>
