@@ -10,17 +10,17 @@
  *
  * @constructor
  */
-plastic.ElementAttributes = function(el) {
+plastic.ElementAttributes = function(pEl) {
 
 
-    this.el = el;
+    this.pEl = pEl;
 
     /**
      * plastic.js DOM Element
      *
      * @type {{}}
      */
-    this.$el = el.$el;
+    this.$el = pEl.$el;
 
     /**
      * plastic.js Element Attributes
@@ -87,7 +87,7 @@ plastic.ElementAttributes.prototype = {
 
         }
 
-        if (this.el.options.debug) {
+        if (this.pEl.options.debug) {
             console.log(this.attr);
         }
 

@@ -84,7 +84,7 @@ plastic.modules.dependencies = {
         "use strict";
 
         var cssComplete = function() {
-
+            plastic.events.pub('loaded-' + depName + '.css');
         };
 
         var jsComplete = function() {

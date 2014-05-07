@@ -17,14 +17,14 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: true,
+    debug: false,
 
     /**
      * Logs Benchmark Infos to the console
      *
      * @type {boolean}
      */
-    benchmark: true,
+    benchmark: false,
 
     /**
      * Width of Canvas, if not given

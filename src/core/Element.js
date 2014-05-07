@@ -6,13 +6,19 @@
  * @example
  * plastic.elements[i] = new plastic.Element(el);
  *
+ * @param {string|Object} el jQuery DOM Element or jQuery Selector ID String
+ *
  * @constructor
  */
 plastic.Element = function(el) {
 
     // If given an selector String, use jQuery to get the element
     if (typeof el === 'string' || el instanceof String) {
-        el = $(el);
+        if (el.charAt(0) === '#') {
+            el = $(el);
+        } else {
+            throw new Error('plasticElement Constructor only takes HTML ID Selectors! (e.g. "#myel")');
+        }
     }
 
 
@@ -21,19 +27,33 @@ plastic.Element = function(el) {
     //////////////////////////////////////////
 
     /**
-     * DOM Element
+     * jQuery DOM Element
      *
      * @type {{}}
      */
     this.$el = el;
 
-    /**
-     * HTML ID if available, otherwise Number
-     */
-    this.id = el[0].id;
+    if (el && el[0] && el[0].id) {
 
-    if (!this.id) {
-        this.id = plastic.elements.length + 1;
+        /**
+         * HTML ID if available, otherwise auto generated ID
+         * @type {String}
+         */
+        this.id = el[0].id;
+
+    } else {
+        this.id = 'plastic-el-' + plastic.elements.length + 1;
+    }
+
+    /**
+     * Inherited (and overwritten) general element options
+     *
+     * @type {Object|plastic.options}
+     */
+    this.options = plastic.options;
+
+    if (this.options.debug) {
+        console.log('[#' + this.id + '] new plastic.Element()');
     }
 
     /**
@@ -81,37 +101,25 @@ plastic.Element = function(el) {
     this.benchmarkCompleted = 0;
 
     /**
-     * Inherited (and overwritten) general element options
-     *
-     * @type {Object|plastic.options}
-     */
-    this.options = plastic.options;
-
-    /**
      * Element Query Module Instance
      *
-     * @type {{}}
+     * @type {Object|boolean}
      */
-    this.queryModule = undefined;
+    this.queryModule = false;
 
     /**
      * Element Data Module Instance
      *
-     * @type {{}}
+     * @type {Object|boolean}
      */
-    this.dataModule = undefined;
+    this.dataModule = false;
 
     /**
      * Element Display Module Instance
      *
-     * @type {{}}
+     * @type {Object|boolean}
      */
-    this.displayModule = undefined;
-
-    if (this.options.debug) {
-        console.log('[#' + this.id + '] new plastic.Element()');
-    }
-
+    this.displayModule = false;
 
     /**
      * plastic.js ElementAttibutes Object (Instance)
@@ -121,18 +129,20 @@ plastic.Element = function(el) {
     this.attributes = new plastic.ElementAttributes(this);
 
     /**
-     * Link to Attributes Object
+     * Link to calculated Attributes Object
      *
      * If you need easy access to the current Attributes Object, use this.
      *
      * @type {{}}
      */
-    this.attr = this.attributes.attr;
+    this.attr = this.attributes.getAttr();
 
 
     //////////////////////////////////////////
     // Element Bootstrap                    //
     //////////////////////////////////////////
+
+    this.mergeOptions();
 
 
 };
@@ -213,27 +223,31 @@ plastic.Element.prototype = {
                 console.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
 
+            // TODO: Catch Timeout Error
 
+            /** jQuery AJAX Request Object */
             var request = $.ajax({
                 url: this.attr.data.url,
                 dataType: 'json',
                 timeout: this.options.timeout,
                 success: function(data) {
                     "use strict";
+
                     if (data !== null && typeof data === 'object') {
                         self.attr.data.raw = data;
                     } else {
                         self.attr.data.raw = $.parseJSON(data);
                     }
+
+                    self.benchmarkDataLoaded = (new Date()).getTime();
+                    self.attr.raw = data;
+                    self.updateProgress();
+
                     self.events.pub('data-sucess');
                 },
                 error: function() {
                     plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
-                },
-                complete: function(data) {
-                    self.benchmarkDataLoaded = (new Date()).getTime();
-                    self.attr.raw = data;
-                    self.updateProgress();
+                    self.cancelProgress();
                 }
             });
 
@@ -312,6 +326,15 @@ plastic.Element.prototype = {
     },
 
     /**
+     * Cancels the processing of the element and displays the info to the user
+     * @todo Unsubscribe all remaining events?
+     */
+    cancelProgress: function() {
+        "use strict";
+        plastic.msg('plastic.js processing aborted.', 'error', this.$el);
+    },
+
+    /**
      * Dumps benchmark data to the console
      */
     displayBenchmark: function() {
@@ -320,15 +343,18 @@ plastic.Element.prototype = {
         var dataLoadedDiff = this.benchmarkDataLoaded - this.benchmarkStart;
         var totalDiff = this.benchmarkCompleted - this.benchmarkStart;
 
-        console.log('[#' + this.id + '] BENCHMARK-DATA:         ' + dataLoadedDiff + 'ms');
+        var msg = '[#' + this.id + '] BENCHMARK:';
+
+        msg += (' DATA: ' + dataLoadedDiff + 'ms');
 
         for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
             var moduleTime = this.benchmarkModulesLoaded[i];
             var moduleDiff = moduleTime - this.benchmarkStart;
-            console.log('[#' + this.id + '] BENCHMARK-MODULE #' + (i + 1) + ':    ' + moduleDiff + 'ms');
+            msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
         }
 
-        console.log('[#' + this.id + '] BENCHMARK-TOTAL:        ' + totalDiff + 'ms');
+        msg += '] | TOTAL: ' + totalDiff + 'ms';
+        console.log(msg);
 
     },
 
@@ -433,6 +459,11 @@ plastic.Element.prototype = {
                 throw new Error('Data Structure invalid!');
             }
         }
+    },
+
+    mergeOptions: function() {
+        "use strict";
+        this.options = $.extend(true, {}, plastic.options, this.attr.options.general);
     }
 
 };
