@@ -29,13 +29,6 @@ plastic.ElementAttributes = function(pEl) {
      */
     this.attr = {};
 
-    /**
-     * Array of element specific (collected) dependencies
-     *
-     * @type {Array}
-     */
-    this.dependencies = [];
-
     // Parse all Attributes of the current plastic.element
     this.parse();
 
@@ -346,7 +339,7 @@ plastic.ElementAttributes.prototype = {
             plastic.modules.dependencies.add(dataModuleInfo.dependencies);
         }
 
-        this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
+        this.pEl.dependencies = (this.pEl.dependencies.concat(displayModuleInfo.dependencies));
     }
 
 };

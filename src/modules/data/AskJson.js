@@ -15,13 +15,9 @@ plastic.modules.data.AskJson = function(dataObj) {
     this.dataObj = dataObj;
 
     // TODO: Generate this via schemaParser Helper
-    this.descriptionSchema = {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {}
-    };
+    this.descriptionSchema = {};
 
-    this.validationSchema = {
+    this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 
@@ -157,7 +153,7 @@ plastic.modules.data.AskJson.prototype = {
         }
 
         // Enrich processed data by appling the descriptionSchema to it.
-        this.dataObj.processedHtml = plastic.schemaParser.getHtmlData(this.dataObj.processed, this.descriptionSchema);
+//        this.dataObj.processedHtml = plastic.schemaParser.getHtmlData(this.dataObj.processed, this.descriptionSchema);
 
     }
 

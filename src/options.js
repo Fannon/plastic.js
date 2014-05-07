@@ -17,7 +17,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: false,
+    debug: true,
 
     /**
      * Logs Benchmark Infos to the console

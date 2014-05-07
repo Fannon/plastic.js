@@ -101,6 +101,29 @@ plastic.Element = function(el) {
     this.benchmarkCompleted = 0;
 
     /**
+     * Module Dependencies
+     * Those are
+     * @type {Array}
+     */
+    this.dependencies = [];
+
+    /**
+     * plastic.js ElementAttibutes Object (Instance)
+     *
+     * @type {plastic.ElementAttributes}
+     */
+    this.attributes = new plastic.ElementAttributes(this);
+
+    /**
+     * Link to calculated Attributes Object
+     *
+     * If you need easy access to the current Attributes Object, use this.
+     *
+     * @type {{}}
+     */
+    this.attr = this.attributes.attr;
+
+    /**
      * Element Query Module Instance
      *
      * @type {Object|boolean}
@@ -122,20 +145,9 @@ plastic.Element = function(el) {
     this.displayModule = false;
 
     /**
-     * plastic.js ElementAttibutes Object (Instance)
      *
-     * @type {plastic.ElementAttributes}
      */
-    this.attributes = new plastic.ElementAttributes(this);
-
-    /**
-     * Link to calculated Attributes Object
-     *
-     * If you need easy access to the current Attributes Object, use this.
-     *
-     * @type {{}}
-     */
-    this.attr = this.attributes.getAttr();
+    this.schema = plastic.ElementSchema(this);
 
 
     //////////////////////////////////////////
@@ -264,11 +276,11 @@ plastic.Element.prototype = {
             this.updateProgress();
         };
 
-        for (var i = 0; i < this.attributes.dependencies.length; i++) {
+        for (var i = 0; i < this.dependencies.length; i++) {
 
            this.eventsTotal += 1;
 
-            plastic.events.sub('loaded-' + this.attributes.dependencies[i], self, depLoaded);
+            plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
         }
 
 
@@ -433,9 +445,26 @@ plastic.Element.prototype = {
      * * Schema Validation: Validates the Data Structure of the incoming data
      *
      * @param {{}} module   plastic.js Module
-     * @param {{}} data     Data Object that is to be validated
      */
-    validateModule: function(module, data) {
+    validateModule: function(module) {
+
+        var env = jjv();
+        var self = this;
+
+        var validateSchema = function(schemaName, data) {
+
+            if (module[schemaName]) {
+                env.addSchema(schemaName, module[schemaName]);
+                var errors = env.validate(schemaName, data);
+
+                // validation was successful
+                if (errors) {
+                    console.dir(errors);
+                    throw new Error( schemaName + ' Structure invalid!');
+                }
+            }
+
+        };
 
         if (module.validate) {
             var validationErrors = module.validate();
@@ -447,18 +476,19 @@ plastic.Element.prototype = {
             }
         }
 
-        if (module.validationSchema) {
-
-            var env = jjv();
-            env.addSchema('data', module.validationSchema);
-            var schemaErrors = env.validate('data', data);
-
-            // validation was successful
-            if (schemaErrors) {
-                console.dir(schemaErrors);
-                throw new Error('Data Structure invalid!');
-            }
+        if (this.attr.data && this.attr.data.raw) {
+            validateSchema('rawDataSchema', this.attr.data.raw);
         }
+
+        if (this.attr.data && this.attr.data.processed) {
+            validateSchema('processedDataSchema', this.attr.data.processed);
+        }
+
+        if (this.attr.options && this.attr.options.display && this.attr.options.display.options) {
+            validateSchema('displayOptionsSchema', this.attr.options.display.options);
+        }
+
+
     },
 
     mergeOptions: function() {

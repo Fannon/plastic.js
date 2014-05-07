@@ -20,10 +20,16 @@ plastic.modules.display.SimpleTable = function(el, elAttr) {
     this.elAttr = elAttr;
 
     /**
-     * Validation Schema
+     * Display Options Validation Schema
      * @type {{}}
      */
-    this.validationSchema = {};
+    this.displayOptionsSchema = {};
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.processedDataSchema = {};
 
     /**
      * Display Element that is rendered

@@ -4,7 +4,27 @@
  * @singleton
  * @namespace
  */
-plastic.schemaParser = {
+plastic.ElementSchema = function(pEl) {
+    "use strict";
+
+    /**
+     * plastic.js Element Object
+     */
+    this.pEl = pEl;
+
+    /**
+     * Description Schema
+     * @type {{}}
+     */
+    this.descriptionSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+    };
+
+};
+
+plastic.ElementSchema.prototype = {
 
     /**
      * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
@@ -48,7 +68,7 @@ plastic.schemaParser = {
                 var cellValue = row[cellType];
                 var format = descriptionSchema.properties[cellType].format;
 
-                // TODO: Case-Handling: value could be no array
+                // TODO: Case-Handling: value could be no array (?)
                 for (var j = 0; j < cellValue.length; j++) {
 
                     if (format) {
