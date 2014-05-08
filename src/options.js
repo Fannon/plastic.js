@@ -42,5 +42,5 @@ plastic.options = {
      * Default AJAX Timeout (in ms)
      * @type {number}
      */
-    timeout: 5000
+    timeout: 3000
 };

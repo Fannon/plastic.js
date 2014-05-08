@@ -50,7 +50,7 @@ plastic.msg = (function () {
 
     var createNotification = function(msg, type, el) {
 
-        el.find('.plastic-js-messages').append('<div class="plastic-message plastic-message-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
+        el.find('.plastic-js-messages').append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
     };
 
     return message;

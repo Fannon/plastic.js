@@ -6,12 +6,12 @@
     overflow: scroll;
 }
 
-.plastic-js-message {
+.plastic-js-messages {
     position: absolute;
     top: 0;
     left: 0;
 }
-.plastic-message {
+.plastic-js-messages .plastic-js-msg {
     display: block;
     height: auto;
     padding: 2px 4px;
@@ -21,7 +21,7 @@
     font-size: 0.85em;
 }
 
-.plastic-message-error {
+.plastic-js-messages .plastic-js-msg-error {
     background: #F6CECE;
     color: #B31818;
     border: 1px solid #B31818;
