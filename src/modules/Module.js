@@ -54,39 +54,72 @@ plastic.modules.Module = function(pEl, type, name) {
 
     // Specific case handling for each module-type
     if (type === 'display') {
-
         this.module = new Module(pEl.$el, pEl.attr);
-        this.validate();
         this.execute();
 
     } else if (type === 'data') {
-
         this.module = new Module(pEl.attr.data);
-        this.validate();
-        pEl.attr.data = this.execute();
+        this.execute();
 
     } else if (type === 'query') {
-
         this.module = new Module(pEl.attr.query);
-        this.validate();
-        pEl.attr.data = this.execute();
+        this.execute();
 
     } else {
         throw new Error('Invalid Module Type!');
     }
 
-
 };
 
 plastic.modules.Module.prototype = {
 
+    /**
+     * Executes the module and stores the return values accordingly
+     *
+     * Validates the data against the module before executing it
+     */
     execute: function() {
         "use strict";
-        return this.module.execute();
+
+        if (this.type === 'display') {
+            this.validate();
+            this.module.execute();
+
+        } else if (this.type === 'data') {
+            this.validate();
+            this.pEl.attr.data = this.module.execute();
+
+        } else if (this.type === 'query') {
+            this.validate();
+            this.pEl.attr.data = this.module.execute();
+        }
+
     },
 
+    /**
+     * General Module Validation
+     *
+     * This calls all available validation Schemas and Function of the module
+     */
     validate: function() {
         "use strict";
+
+        var self = this;
+
+        var validateModuleSchema = function(schemaName, data) {
+
+            var env = jjv();
+            var schema = self.module[schemaName];
+
+            env.addSchema(schemaName, data);
+            var errors = env.validate(schema, data);
+
+            // validation was successful
+            if (errors) {
+                console.dir(errors);
+                throw new Error(schemaName + ' Schema Structure invalid!');
+            }
+        };
 
         if (this.module.validate) {
             var validationErrors = this.module.validate();
@@ -99,38 +132,31 @@ plastic.modules.Module.prototype = {
         }
 
         if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
-            this.validateModuleSchema('rawDataSchema', this.pEl.attr.data.raw);
+            validateModuleSchema('rawDataSchema', this.pEl.attr.data.raw);
         }
 
         if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
-            this.validateModuleSchema('processedDataSchema', this.pEl.attr.data.processed);
+            validateModuleSchema('processedDataSchema', this.pEl.attr.data.processed);
         }
 
         if (this.module.displayOptionsSchema && this.pEl.attr.options && this.pEl.attr.options.display && this.pEl.attr.options.display.options) {
-            this.validateModuleSchema('displayOptionsSchema', this.pEl.attr.options.display.options);
+            validateModuleSchema('displayOptionsSchema', this.pEl.attr.options.display.options);
         }
 
 
     },
 
+    /**
+     * Calls the Module Update function (if available)
+     */
     update: function() {
         "use strict";
-        this.module.update();
-    },
-
-    validateModuleSchema: function(schemaName, data) {
-
-        var env = jjv();
-        var schema = this.module[schemaName];
-
-        env.addSchema(schemaName, data);
-        var errors = env.validate(schema, data);
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error(schemaName + ' Schema Structure invalid!');
+        if (this.module.update) {
+            this.module.update();
         }
+
     }
+
+
 
 };
