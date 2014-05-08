@@ -178,6 +178,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="plastic.options.benchmark"><a href="plastic.options.html#benchmark">benchmark</a></li>
+            
                 <li data-name="plastic.options.debug"><a href="plastic.options.html#debug">debug</a></li>
             
                 <li data-name="plastic.options.height"><a href="plastic.options.html#height">height</a></li>
@@ -207,9 +209,9 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.Element#attr"><a href="plastic.Element.html#attr">attr</a></li>
+                <li data-name="plastic.Element#$el"><a href="plastic.Element.html#$el">$el</a></li>
             
-                <li data-name="plastic.Element#attributes"><a href="plastic.Element.html#attributes">attributes</a></li>
+                <li data-name="plastic.Element#attr"><a href="plastic.Element.html#attr">attr</a></li>
             
                 <li data-name="plastic.Element#benchmarkCompleted"><a href="plastic.Element.html#benchmarkCompleted">benchmarkCompleted</a></li>
             
@@ -225,13 +227,13 @@
             
                 <li data-name="plastic.Element#displayModule"><a href="plastic.Element.html#displayModule">displayModule</a></li>
             
-                <li data-name="plastic.Element#el"><a href="plastic.Element.html#el">el</a></li>
-            
                 <li data-name="plastic.Element#events"><a href="plastic.Element.html#events">events</a></li>
             
                 <li data-name="plastic.Element#eventsProgress"><a href="plastic.Element.html#eventsProgress">eventsProgress</a></li>
             
                 <li data-name="plastic.Element#eventsTotal"><a href="plastic.Element.html#eventsTotal">eventsTotal</a></li>
+            
+                <li data-name="plastic.Element#id"><a href="plastic.Element.html#id">id</a></li>
             
                 <li data-name="plastic.Element#options"><a href="plastic.Element.html#options">options</a></li>
             
@@ -245,29 +247,25 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.Element#callDataParser"><a href="plastic.Element.html#callDataParser">callDataParser</a></li>
+                <li data-name="plastic.Element#applySchema"><a href="plastic.Element.html#applySchema">applySchema</a></li>
             
-                <li data-name="plastic.Element#callDisplayModule"><a href="plastic.Element.html#callDisplayModule">callDisplayModule</a></li>
+                <li data-name="plastic.Element#cancelProgress"><a href="plastic.Element.html#cancelProgress">cancelProgress</a></li>
             
-                <li data-name="plastic.Element#callQueryParser"><a href="plastic.Element.html#callQueryParser">callQueryParser</a></li>
+                <li data-name="plastic.Element#completeProgress"><a href="plastic.Element.html#completeProgress">completeProgress</a></li>
             
                 <li data-name="plastic.Element#createDisplayContainer"><a href="plastic.Element.html#createDisplayContainer">createDisplayContainer</a></li>
             
-                <li data-name="plastic.Element#createMsgContainer"><a href="plastic.Element.html#createMsgContainer">createMsgContainer</a></li>
+                <li data-name="plastic.Element#createMessageContainer"><a href="plastic.Element.html#createMessageContainer">createMessageContainer</a></li>
             
                 <li data-name="plastic.Element#displayBenchmark"><a href="plastic.Element.html#displayBenchmark">displayBenchmark</a></li>
             
                 <li data-name="plastic.Element#execute"><a href="plastic.Element.html#execute">execute</a></li>
             
-                <li data-name="plastic.Element#getAttr"><a href="plastic.Element.html#getAttr">getAttr</a></li>
+                <li data-name="plastic.Element#registerDependencies"><a href="plastic.Element.html#registerDependencies">registerDependencies</a></li>
             
-                <li data-name="plastic.Element#getEl"><a href="plastic.Element.html#getEl">getEl</a></li>
+                <li data-name="plastic.Element#updateAttributes"><a href="plastic.Element.html#updateAttributes">updateAttributes</a></li>
             
-                <li data-name="plastic.Element#parseAttributes"><a href="plastic.Element.html#parseAttributes">parseAttributes</a></li>
-            
-                <li data-name="plastic.Element#setEl"><a href="plastic.Element.html#setEl">setEl</a></li>
-            
-                <li data-name="plastic.Element#validateModule"><a href="plastic.Element.html#validateModule">validateModule</a></li>
+                <li data-name="plastic.Element#updateProgress"><a href="plastic.Element.html#updateProgress">updateProgress</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -284,11 +282,19 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.ElementAttributes#attr"><a href="plastic.ElementAttributes.html#attr">attr</a></li>
+                <li data-name="plastic.ElementAttributes#$el"><a href="plastic.ElementAttributes.html#$el">$el</a></li>
             
-                <li data-name="plastic.ElementAttributes#dependencies"><a href="plastic.ElementAttributes.html#dependencies">dependencies</a></li>
+                <li data-name="plastic.ElementAttributes#attrObjSchema"><a href="plastic.ElementAttributes.html#attrObjSchema">attrObjSchema</a></li>
             
-                <li data-name="plastic.ElementAttributes#el"><a href="plastic.ElementAttributes.html#el">el</a></li>
+                <li data-name="plastic.ElementAttributes#data"><a href="plastic.ElementAttributes.html#data">data</a></li>
+            
+                <li data-name="plastic.ElementAttributes#options"><a href="plastic.ElementAttributes.html#options">options</a></li>
+            
+                <li data-name="plastic.ElementAttributes#query"><a href="plastic.ElementAttributes.html#query">query</a></li>
+            
+                <li data-name="plastic.ElementAttributes#style"><a href="plastic.ElementAttributes.html#style">style</a></li>
+            
+                <li data-name="plastic.ElementAttributes#style"><a href="plastic.ElementAttributes.html#style">style</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -298,21 +304,19 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.ElementAttributes#getAttr"><a href="plastic.ElementAttributes.html#getAttr">getAttr</a></li>
+                <li data-name="plastic.ElementAttributes#getAttrObj"><a href="plastic.ElementAttributes.html#getAttrObj">getAttrObj</a></li>
             
                 <li data-name="plastic.ElementAttributes#getData"><a href="plastic.ElementAttributes.html#getData">getData</a></li>
+            
+                <li data-name="plastic.ElementAttributes#getDataDescription"><a href="plastic.ElementAttributes.html#getDataDescription">getDataDescription</a></li>
             
                 <li data-name="plastic.ElementAttributes#getOptions"><a href="plastic.ElementAttributes.html#getOptions">getOptions</a></li>
             
                 <li data-name="plastic.ElementAttributes#getQuery"><a href="plastic.ElementAttributes.html#getQuery">getQuery</a></li>
             
-                <li data-name="plastic.ElementAttributes#getSchema"><a href="plastic.ElementAttributes.html#getSchema">getSchema</a></li>
-            
                 <li data-name="plastic.ElementAttributes#getStyle"><a href="plastic.ElementAttributes.html#getStyle">getStyle</a></li>
             
                 <li data-name="plastic.ElementAttributes#parse"><a href="plastic.ElementAttributes.html#parse">parse</a></li>
-            
-                <li data-name="plastic.ElementAttributes#registerDependencies"><a href="plastic.ElementAttributes.html#registerDependencies">registerDependencies</a></li>
             
                 <li data-name="plastic.ElementAttributes#validate"><a href="plastic.ElementAttributes.html#validate">validate</a></li>
             
@@ -363,6 +367,8 @@
             <span class="subtitle">Members</span>
             
                 <li data-name="plastic.modules.data.AskJson#dataObj"><a href="plastic.modules.data.AskJson.html#dataObj">dataObj</a></li>
+            
+                <li data-name="plastic.modules.data.AskJson#schemaMap"><a href="plastic.modules.data.AskJson.html#schemaMap">schemaMap</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -426,13 +432,15 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="plastic.modules.display.SimpleTable#$el"><a href="plastic.modules.display.SimpleTable.html#$el">$el</a></li>
+            
                 <li data-name="plastic.modules.display.SimpleTable#displayEl"><a href="plastic.modules.display.SimpleTable.html#displayEl">displayEl</a></li>
             
-                <li data-name="plastic.modules.display.SimpleTable#el"><a href="plastic.modules.display.SimpleTable.html#el">el</a></li>
+                <li data-name="plastic.modules.display.SimpleTable#displayOptionsSchema"><a href="plastic.modules.display.SimpleTable.html#displayOptionsSchema">displayOptionsSchema</a></li>
             
                 <li data-name="plastic.modules.display.SimpleTable#elAttr"><a href="plastic.modules.display.SimpleTable.html#elAttr">elAttr</a></li>
             
-                <li data-name="plastic.modules.display.SimpleTable#validationSchema"><a href="plastic.modules.display.SimpleTable.html#validationSchema">validationSchema</a></li>
+                <li data-name="plastic.modules.display.SimpleTable#processedDataSchema"><a href="plastic.modules.display.SimpleTable.html#processedDataSchema">processedDataSchema</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -447,6 +455,45 @@
                 <li data-name="plastic.modules.display.SimpleTable#setElAttr"><a href="plastic.modules.display.SimpleTable.html#setElAttr">setElAttr</a></li>
             
                 <li data-name="plastic.modules.display.SimpleTable#validate"><a href="plastic.modules.display.SimpleTable.html#validate">validate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.Module">
+            <span class="title">
+                <a href="plastic.modules.Module.html">plastic.modules.Module</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.Module#info"><a href="plastic.modules.Module.html#info">info</a></li>
+            
+                <li data-name="plastic.modules.Module#module"><a href="plastic.modules.Module.html#module">module</a></li>
+            
+                <li data-name="plastic.modules.Module#name"><a href="plastic.modules.Module.html#name">name</a></li>
+            
+                <li data-name="plastic.modules.Module#pEl"><a href="plastic.modules.Module.html#pEl">pEl</a></li>
+            
+                <li data-name="plastic.modules.Module#type"><a href="plastic.modules.Module.html#type">type</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="plastic.modules.Module#execute"><a href="plastic.modules.Module.html#execute">execute</a></li>
+            
+                <li data-name="plastic.modules.Module#update"><a href="plastic.modules.Module.html#update">update</a></li>
+            
+                <li data-name="plastic.modules.Module#validate"><a href="plastic.modules.Module.html#validate">validate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -545,12 +592,12 @@
     <div class="nameContainer">
         <h4 class="name" id="Element">
             
-            new plastic.Element<span class="signature">()</span>
+            new plastic.Element<span class="signature">(el)</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 11
+            core/Element.js, line 13
         </div>
         
     </div>
@@ -570,6 +617,54 @@
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>el</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>jQuery DOM Element or jQuery Selector ID String</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -639,7 +734,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="attr">attr<span class="type-signature type object">Object</span> </h4>
+        <h4 class="name" id="$el">$el<span class="type-signature type object">Object</span> </h4>
     </div>
     
     
@@ -647,8 +742,7 @@
 <dd>
     
     <div class="description">
-        <p>Link to Attributes Object</p>
-<p>If you need easy access to the current Attributes Object, use this.</p>
+        <p>jQuery DOM Element</p>
     </div>
     
     
@@ -685,7 +779,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="attributes">attributes<span class="type-signature type plastic.elementattributes"><a href="plastic.ElementAttributes.html">plastic.ElementAttributes</a></span> </h4>
+        <h4 class="name" id="attr">attr<span class="type-signature type plastic.elementattributes"><a href="plastic.ElementAttributes.html">plastic.ElementAttributes</a></span> </h4>
     </div>
     
     
@@ -910,7 +1004,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="dataModule">dataModule<span class="type-signature type object">Object</span> </h4>
+        <h4 class="name" id="dataModule">dataModule<span class="type-signature type plastic.element.element">plastic.element.Element</span> <span class="type-signature type boolean">boolean</span> </h4>
     </div>
     
     
@@ -955,7 +1049,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="dependencies">dependencies<span class="type-signature type object">Object</span> </h4>
+        <h4 class="name" id="dependencies">dependencies<span class="type-signature type array">Array</span> </h4>
     </div>
     
     
@@ -963,7 +1057,8 @@
 <dd>
     
     <div class="description">
-        <p>Module specific dependencies</p>
+        <p>Module Dependencies
+Those are</p>
     </div>
     
     
@@ -1000,7 +1095,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="displayModule">displayModule<span class="type-signature type object">Object</span> </h4>
+        <h4 class="name" id="displayModule">displayModule<span class="type-signature type plastic.element.element">plastic.element.Element</span> <span class="type-signature type boolean">boolean</span> </h4>
     </div>
     
     
@@ -1009,51 +1104,6 @@
     
     <div class="description">
         <p>Element Display Module Instance</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="el">el<span class="type-signature type object">Object</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>DOM Element</p>
     </div>
     
     
@@ -1226,6 +1276,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="id">id<span class="type-signature type string">String</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>HTML ID if available, otherwise auto generated ID</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="options">options<span class="type-signature type object">Object</span> <span class="type-signature type plastic.options"><a href="plastic.options.html">plastic.options</a></span> </h4>
     </div>
     
@@ -1271,7 +1366,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="queryModule">queryModule<span class="type-signature type object">Object</span> </h4>
+        <h4 class="name" id="queryModule">queryModule<span class="type-signature type plastic.element.element">plastic.element.Element</span> <span class="type-signature type boolean">boolean</span> </h4>
     </div>
     
     
@@ -1322,14 +1417,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="callDataParser">
+        <h4 class="name" id="applySchema">
             
-            callDataParser<span class="signature">()</span>
+            applySchema<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 353
+            core/Element.js, line 389
         </div>
         
     </div>
@@ -1340,7 +1435,7 @@
     
     
     <div class="description">
-        <p>Helper Function to call the Data Parser Module</p>
+        <p>Applies Data Description to generate &quot;annotated / enriched&quot; processed data</p>
     </div>
     
 
@@ -1393,14 +1488,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="callDisplayModule">
+        <h4 class="name" id="cancelProgress">
             
-            callDisplayModule<span class="signature">()</span>
+            cancelProgress<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 382
+            core/Element.js, line 309
         </div>
         
     </div>
@@ -1411,7 +1506,7 @@
     
     
     <div class="description">
-        <p>Helper Function to call the Display Module</p>
+        <p>Cancels the processing of the element and displays the info to the user</p>
     </div>
     
 
@@ -1444,6 +1539,13 @@
     
     
     
+    <dt class="tag-todo">TODO</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Unsubscribe all remaining events?</li>
+        </ul>
+    </dd>
+    
 </dl>
 
     
@@ -1464,14 +1566,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="callQueryParser">
+        <h4 class="name" id="completeProgress">
             
-            callQueryParser<span class="signature">()</span>
+            completeProgress<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 328
+            core/Element.js, line 317
         </div>
         
     </div>
@@ -1482,7 +1584,7 @@
     
     
     <div class="description">
-        <p>Helper Function to call the Query Parser Module</p>
+        <p>This executes all remaining actions after all events are completed</p>
     </div>
     
 
@@ -1542,7 +1644,7 @@
     
         
         <div class="tag-source">
-            core/Element.js, line 272
+            core/Element.js, line 276
         </div>
         
     </div>
@@ -1586,6 +1688,13 @@
     
     
     
+    <dt class="tag-todo">TODO</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>$el.find unnecessary?</li>
+        </ul>
+    </dd>
+    
 </dl>
 
     
@@ -1606,14 +1715,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="createMsgContainer">
+        <h4 class="name" id="createMessageContainer">
             
-            createMsgContainer<span class="signature">()</span>
+            createMessageContainer<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 256
+            core/Element.js, line 260
         </div>
         
     </div>
@@ -1657,6 +1766,13 @@
     
     
     
+    <dt class="tag-todo">TODO</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>$el.find unnecessary?</li>
+        </ul>
+    </dd>
+    
 </dl>
 
     
@@ -1684,7 +1800,7 @@
     
         
         <div class="tag-source">
-            core/Element.js, line 304
+            core/Element.js, line 365
         </div>
         
     </div>
@@ -1755,7 +1871,7 @@
     
         
         <div class="tag-source">
-            core/Element.js, line 173
+            core/Element.js, line 164
         </div>
         
     </div>
@@ -1827,14 +1943,14 @@ This starts</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="getAttr">
+        <h4 class="name" id="registerDependencies">
             
-            getAttr<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Object}</span>
+            registerDependencies<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 154
+            core/Element.js, line 342
         </div>
         
     </div>
@@ -1845,7 +1961,8 @@ This starts</p>
     
     
     <div class="description">
-        <p>Get plastic.js Element Attributes Object</p>
+        <p>Looks for all external dependencies that are required by the currently used modules</p>
+<p>Registers all Dependencys for Lazyloading</p>
     </div>
     
 
@@ -1878,81 +1995,12 @@ This starts</p>
     
     
     
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getEl">
-            
-            getEl<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Object}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            core/Element.js, line 137
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Get DOM Element within PlasticElement Container</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <dt class="tag-todo">TODO</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Use a Set Datastructure?</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -1968,25 +2016,20 @@ This starts</p>
     
     
     
-
-
-    
-    
-    
 </dd>
 
         
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="parseAttributes">
+        <h4 class="name" id="updateAttributes">
             
-            parseAttributes<span class="signature">()</span>
+            updateAttributes<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 161
+            core/Element.js, line 251
         </div>
         
     </div>
@@ -2050,14 +2093,14 @@ This starts</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="setEl">
+        <h4 class="name" id="updateProgress">
             
-            setEl<span class="signature">(el)</span>
+            updateProgress<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            core/Element.js, line 145
+            core/Element.js, line 290
         </div>
         
     </div>
@@ -2068,7 +2111,7 @@ This starts</p>
     
     
     <div class="description">
-        <p>Get DOM Element within PlasticElement Container</p>
+        <p>Updates the Progress of asynchronal events</p>
     </div>
     
 
@@ -2076,188 +2119,6 @@ This starts</p>
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>el</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="validateModule">
-            
-            validateModule<span class="signature">(module, data)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            core/Element.js, line 419
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Validation Helper Function</p>
-<p>This calls two kinds of validations:
-<em> General Validation: Validates custom Logic
-</em> Schema Validation: Validates the Data Structure of the incoming data</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>module</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>plastic.js Module</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>Data Object that is to be validated</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -2316,7 +2177,7 @@ This starts</p>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue May 06 2014 10:49:35 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu May 08 2014 16:25:24 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

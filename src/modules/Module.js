@@ -14,6 +14,7 @@ plastic.modules.Module = function(pEl, type, name) {
 
     /**
      * plastic Element
+     * @type {plastic.Element}
      */
     this.pEl = pEl;
 
@@ -32,13 +33,13 @@ plastic.modules.Module = function(pEl, type, name) {
     /**
      * Specific Module Instance
      *
-     * @type {{}}
+     * @type {Object}
      */
     this.module = undefined;
 
     /**
      * Module Infos (like className, Dependencies, etc.)
-     * @type {{}}
+     * @type {Object}
      */
     this.info = plastic.modules.registry.get(type, name);
 

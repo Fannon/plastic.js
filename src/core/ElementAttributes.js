@@ -23,13 +23,6 @@ plastic.ElementAttributes = function(pEl) {
     this.$el = pEl.$el;
 
     /**
-     * plastic.js Element Attributes
-     *
-     * @type {Object}
-     */
-    this.attr = {};
-
-    /**
      * Element Style Attributes
      * @type {Object|boolean}
      */
@@ -139,7 +132,8 @@ plastic.ElementAttributes.prototype = {
 
         var attrObj = {
             "style": this.style,
-            "options": this.options
+            "options": this.options,
+            "display": this.display
         };
 
         if (this.data) {
@@ -208,8 +202,8 @@ plastic.ElementAttributes.prototype = {
                     options = $.parseJSON(optionsString);
 
                     // SUCCESS
-                    this.displayModule = options.display.module;
                     this.options = options;
+                    this.display = options.display;
 
                 } catch(e) {
                     console.dir(e);
@@ -249,7 +243,6 @@ plastic.ElementAttributes.prototype = {
                 query.text = queryString;
 
                 // SUCCESS
-                this.queryModule = query.module;
                 this.query = query;
 
             } else {
@@ -313,7 +306,6 @@ plastic.ElementAttributes.prototype = {
             }
 
             // SUCCESS
-//            this.dataModule =
             this.data = data;
 
         }

@@ -135,11 +135,6 @@ plastic.Element = function(el) {
      */
     this.displayModule = false;
 
-    /**
-     * Element Schema
-     */
-    this.schema = new plastic.ElementSchema(this);
-
 
     //////////////////////////////////////////
     // Element Bootstrap                    //
@@ -321,11 +316,15 @@ plastic.Element.prototype = {
      */
     completeProgress: function() {
         "use strict";
+
+        // Instanciate new Data Module
         this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
 
-        this.schema.apply();
+        // Apply Data Description if available
+        this.applySchema();
 
-        this.displayModule = new plastic.modules.Module(this, 'display', this.attr.options.display.module);
+        // Instanciate new Display Module (renders the output)
+        this.displayModule = new plastic.modules.Module(this, 'display', this.attr.display.module);
 
         this.benchmarkCompleted = (new Date()).getTime();
 
@@ -344,7 +343,7 @@ plastic.Element.prototype = {
         "use strict";
 
         console.dir(this.attr);
-        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.options.display.module);
+        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.display.module);
         plastic.modules.dependencies.add(displayModuleInfo.dependencies);
 
         if (this.attr.data && this.attr.data.module) {
@@ -381,6 +380,64 @@ plastic.Element.prototype = {
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
         console.log(msg);
+
+    },
+
+    /**
+     * Applies Data Description to generate "annotated / enriched" processed data
+     */
+    applySchema: function() {
+        "use strict";
+
+        var self = this;
+        var processedData = this.attr.data.processed;
+        var dataDescription = this.attr.data.description;
+
+        var applyHtml = function() {
+
+            /**
+             * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
+             *
+             * @type {{}}
+             */
+            var htmlMapper = {
+                "email": function(val) {
+                    var strippedVal = val.replace('mailto:', '');
+                    return '<a href="' + val + '">' + strippedVal + '</a>';
+                },
+                "uri": function(val) {
+                    return '<a href="' + val + '">' + val + '</a>';
+                }
+            };
+
+            var processedHtml = $.extend(true, [], processedData); // Deep Copy
+
+            for (var i = 0; i < processedHtml.length; i++) {
+
+                var row = processedHtml[i];
+
+                for (var cellType in row) {
+
+                    var cellValue = row[cellType];
+                    var format = dataDescription[cellType].format;
+
+                    // TODO: Case-Handling: value could be no array (?)
+                    for (var j = 0; j < cellValue.length; j++) {
+
+                        if (format) {
+                            cellValue[j] = htmlMapper[format](cellValue[j]);
+                        }
+                    }
+                }
+
+            }
+
+            self.attr.data.processedHtml = processedHtml;
+        };
+
+        if (dataDescription && Object.keys(dataDescription).length > 0) {
+            applyHtml();
+        }
 
     }
 

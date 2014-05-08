@@ -32,9 +32,7 @@
 		"tags": ["examples"]
 	},
     "opts": {
-        "verbose": true,
         "lenient": true,
-        "encoding": "utf8",
-        "explain": true
+        "encoding": "utf8"
     }
 }
