@@ -67,7 +67,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "format": "uri"
+            "format": "phone"
         }
     };
 

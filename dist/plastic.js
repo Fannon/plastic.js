@@ -185,16 +185,6 @@ plastic.Element = function(el) {
 
     var self = this;
 
-    // If given an selector String, use jQuery to get the element
-    if (typeof el === 'string' || el instanceof String) {
-        if (el.charAt(0) === '#') {
-            el = $(el);
-        } else {
-            throw new Error('plasticElement Constructor only takes HTML ID Selectors! (e.g. "#myel")');
-        }
-    }
-
-
     //////////////////////////////////////////
     // Element Attributes                   //
     //////////////////////////////////////////
@@ -206,14 +196,15 @@ plastic.Element = function(el) {
      */
     this.$el = el;
 
+    /**
+     * HTML ID if available, otherwise auto generated ID
+     * @type {String}
+     */
+    this.id = undefined;
+
+    // Get / Calculate ID
     if (el && el[0] && el[0].id) {
-
-        /**
-         * HTML ID if available, otherwise auto generated ID
-         * @type {String}
-         */
         this.id = el[0].id;
-
     } else {
         this.id = 'plastic-el-' + plastic.elements.length + 1;
     }
@@ -347,9 +338,6 @@ plastic.Element.prototype = {
 
     /**
      * Executes the processing of the plastic.element
-     * This starts
-     *
-     * @todo Introduce Error State: Stop further Processing if there are Exceptions
      */
     execute: function() {
 
@@ -413,7 +401,7 @@ plastic.Element.prototype = {
             }
 
         } else {
-            // Data already there, continue:
+            // Data is already there, continue:
             self.updateProgress();
         }
 
@@ -478,11 +466,12 @@ plastic.Element.prototype = {
 
     /**
      * Cancels the processing of the element and displays the info to the user
-     * @todo Unsubscribe all remaining events?
      */
     cancelProgress: function() {
         "use strict";
         plastic.msg('plastic.js processing aborted.', 'error', this.$el);
+        // Clear all Element Events
+        this.events = new plastic.helper.Events();
     },
 
     /**
@@ -571,6 +560,8 @@ plastic.Element.prototype = {
 
             /**
              * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
+             * @todo Create more Formats
+             * @todo Create Phone Number
              *
              * @type {{}}
              */
@@ -579,8 +570,14 @@ plastic.Element.prototype = {
                     var strippedVal = val.replace('mailto:', '');
                     return '<a href="' + val + '">' + strippedVal + '</a>';
                 },
+                "phone": function(val) {
+                    var strippedVal = val.replace('tel:', '');
+                    return '<a href="' + val + '">' + strippedVal + '</a>';
+                },
                 "uri": function(val) {
-                    return '<a href="' + val + '">' + val + '</a>';
+                    // Strips http:// or ftp:// etc.
+                    var strippedVal = val.replace(/\w*:\/{2}/g, ''); //
+                    return '<a href="' + val + '">' + strippedVal + '</a>';
                 }
             };
 
