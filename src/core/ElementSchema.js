@@ -34,7 +34,7 @@ plastic.ElementSchema.prototype = {
     htmlMap: {
         "email": function(val) {
             "use strict";
-            var strippedVal = val.replace('mailto:','');
+            var strippedVal = val.replace('mailto:', '');
             return '<a href="' + val + '">' + strippedVal + '</a>';
         },
         "uri": function(val) {

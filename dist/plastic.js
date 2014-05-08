@@ -153,7 +153,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: false,
+    debug: true,
 
     /**
      * Logs Benchmark Infos to the console
@@ -272,6 +272,29 @@ plastic.Element = function(el) {
     this.benchmarkCompleted = 0;
 
     /**
+     * Module Dependencies
+     * Those are
+     * @type {Array}
+     */
+    this.dependencies = [];
+
+    /**
+     * plastic.js ElementAttibutes Object (Instance)
+     *
+     * @type {plastic.ElementAttributes}
+     */
+    this.attributes = new plastic.ElementAttributes(this);
+
+    /**
+     * Link to calculated Attributes Object
+     *
+     * If you need easy access to the current Attributes Object, use this.
+     *
+     * @type {{}}
+     */
+    this.attr = this.attributes.attr;
+
+    /**
      * Element Query Module Instance
      *
      * @type {Object|boolean}
@@ -293,20 +316,9 @@ plastic.Element = function(el) {
     this.displayModule = false;
 
     /**
-     * plastic.js ElementAttibutes Object (Instance)
      *
-     * @type {plastic.ElementAttributes}
      */
-    this.attributes = new plastic.ElementAttributes(this);
-
-    /**
-     * Link to calculated Attributes Object
-     *
-     * If you need easy access to the current Attributes Object, use this.
-     *
-     * @type {{}}
-     */
-    this.attr = this.attributes.getAttr();
+    this.schema = plastic.ElementSchema(this);
 
 
     //////////////////////////////////////////
@@ -435,11 +447,11 @@ plastic.Element.prototype = {
             this.updateProgress();
         };
 
-        for (var i = 0; i < this.attributes.dependencies.length; i++) {
+        for (var i = 0; i < this.dependencies.length; i++) {
 
            this.eventsTotal += 1;
 
-            plastic.events.sub('loaded-' + this.attributes.dependencies[i], self, depLoaded);
+            plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
         }
 
 
@@ -604,9 +616,25 @@ plastic.Element.prototype = {
      * * Schema Validation: Validates the Data Structure of the incoming data
      *
      * @param {{}} module   plastic.js Module
-     * @param {{}} data     Data Object that is to be validated
      */
-    validateModule: function(module, data) {
+    validateModule: function(module) {
+
+        var env = jjv();
+
+        var validateSchema = function(schemaName, data) {
+
+            if (module[schemaName]) {
+                env.addSchema(schemaName, module[schemaName]);
+                var errors = env.validate(schemaName, data);
+
+                // validation was successful
+                if (errors) {
+                    console.dir(errors);
+                    throw new Error( schemaName + ' Structure invalid!');
+                }
+            }
+
+        };
 
         if (module.validate) {
             var validationErrors = module.validate();
@@ -618,18 +646,19 @@ plastic.Element.prototype = {
             }
         }
 
-        if (module.validationSchema) {
-
-            var env = jjv();
-            env.addSchema('data', module.validationSchema);
-            var schemaErrors = env.validate('data', data);
-
-            // validation was successful
-            if (schemaErrors) {
-                console.dir(schemaErrors);
-                throw new Error('Data Structure invalid!');
-            }
+        if (this.attr.data && this.attr.data.raw) {
+            validateSchema('rawDataSchema', this.attr.data.raw);
         }
+
+        if (this.attr.data && this.attr.data.processed) {
+            validateSchema('processedDataSchema', this.attr.data.processed);
+        }
+
+        if (this.attr.options && this.attr.options.display && this.attr.options.display.options) {
+            validateSchema('displayOptionsSchema', this.attr.options.display.options);
+        }
+
+
     },
 
     mergeOptions: function() {
@@ -657,13 +686,6 @@ plastic.ElementAttributes = function(pEl) {
      * @type {Object}
      */
     this.attr = {};
-
-    /**
-     * Array of element specific (collected) dependencies
-     *
-     * @type {Array}
-     */
-    this.dependencies = [];
 
     // Parse all Attributes of the current plastic.element
     this.parse();
@@ -975,9 +997,88 @@ plastic.ElementAttributes.prototype = {
             plastic.modules.dependencies.add(dataModuleInfo.dependencies);
         }
 
-        this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
+        this.pEl.dependencies = (this.pEl.dependencies.concat(displayModuleInfo.dependencies));
     }
 
+};
+
+plastic.ElementSchema = function(pEl) {
+    "use strict";
+
+    /**
+     * plastic.js Element Object
+     */
+    this.pEl = pEl;
+
+    /**
+     * Description Schema
+     * @type {{}}
+     */
+    this.descriptionSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+    };
+
+};
+
+plastic.ElementSchema.prototype = {
+
+    /**
+     * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
+     *
+     * @type {{}}
+     */
+    htmlMap: {
+        "email": function(val) {
+            "use strict";
+            var strippedVal = val.replace('mailto:','');
+            return '<a href="' + val + '">' + strippedVal + '</a>';
+        },
+        "uri": function(val) {
+            "use strict";
+            return '<a href="' + val + '">' + val + '</a>';
+        }
+    },
+
+    /**
+     * Calculates processed Data (HTML'ified) with the descriptionSchema applied
+     *
+     * @todo (Optionally) validate data against the descriptionSchema
+     *
+     * @param processedData
+     * @param descriptionSchema
+     *
+     * @returns {[]}
+     */
+    getHtmlData: function(processedData, descriptionSchema) {
+        "use strict";
+
+        var self = this;
+        var processedHtml = $.extend(true, [], processedData); // Deep Copy
+
+        for (var i = 0; i < processedHtml.length; i++) {
+
+            var row = processedHtml[i];
+
+            for (var cellType in row) {
+
+                var cellValue = row[cellType];
+                var format = descriptionSchema.properties[cellType].format;
+
+                // TODO: Case-Handling: value could be no array (?)
+                for (var j = 0; j < cellValue.length; j++) {
+
+                    if (format) {
+                        cellValue[j] = self.htmlMap[format](cellValue[j]);
+                    }
+                }
+            }
+
+        }
+
+        return processedHtml;
+    }
 };
 
 plastic.msg = (function () {
@@ -1027,64 +1128,6 @@ plastic.msg = (function () {
 })();
 
 
-plastic.schemaParser = {
-
-    /**
-     * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
-     *
-     * @type {{}}
-     */
-    htmlMap: {
-        "email": function(val) {
-            "use strict";
-            var strippedVal = val.replace('mailto:','');
-            return '<a href="' + val + '">' + strippedVal + '</a>';
-        },
-        "uri": function(val) {
-            "use strict";
-            return '<a href="' + val + '">' + val + '</a>';
-        }
-    },
-
-    /**
-     * Calculates processed Data (HTML'ified) with the descriptionSchema applied
-     *
-     * @todo (Optionally) validate data against the descriptionSchema
-     *
-     * @param processedData
-     * @param descriptionSchema
-     *
-     * @returns {[]}
-     */
-    getHtmlData: function(processedData, descriptionSchema) {
-        "use strict";
-
-        var self = this;
-        var processedHtml = $.extend(true, [], processedData); // Deep Copy
-
-        for (var i = 0; i < processedHtml.length; i++) {
-
-            var row = processedHtml[i];
-
-            for (var cellType in row) {
-
-                var cellValue = row[cellType];
-                var format = descriptionSchema.properties[cellType].format;
-
-                // TODO: Case-Handling: value could be no array
-                for (var j = 0; j < cellValue.length; j++) {
-
-                    if (format) {
-                        cellValue[j] = self.htmlMap[format](cellValue[j]);
-                    }
-                }
-            }
-
-        }
-
-        return processedHtml;
-    }
-};
 plastic.helper.Events = function() {
     "use strict";
 

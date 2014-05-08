@@ -449,7 +449,6 @@ plastic.Element.prototype = {
     validateModule: function(module) {
 
         var env = jjv();
-        var self = this;
 
         var validateSchema = function(schemaName, data) {
 
