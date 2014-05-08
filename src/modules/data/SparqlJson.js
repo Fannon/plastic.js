@@ -21,7 +21,7 @@ plastic.modules.data.SparqlJson = function(dataObj) {
      * @todo: Not 100% done
      * @type {{}}
      */
-    this.validationSchema = {
+    this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 

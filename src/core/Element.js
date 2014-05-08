@@ -12,6 +12,8 @@
  */
 plastic.Element = function(el) {
 
+    var self = this;
+
     // If given an selector String, use jQuery to get the element
     if (typeof el === 'string' || el instanceof String) {
         if (el.charAt(0) === '#') {
@@ -66,7 +68,7 @@ plastic.Element = function(el) {
      *
      * @type {number}
      */
-    this.eventsTotal = 0;
+    this.eventsTotal = 1;
 
     /**
      * Current Number of asynchronous Events that already happened
@@ -147,6 +149,23 @@ plastic.Element = function(el) {
     this.registerDependencies();
 
 
+    //////////////////////////////////////////
+    // REGISTER EVENTS LSITENERS            //
+    //////////////////////////////////////////
+
+    /** Helper Function: On dependency load */
+    var depLoaded = function() {
+        "use strict";
+        self.benchmarkModulesLoaded.push((new Date()).getTime());
+        this.updateProgress();
+    };
+
+    for (var i = 0; i < this.dependencies.length; i++) {
+        this.eventsTotal += 1;
+        plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
+    }
+
+
 };
 
 //////////////////////////////////////////
@@ -185,8 +204,6 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
-            this.eventsTotal += 1;
-
             if (this.options.debug) {
                 console.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
@@ -224,24 +241,10 @@ plastic.Element.prototype = {
                 throw new Error('Data Request failed');
             }
 
+        } else {
+            // Data already there, continue:
+            self.updateProgress();
         }
-
-
-        //////////////////////////////////////////
-        // REGISTER DEPENDENCY EVENTS           //
-        //////////////////////////////////////////
-
-        var depLoaded = function() {
-            "use strict";
-            self.benchmarkModulesLoaded.push((new Date()).getTime());
-            this.updateProgress();
-        };
-
-        for (var i = 0; i < this.dependencies.length; i++) {
-            this.eventsTotal += 1;
-            plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
-        }
-
 
     },
 

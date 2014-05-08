@@ -11,9 +11,11 @@ plastic.modules.dependencies = {
      *
      * If a module is added that has a new external dependency it can either be added here
      * or be added via setDependency() at runtime.
+     * If "test" is given, plastic.js will look if the given global variable exists. If it does, it will not be loaded.
      */
     registry: {
         "d3": {
+            "test": "d3",
             "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"]
         },
         "nvd3": {
@@ -78,6 +80,8 @@ plastic.modules.dependencies = {
      * Dependencies to load have to be added first via .add(dependencies)
      * Triggers plastic events (loaded-)
      * Uses {@link https://github.com/rgrove/lazyload/}
+     *
+     * @todo Dependency Caching?
      */
     fetch: function() {
 
@@ -95,8 +99,17 @@ plastic.modules.dependencies = {
 
             var urls = this.usedDeps[depName];
 
-            LazyLoad.css(urls.css, cssComplete, depName);
-            LazyLoad.js(urls.js, jsComplete, depName);
+            if (urls.test && !window[urls.test]) {
+                LazyLoad.css(urls.css, cssComplete, depName);
+                LazyLoad.js(urls.js, jsComplete, depName);
+            } else {
+                jsComplete();
+                if (plastic.options.debug) {
+                    console.info('[GLOBAL] Dependency ' + depName + ' not loaded, it already exists ');
+                }
+            }
+
+
 
         }
     }
