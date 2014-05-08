@@ -125,7 +125,7 @@ plastic.modules.data.AskJson.prototype = {
 
                 var mappedType = this.schemaMap[o.typeid];
                 if (mappedType) {
-                    this.descriptionSchema.properties[o.label] = mappedType;
+                    this.descriptionSchema[o.label] = mappedType;
                 }
 
             }

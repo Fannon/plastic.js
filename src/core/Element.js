@@ -112,16 +112,7 @@ plastic.Element = function(el) {
      *
      * @type {plastic.ElementAttributes}
      */
-    this.attributes = new plastic.ElementAttributes(this);
-
-    /**
-     * Link to calculated Attributes Object
-     *
-     * If you need easy access to the current Attributes Object, use this.
-     *
-     * @type {{}}
-     */
-    this.attr = this.attributes.attr;
+    this.attr = new plastic.ElementAttributes(this);
 
     /**
      * Element Query Module Instance
@@ -154,7 +145,13 @@ plastic.Element = function(el) {
     // Element Bootstrap                    //
     //////////////////////////////////////////
 
+    // Merge general options from ElementsAttributes
     this.mergeOptions();
+
+    // Register all necessary dependencies
+    this.registerDependencies();
+
+
 
 
 };
@@ -219,7 +216,7 @@ plastic.Element.prototype = {
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
-            this.callQueryParser();
+            this.callQueryModule();
         }
 
 
@@ -327,7 +324,7 @@ plastic.Element.prototype = {
 
         if (this.eventsProgress === this.eventsTotal) {
 
-            this.callDataParser();
+            this.callDataModule();
             this.callDisplayModule();
 
             if (this.options.benchmark) {
@@ -370,12 +367,10 @@ plastic.Element.prototype = {
 
     },
 
-
-
     /**
      * Helper Function to call the Query Parser Module
      */
-    callQueryParser: function() {
+    callQueryModule: function() {
 
         // Look for data parser module in the registry
         var moduleInfo = plastic.modules.registry.get('query',[this.attr.query.type]);
@@ -383,7 +378,7 @@ plastic.Element.prototype = {
 
         if (Module) {
             this.queryModule = new Module(this.attr.query);
-            this.validateModule(this.queryModule, this.attr.query);
+            this.validateModule(this.queryModule);
             this.attr.data = this.queryModule.execute();
 
         } else {
@@ -395,7 +390,7 @@ plastic.Element.prototype = {
     /**
      * Helper Function to call the Data Parser Module
      */
-    callDataParser: function() {
+    callDataModule: function() {
 
         // Look for data parser module in the registry
         var moduleInfo = plastic.modules.registry.get('data', [this.attr.data.parser]);
@@ -403,7 +398,7 @@ plastic.Element.prototype = {
 
         if (Module) {
             this.dataModule = new Module(this.attr.data);
-            this.validateModule(this.dataModule, this.attr.data.raw);
+            this.validateModule(this.dataModule);
             this.attr.data = this.dataModule.execute();
 
         } else {
@@ -426,7 +421,7 @@ plastic.Element.prototype = {
         if (Module) {
 
             self.displayModule = new Module(self.$el, self.attr);
-            self.validateModule(self.displayModule, self.attr.options.display);
+            self.validateModule(self.displayModule);
             self.displayModule.execute();
 
             self.benchmarkCompleted = (new Date()).getTime();
@@ -435,6 +430,27 @@ plastic.Element.prototype = {
             plastic.msg('Display Module ' + this.attr.data.parser + ' not found.', 'error', this.$el);
         }
 
+    },
+
+    /**
+     * Looks for all external dependencies that are required by the currently used modules
+     *
+     * Registers all Dependencys for Lazyloading
+     * @todo Use a Set Datastructure?
+     */
+    registerDependencies: function() {
+        "use strict";
+
+        console.dir(this.attr);
+        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.options.display.module);
+        plastic.modules.dependencies.add(displayModuleInfo.dependencies);
+
+        if (this.attr.data && this.attr.data.parser) {
+            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.parser);
+            plastic.modules.dependencies.add(dataModuleInfo.dependencies);
+        }
+
+        this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
     },
 
     /**

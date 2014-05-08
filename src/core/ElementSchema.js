@@ -22,6 +22,8 @@ plastic.ElementSchema = function(pEl) {
         "properties": {}
     };
 
+
+
 };
 
 plastic.ElementSchema.prototype = {
