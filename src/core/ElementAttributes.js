@@ -117,6 +117,7 @@ plastic.ElementAttributes.prototype = {
                     "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
                     "processed": {"type": "array"},
+                    "processedHtml": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
                 },

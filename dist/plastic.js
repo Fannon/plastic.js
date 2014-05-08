@@ -309,7 +309,7 @@ plastic.Element = function(el) {
     /**
      * Element Schema
      */
-    this.schema = plastic.ElementSchema(this);
+    this.schema = new plastic.ElementSchema(this);
 
 
     //////////////////////////////////////////
@@ -332,32 +332,6 @@ plastic.Element = function(el) {
 plastic.Element.prototype = {
 
     /**
-     * Get DOM Element within PlasticElement Container
-     * @returns {Object}
-     */
-    getEl:function() {
-        return this.$el;
-    },
-
-    /**
-     * Get DOM Element within PlasticElement Container
-     * @param el
-     */
-    setEl:function(el) {
-        this.$el = el;
-    },
-
-
-    /**
-     * Creates a new Attributes Object which parses and stores all Attributes of the plastic.js element
-     */
-    parseAttributes: function() {
-        "use strict";
-        this.attributes = new plastic.ElementAttributes(this.$el);
-        this.attr = this.attributes.attr;
-    },
-
-    /**
      * Executes the processing of the plastic.element
      * This starts
      *
@@ -368,12 +342,12 @@ plastic.Element.prototype = {
         /** Asynchronous Mode */
         var self = this;
 
-        this.createMsgContainer(this.$el);
+        this.createMessageContainer(this.$el);
         this.createDisplayContainer(this.$el);
 
 
         //////////////////////////////////////////
-        // CALLING QUERY PARSER                 //
+        // CALLING QUERY MODULE                 //
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
@@ -426,12 +400,11 @@ plastic.Element.prototype = {
                 throw new Error('Data Request failed');
             }
 
-
         }
 
 
         //////////////////////////////////////////
-        // LOAD ALL EXTERNAL DEPENDENCIES       //
+        // REGISTER DEPENDENCY EVENTS           //
         //////////////////////////////////////////
 
         var depLoaded = function() {
@@ -441,9 +414,7 @@ plastic.Element.prototype = {
         };
 
         for (var i = 0; i < this.dependencies.length; i++) {
-
-           this.eventsTotal += 1;
-
+            this.eventsTotal += 1;
             plastic.events.sub('loaded-' + this.dependencies[i], self, depLoaded);
         }
 
@@ -451,15 +422,24 @@ plastic.Element.prototype = {
     },
 
     /**
-     * Helper Functin which creates a HTML Element for use as a Message Container
+     * Creates a new Attributes Object which parses and stores all Attributes of the plastic.js element
      */
-    createMsgContainer: function() {
+    updateAttributes: function() {
+        "use strict";
+        this.attributes = new plastic.ElementAttributes(this.$el);
+    },
+
+    /**
+     * Helper Functin which creates a HTML Element for use as a Message Container
+     * @todo $el.find unnecessary?
+     */
+    createMessageContainer: function() {
         "use strict";
 
         this.$el.css('position', 'relative');
 
-        this.$el.append('<div class="plastic-js-msg"></div>');
-        var msgEl = this.$el.find('.plastic-js-msg');
+        this.$el.append('<div class="plastic-js-messages"></div>');
+        var msgEl = this.$el.find('.plastic-js-messages');
         msgEl
             .width(this.$el.width())
         ;
@@ -467,6 +447,7 @@ plastic.Element.prototype = {
 
     /**
      * Helper Functin which creates a HTML Element for use as a Display Container
+     * @todo $el.find unnecessary?
      */
     createDisplayContainer: function() {
         "use strict";
@@ -491,19 +472,9 @@ plastic.Element.prototype = {
             console.log('[#' + this.id + '] Current Progress: ' + this.eventsProgress + '/' + this.eventsTotal);
         }
 
-
         // If all events are run (dependencies loaded): continue with processing of the element
         if (this.eventsProgress === this.eventsTotal) {
-
-            this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
-            this.displayModule = new plastic.modules.Module(this, 'display', this.attr.options.display.module);
-
-            this.benchmarkCompleted = (new Date()).getTime();
-
-            if (this.options.benchmark) {
-                this.displayBenchmark();
-            }
-
+            this.completeProgress();
         }
     },
 
@@ -517,27 +488,21 @@ plastic.Element.prototype = {
     },
 
     /**
-     * Dumps benchmark data to the console
+     * This executes all remaining actions after all events are completed
      */
-    displayBenchmark: function() {
+    completeProgress: function() {
         "use strict";
+        this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
 
-        var dataLoadedDiff = this.benchmarkDataLoaded - this.benchmarkStart;
-        var totalDiff = this.benchmarkCompleted - this.benchmarkStart;
+        this.schema.apply();
 
-        var msg = '[#' + this.id + '] BENCHMARK:';
+        this.displayModule = new plastic.modules.Module(this, 'display', this.attr.options.display.module);
 
-        msg += (' DATA: ' + dataLoadedDiff + 'ms');
+        this.benchmarkCompleted = (new Date()).getTime();
 
-        for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
-            var moduleTime = this.benchmarkModulesLoaded[i];
-            var moduleDiff = moduleTime - this.benchmarkStart;
-            msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
+        if (this.options.benchmark) {
+            this.displayBenchmark();
         }
-
-        msg += ' | TOTAL: ' + totalDiff + 'ms';
-        console.log(msg);
-
     },
 
     /**
@@ -564,6 +529,30 @@ plastic.Element.prototype = {
     mergeOptions: function() {
         "use strict";
         this.options = $.extend(true, {}, plastic.options, this.attr.options.general);
+    },
+
+    /**
+     * Dumps benchmark data to the console
+     */
+    displayBenchmark: function() {
+        "use strict";
+
+        var dataLoadedDiff = this.benchmarkDataLoaded - this.benchmarkStart;
+        var totalDiff = this.benchmarkCompleted - this.benchmarkStart;
+
+        var msg = '[#' + this.id + '] BENCHMARK:';
+
+        msg += (' DATA: ' + dataLoadedDiff + 'ms');
+
+        for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
+            var moduleTime = this.benchmarkModulesLoaded[i];
+            var moduleDiff = moduleTime - this.benchmarkStart;
+            msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
+        }
+
+        msg += ' | TOTAL: ' + totalDiff + 'ms';
+        console.log(msg);
+
     }
 
 };
@@ -675,6 +664,7 @@ plastic.ElementAttributes.prototype = {
                     "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
                     "processed": {"type": "array"},
+                    "processedHtml": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
                 },
@@ -906,6 +896,8 @@ plastic.ElementSchema = function(pEl) {
      */
     this.pEl = pEl;
 
+    this.dataDescription = {};
+
     /**
      * Description Schema
      * @type {{}}
@@ -913,7 +905,7 @@ plastic.ElementSchema = function(pEl) {
     this.descriptionSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": this.dataDescription
     };
 
 
@@ -922,21 +914,18 @@ plastic.ElementSchema = function(pEl) {
 
 plastic.ElementSchema.prototype = {
 
+
     /**
-     * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
-     *
-     * @type {{}}
+     * Apply schema (if available) to the data
      */
-    htmlMap: {
-        "email": function(val) {
-            "use strict";
-            var strippedVal = val.replace('mailto:', '');
-            return '<a href="' + val + '">' + strippedVal + '</a>';
-        },
-        "uri": function(val) {
-            "use strict";
-            return '<a href="' + val + '">' + val + '</a>';
+    apply: function () {
+        "use strict";
+        this.dataDescription = this.pEl.attr.data.description;
+
+        if (this.dataDescription && Object.keys(this.dataDescription).length > 0) {
+            this.applyHtml();
         }
+
     },
 
     /**
@@ -944,15 +933,30 @@ plastic.ElementSchema.prototype = {
      *
      * @todo (Optionally) validate data against the descriptionSchema
      *
-     * @param processedData
-     * @param descriptionSchema
-     *
      * @returns {[]}
      */
-    getHtmlData: function(processedData, descriptionSchema) {
+    applyHtml: function() {
         "use strict";
 
+        /**
+         * Maps DataTypes (Formats) to a converter function, which returns the HTML reprentation of the type
+         *
+         * @type {{}}
+         */
+        var htmlMapper = {
+            "email": function(val) {
+                var strippedVal = val.replace('mailto:', '');
+                return '<a href="' + val + '">' + strippedVal + '</a>';
+            },
+            "uri": function(val) {
+                return '<a href="' + val + '">' + val + '</a>';
+            }
+        };
+
+
         var self = this;
+        var processedData = this.pEl.attr.data.processed;
+
         var processedHtml = $.extend(true, [], processedData); // Deep Copy
 
         for (var i = 0; i < processedHtml.length; i++) {
@@ -962,20 +966,20 @@ plastic.ElementSchema.prototype = {
             for (var cellType in row) {
 
                 var cellValue = row[cellType];
-                var format = descriptionSchema.properties[cellType].format;
+                var format = this.dataDescription[cellType].format;
 
                 // TODO: Case-Handling: value could be no array (?)
                 for (var j = 0; j < cellValue.length; j++) {
 
                     if (format) {
-                        cellValue[j] = self.htmlMap[format](cellValue[j]);
+                        cellValue[j] = htmlMapper[format](cellValue[j]);
                     }
                 }
             }
 
         }
 
-        return processedHtml;
+        this.pEl.attr.data.processedHtml = processedHtml;
     }
 };
 

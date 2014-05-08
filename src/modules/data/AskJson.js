@@ -14,8 +14,7 @@ plastic.modules.data.AskJson = function(dataObj) {
      */
     this.dataObj = dataObj;
 
-    // TODO: Generate this via schemaParser Helper
-    this.descriptionSchema = {};
+    this.dataDescription = {};
 
     this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
@@ -125,19 +124,14 @@ plastic.modules.data.AskJson.prototype = {
 
                 var mappedType = this.schemaMap[o.typeid];
                 if (mappedType) {
-                    this.descriptionSchema[o.label] = mappedType;
+                    this.dataDescription[o.label] = mappedType;
                 }
 
             }
 
+            this.dataObj.description = this.dataDescription;
 
-        } else {
-
-            // Description provided within the tag, will overwrite default schema
-            this.descriptionSchema.properties = this.dataObj.description;
         }
-
-        this.dataObj.descriptionSchema = this.descriptionSchema;
     },
 
     parseData: function() {
