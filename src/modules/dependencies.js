@@ -1,5 +1,5 @@
 /**
- * Dependency Registry
+ * Dependency Registry Singleton
  *
  * @singleton
  * @namespace

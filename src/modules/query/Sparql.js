@@ -49,7 +49,7 @@ plastic.modules.query.Sparql.prototype = {
 
         // Set Data Parser Module
         var dataObj = {
-            parser: 'sparql-json'
+            module: 'sparql-json'
         };
 
         var url = this.queryObj.url;

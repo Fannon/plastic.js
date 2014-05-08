@@ -288,26 +288,26 @@ plastic.Element = function(el) {
     /**
      * Element Query Module Instance
      *
-     * @type {Object|boolean}
+     * @type {plastic.element.Element|boolean}
      */
     this.queryModule = false;
 
     /**
      * Element Data Module Instance
      *
-     * @type {Object|boolean}
+     * @type {plastic.element.Element|boolean}
      */
     this.dataModule = false;
 
     /**
      * Element Display Module Instance
      *
-     * @type {Object|boolean}
+     * @type {plastic.element.Element|boolean}
      */
     this.displayModule = false;
 
     /**
-     *
+     * Element Schema
      */
     this.schema = plastic.ElementSchema(this);
 
@@ -321,8 +321,6 @@ plastic.Element = function(el) {
 
     // Register all necessary dependencies
     this.registerDependencies();
-
-
 
 
 };
@@ -349,14 +347,6 @@ plastic.Element.prototype = {
         this.$el = el;
     },
 
-    /**
-     * Get plastic.js Element Attributes Object
-     *
-     * @returns {Object}
-     */
-    getAttr:function() {
-        return this.attr;
-    },
 
     /**
      * Creates a new Attributes Object which parses and stores all Attributes of the plastic.js element
@@ -387,7 +377,7 @@ plastic.Element.prototype = {
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
-            this.callQueryModule();
+            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.module);
         }
 
 
@@ -406,30 +396,36 @@ plastic.Element.prototype = {
             // TODO: Catch Timeout Error
 
             /** jQuery AJAX Request Object */
-            var request = $.ajax({
-                url: this.attr.data.url,
-                dataType: 'json',
-                timeout: this.options.timeout,
-                success: function(data) {
-                    "use strict";
+            try {
+                $.ajax({
+                    url: this.attr.data.url,
+                    dataType: 'json',
+                    timeout: this.options.timeout,
+                    success: function(data) {
+                        "use strict";
 
-                    if (data !== null && typeof data === 'object') {
-                        self.attr.data.raw = data;
-                    } else {
-                        self.attr.data.raw = $.parseJSON(data);
+                        if (data !== null && typeof data === 'object') {
+                            self.attr.data.raw = data;
+                        } else {
+                            self.attr.data.raw = $.parseJSON(data);
+                        }
+
+                        self.benchmarkDataLoaded = (new Date()).getTime();
+                        self.attr.raw = data;
+                        self.updateProgress();
+
+                        self.events.pub('data-sucess');
+                    },
+                    error: function() {
+                        plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
+                        self.cancelProgress();
                     }
+                });
+            } catch(e) {
+                console.error(e);
+                throw new Error('Data Request failed');
+            }
 
-                    self.benchmarkDataLoaded = (new Date()).getTime();
-                    self.attr.raw = data;
-                    self.updateProgress();
-
-                    self.events.pub('data-sucess');
-                },
-                error: function() {
-                    plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
-                    self.cancelProgress();
-                }
-            });
 
         }
 
@@ -483,6 +479,9 @@ plastic.Element.prototype = {
         ;
     },
 
+    /**
+     * Updates the Progress of asynchronal events
+     */
     updateProgress: function() {
         "use strict";
 
@@ -493,10 +492,13 @@ plastic.Element.prototype = {
         }
 
 
+        // If all events are run (dependencies loaded): continue with processing of the element
         if (this.eventsProgress === this.eventsTotal) {
 
-            this.callDataModule();
-            this.callDisplayModule();
+            this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
+            this.displayModule = new plastic.modules.Module(this, 'display', this.attr.options.display.module);
+
+            this.benchmarkCompleted = (new Date()).getTime();
 
             if (this.options.benchmark) {
                 this.displayBenchmark();
@@ -533,73 +535,8 @@ plastic.Element.prototype = {
             msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
         }
 
-        msg += '] | TOTAL: ' + totalDiff + 'ms';
+        msg += ' | TOTAL: ' + totalDiff + 'ms';
         console.log(msg);
-
-    },
-
-    /**
-     * Helper Function to call the Query Parser Module
-     */
-    callQueryModule: function() {
-
-        // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('query',[this.attr.query.type]);
-        var Module = plastic.modules.query[moduleInfo.className];
-
-        if (Module) {
-            this.queryModule = new Module(this.attr.query);
-            this.validateModule(this.queryModule);
-            this.attr.data = this.queryModule.execute();
-
-        } else {
-            plastic.msg('Query Parser Module ' + this.attr.query.type + ' not found.', 'error', this.$el);
-        }
-
-    },
-
-    /**
-     * Helper Function to call the Data Parser Module
-     */
-    callDataModule: function() {
-
-        // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('data', [this.attr.data.parser]);
-        var Module = plastic.modules.data[moduleInfo.className];
-
-        if (Module) {
-            this.dataModule = new Module(this.attr.data);
-            this.validateModule(this.dataModule);
-            this.attr.data = this.dataModule.execute();
-
-        } else {
-            plastic.msg('Data Parser Module ' + this.attr.data.parser + ' not found.', 'error', this.$el);
-        }
-
-    },
-
-    /**
-     * Helper Function to call the Display Module
-     */
-    callDisplayModule: function() {
-
-        var self = this;
-
-        // Look for data parser module in the registry
-        var moduleInfo = plastic.modules.registry.get('display',[this.attr.options.display.module]);
-        var Module = plastic.modules.display[moduleInfo.className];
-
-        if (Module) {
-
-            self.displayModule = new Module(self.$el, self.attr);
-            self.validateModule(self.displayModule);
-            self.displayModule.execute();
-
-            self.benchmarkCompleted = (new Date()).getTime();
-
-        } else {
-            plastic.msg('Display Module ' + this.attr.data.parser + ' not found.', 'error', this.$el);
-        }
 
     },
 
@@ -616,65 +553,12 @@ plastic.Element.prototype = {
         var displayModuleInfo = plastic.modules.registry.get('display', this.attr.options.display.module);
         plastic.modules.dependencies.add(displayModuleInfo.dependencies);
 
-        if (this.attr.data && this.attr.data.parser) {
-            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.parser);
+        if (this.attr.data && this.attr.data.module) {
+            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.module);
             plastic.modules.dependencies.add(dataModuleInfo.dependencies);
         }
 
         this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
-    },
-
-    /**
-     * Validation Helper Function
-     *
-     * This calls two kinds of validations:
-     * * General Validation: Validates custom Logic
-     * * Schema Validation: Validates the Data Structure of the incoming data
-     *
-     * @param {{}} module   plastic.js Module
-     */
-    validateModule: function(module) {
-
-        var env = jjv();
-
-        var validateSchema = function(schemaName, data) {
-
-            if (module[schemaName]) {
-                env.addSchema(schemaName, module[schemaName]);
-                var errors = env.validate(schemaName, data);
-
-                // validation was successful
-                if (errors) {
-                    console.dir(errors);
-                    throw new Error( schemaName + ' Structure invalid!');
-                }
-            }
-
-        };
-
-        if (module.validate) {
-            var validationErrors = module.validate();
-
-            // validation was successful
-            if (validationErrors) {
-                console.dir(validationErrors);
-                throw new Error('Validation Error!');
-            }
-        }
-
-        if (this.attr.data && this.attr.data.raw) {
-            validateSchema('rawDataSchema', this.attr.data.raw);
-        }
-
-        if (this.attr.data && this.attr.data.processed) {
-            validateSchema('processedDataSchema', this.attr.data.processed);
-        }
-
-        if (this.attr.options && this.attr.options.display && this.attr.options.display.options) {
-            validateSchema('displayOptionsSchema', this.attr.options.display.options);
-        }
-
-
     },
 
     mergeOptions: function() {
@@ -733,7 +617,6 @@ plastic.ElementAttributes = function(pEl) {
     // Validate the final Attributes Object
     this.validate();
 
-
 };
 
 plastic.ElementAttributes.prototype = {
@@ -781,22 +664,22 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "type": {"type": "string"},
+                    "module": {"type": "string"},
                     "url": {"type": "string"}
                 },
-                "required": ["text", "type", "url"]
+                "required": ["module", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
                 "properties": {
-                    "parser": {"type": "string"},
+                    "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
                     "processed": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
                 },
                 // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
-                "required": ["parser"] }
+                "required": ["module"] }
         },
         "required": ["style", "options"]
     },
@@ -850,8 +733,6 @@ plastic.ElementAttributes.prototype = {
     /**
      * Gets all Style Attributes
      * They are calculated directly from the DOM Element style
-     *
-     * @returns {Object|boolean}
      */
     getStyle: function() {
         "use strict";
@@ -882,6 +763,9 @@ plastic.ElementAttributes.prototype = {
 
                 try {
                     options = $.parseJSON(optionsString);
+
+                    // SUCCESS
+                    this.displayModule = options.display.module;
                     this.options = options;
 
                 } catch(e) {
@@ -914,13 +798,17 @@ plastic.ElementAttributes.prototype = {
             var query = {};
 
             query.url = queryElement.attr('data-query-url');
-            query.type = queryElement.attr('type');
+            query.module = queryElement.attr('type');
 
             var queryString = queryElement[0].text;
 
             if (queryString && queryString !== '') {
                 query.text = queryString;
+
+                // SUCCESS
+                this.queryModule = query.module;
                 this.query = query;
+
             } else {
                 plastic.msg('Empty Query Element!', 'error', this.$el);
                 throw new Error('Empty Query Element!');
@@ -965,7 +853,7 @@ plastic.ElementAttributes.prototype = {
         if (dataElement.length > 0) {
 
             data.url = dataElement.attr('data-url');
-            data.parser = dataElement.attr('data-format');
+            data.module = dataElement.attr('data-format');
 
             // If no Data URL given, read Data Object
             if (!data.url) {
@@ -973,12 +861,16 @@ plastic.ElementAttributes.prototype = {
                 var dataString = dataElement[0].text;
 
                 if (dataString && dataString !== '') {
+
+
                     data.raw = $.parseJSON(dataString);
                 } else {
                     plastic.msg('Empty Data Element!', 'error', this.$el);
                 }
             }
 
+            // SUCCESS
+//            this.dataModule =
             this.data = data;
 
         }
@@ -1000,8 +892,6 @@ plastic.ElementAttributes.prototype = {
         if (errors) {
             console.dir(errors);
             throw new Error('Data Structure invalid!');
-        } else {
-            return true;
         }
 
     }
@@ -1086,171 +976,6 @@ plastic.ElementSchema.prototype = {
         }
 
         return processedHtml;
-    }
-};
-
-plastic.ElementValidator = function(pEl) {
-    "use strict";
-
-    /**
-     * plastic.js Element Object
-     */
-    this.pEl = pEl;
-
-    /**
-     * Description Schema
-     *
-     * @link http://json-schema.org/|JSON-Schema Site
-     * @type {{}}
-     */
-    this.descriptionSchema = {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {}
-    };
-
-    /**
-     * JSON Schema for Attributes validation
-     *
-     * @link http://json-schema.org/|JSON-Schema Site
-     * @type {{}}
-     */
-    this.attributesSchema = {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-
-        "properties": {
-            "style": {
-                "type": "object",
-                "properties": {
-                    "width": {
-                        "type": "number"
-                    },
-                    "height": {
-                        "type": "number"
-                    }
-                }
-            },
-            "options": {
-                "type": "object",
-                "properties": {
-                    "general": {
-                        type: "object"
-                    },
-                    "display": {
-                        "type": "object",
-                        "properties": {
-                            "module": {"type": "string"},
-                            "options": {"type": "object"}
-                        },
-                        required: ['module', "options"]
-                    }
-                },
-                "required": ["general", "display"]
-            },
-            "query": {
-                "type": "object",
-                "properties": {
-                    "text": {"type": "string"},
-                    "type": {"type": "string"},
-                    "url": {"type": "string"}
-                },
-                "required": ["text", "type", "url"]
-            },
-            "data": {
-                "type": "object",
-                "properties": {
-                    "parser": {"type": "string"},
-                    "raw": {"type": ["object", "array", "string"]},
-                    "processed": {"type": "array"},
-                    "url": {"type": "string"},
-                    "description": {"type": "object"} // TODO: Define Description SCHEMA
-                },
-                // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
-                "required": ["parser"] }
-        },
-        "required": ["style", "options"]
-    };
-
-};
-
-plastic.ElementSchema.prototype = {
-
-    /**
-     * Validates the parsed ElementAttributes Data
-     *
-     * @returns {Object|boolean}
-     */
-    validateAttributes: function() {
-        "use strict";
-
-        var env = jjv();
-        env.addSchema('schema', schema);
-        var errors = env.validate('schema', this.attr);
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error('Data Structure invalid!');
-        } else {
-            return true;
-        }
-
-    },
-
-    validateElement: function() {
-        "use strict";
-
-    },
-
-    /**
-     * Validation Helper Function
-     *
-     * This calls two kinds of validations:
-     * * General Validation: Validates custom Logic
-     * * Schema Validation: Validates the Data Structure of the incoming data
-     *
-     * @param {{}} module   plastic.js Module
-     */
-    validateModule: function(module) {
-
-        if (module.validate) {
-            var validationErrors = module.validate();
-
-            // validation was successful
-            if (validationErrors) {
-                console.dir(validationErrors);
-                throw new Error('Validation Error!');
-            }
-        }
-
-        if (this.attr.data && this.attr.data.raw) {
-            this.validateSchema('rawDataSchema', this.attr.data.raw);
-        }
-
-        if (this.attr.data && this.attr.data.processed) {
-            this.validateSchema('processedDataSchema', this.attr.data.processed);
-        }
-
-        if (this.attr.options && this.attr.options.display && this.attr.options.display.options) {
-            this.validateSchema('displayOptionsSchema', this.attr.options.display.options);
-        }
-
-
-    },
-
-    validateSchema: function(schema, schemaName, data) {
-        "use strict";
-        var env = jjv();
-
-        env.addSchema(schemaName, data);
-        var errors = env.validate(schema, data);
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error(schemaName + ' Schema Structure invalid!');
-        }
     }
 };
 

@@ -6,13 +6,13 @@ plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
  *
  * @constructor
  */
-plastic.modules.display.SimpleTable = function(el, elAttr) {
+plastic.modules.display.SimpleTable = function($el, elAttr) {
     "use strict";
 
     /**
      * plastic.js DOM Element
      */
-    this.$el = el;
+    this.$el = $el;
 
     /**
      * plastic.js ElementAttributes

@@ -59,7 +59,6 @@ plastic.ElementAttributes = function(pEl) {
     // Validate the final Attributes Object
     this.validate();
 
-
 };
 
 plastic.ElementAttributes.prototype = {
@@ -107,22 +106,22 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "type": {"type": "string"},
+                    "module": {"type": "string"},
                     "url": {"type": "string"}
                 },
-                "required": ["text", "type", "url"]
+                "required": ["module", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
                 "properties": {
-                    "parser": {"type": "string"},
+                    "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
                     "processed": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
                 },
                 // TODO: object OR url (http://spacetelescope.github.io/understanding-json-schema/reference/combining.html)
-                "required": ["parser"] }
+                "required": ["module"] }
         },
         "required": ["style", "options"]
     },
@@ -176,8 +175,6 @@ plastic.ElementAttributes.prototype = {
     /**
      * Gets all Style Attributes
      * They are calculated directly from the DOM Element style
-     *
-     * @returns {Object|boolean}
      */
     getStyle: function() {
         "use strict";
@@ -208,6 +205,9 @@ plastic.ElementAttributes.prototype = {
 
                 try {
                     options = $.parseJSON(optionsString);
+
+                    // SUCCESS
+                    this.displayModule = options.display.module;
                     this.options = options;
 
                 } catch(e) {
@@ -240,13 +240,17 @@ plastic.ElementAttributes.prototype = {
             var query = {};
 
             query.url = queryElement.attr('data-query-url');
-            query.type = queryElement.attr('type');
+            query.module = queryElement.attr('type');
 
             var queryString = queryElement[0].text;
 
             if (queryString && queryString !== '') {
                 query.text = queryString;
+
+                // SUCCESS
+                this.queryModule = query.module;
                 this.query = query;
+
             } else {
                 plastic.msg('Empty Query Element!', 'error', this.$el);
                 throw new Error('Empty Query Element!');
@@ -291,7 +295,7 @@ plastic.ElementAttributes.prototype = {
         if (dataElement.length > 0) {
 
             data.url = dataElement.attr('data-url');
-            data.parser = dataElement.attr('data-format');
+            data.module = dataElement.attr('data-format');
 
             // If no Data URL given, read Data Object
             if (!data.url) {
@@ -299,12 +303,16 @@ plastic.ElementAttributes.prototype = {
                 var dataString = dataElement[0].text;
 
                 if (dataString && dataString !== '') {
+
+
                     data.raw = $.parseJSON(dataString);
                 } else {
                     plastic.msg('Empty Data Element!', 'error', this.$el);
                 }
             }
 
+            // SUCCESS
+//            this.dataModule =
             this.data = data;
 
         }
@@ -326,8 +334,6 @@ plastic.ElementAttributes.prototype = {
         if (errors) {
             console.dir(errors);
             throw new Error('Data Structure invalid!');
-        } else {
-            return true;
         }
 
     }

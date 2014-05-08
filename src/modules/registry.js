@@ -1,5 +1,5 @@
 /**
- * plastic.js Module Registry Prototype
+ * plastic.js Module Registry Singleton
  *
  * @example
  * plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
