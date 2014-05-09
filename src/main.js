@@ -91,7 +91,7 @@ plastic.execute = function() {
     "use strict";
 
     if (this.options.debug) {
-        console.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
+        plastic.msg.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
     }
 
 
@@ -123,7 +123,7 @@ plastic.execute = function() {
                 try {
                     plastic.elements.push(new plastic.Element(el));
                 } catch(e) {
-                    plastic.msg('plastic element crashed while init', 'error', el);
+                    plastic.msg.error('plastic element crashed while init', 'error', el);
                 }
             }
 
@@ -141,7 +141,7 @@ plastic.execute = function() {
             try {
                 el.execute();
             } catch(e) {
-                console.error('plastic.js Element Crash on init');
+                plastic.message.error('plastic.js Element Crash on init');
             }
         }
 
@@ -149,6 +149,7 @@ plastic.execute = function() {
 
 };
 
+// Execute plastic.js on DOM Ready
 $(document).ready(function() {
     plastic.execute();
 });

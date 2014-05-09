@@ -1,5 +1,8 @@
 /**
- * Dependency Registry Singleton
+ * Dependency Manager (Singleton)
+ *
+ * The Dependency Manager is used to keep track which dependencies are needed to load every plastic element on the page
+ * It can (lazy)load those dependencys on demand and manages the according events.
  *
  * @singleton
  * @namespace
@@ -105,7 +108,7 @@ plastic.modules.dependencyManager = {
             } else {
                 jsComplete();
                 if (plastic.options.debug) {
-                    console.info('[GLOBAL] Dependency ' + depName + ' not loaded, it already exists ');
+                    plastic.msg.log('[GLOBAL] Dependency ' + depName + ' not loaded, it already exists ');
                 }
             }
 

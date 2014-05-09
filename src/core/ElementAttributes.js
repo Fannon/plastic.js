@@ -162,7 +162,7 @@ plastic.ElementAttributes.prototype = {
         this.getDataDescription();
 
         if (this.pEl.options.debug) {
-            console.log(this.getAttrObj());
+            plastic.msg.dir(this.getAttrObj());
         }
 
     },

@@ -1,10 +1,13 @@
 /**
- * plastic.js Module Registry Singleton
+ * plastic.js Module Manager (Singleton)
+ *
+ * The ModuleManager is used to register plastic.js Modules
+ * It stores which modules are available and additional informations about them (like dependencies)
  *
  * @example
- * plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
+ * plastic.modules.moduleManager.register('display', 'simple-table', 'SimpleTable', ["d3"]);
  * @example
- * var moduleInfo = plastic.modules.registry.add('display', 'simple-table');
+ * var moduleInfo = plastic.modules.moduleManager.get('display', 'simple-table');
  *
  * @singleton
  * @namespace
@@ -46,15 +49,7 @@ plastic.modules.moduleManager = {
     register: function(paramsObj) {
         "use strict";
 
-        var env = jjv();
-        env.addSchema('parameters', this.parametersSchema);
-        var errors = env.validate('parameters', paramsObj);
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error('ModuleRegistry parameters invalid!');
-        }
+        plastic.helper.schemaValidation(this.parametersSchema, paramsObj);
 
         try {
             this.modules[paramsObj.moduleType][paramsObj.apiName] = paramsObj;
@@ -72,7 +67,7 @@ plastic.modules.moduleManager = {
      */
     get: function(moduleType, apiName) {
         "use strict";
-        if (this.modules[moduleType][apiName]) {
+        if (this.modules[moduleType] && this.modules[moduleType][apiName]) {
             return this.modules[moduleType][apiName];
         } else {
             return false;

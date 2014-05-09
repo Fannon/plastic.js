@@ -1,8 +1,9 @@
 /**
  * This is a plastic Module Wrapper
  *
- * This Class instanciates the specific Module and provides a thin wrapper around it (facade pattern)
- * It handles common module tasks like validation
+ * This Class instanciates the specific Module (factory pattern)
+ * It also provides a thin wrapper around it (facade pattern)
+ * The Module Object also handles common module tasks like validation
  *
  * @param {plastic.Element} pEl     plastic.Element
  * @param {string}          type    Module Type
@@ -107,41 +108,30 @@ plastic.modules.Module.prototype = {
 
         var self = this;
 
-        var validateModuleSchema = function(schemaName, data) {
-
-            var env = jjv();
-            var schema = self.module[schemaName];
-
-            env.addSchema(schemaName, data);
-            var errors = env.validate(schema, data);
-
-            // validation was successful
-            if (errors) {
-                console.dir(errors);
-                throw new Error(schemaName + ' Schema Structure invalid!');
-            }
-        };
-
+        // General Validation (by logic)
         if (this.module.validate) {
+
             var validationErrors = this.module.validate();
 
             // validation was successful
             if (validationErrors) {
-                console.dir(validationErrors);
-                throw new Error('Validation Error!');
+                plastic.msg.log(validationErrors, self.pEl.$el);
+                throw new Error('Module ' + this.name + ': Validation Error!');
             }
         }
 
+
+        // Schema Validation (by schema objects)
         if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
-            validateModuleSchema('rawDataSchema', this.pEl.attr.data.raw);
+            plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
         }
 
         if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
-            validateModuleSchema('processedDataSchema', this.pEl.attr.data.processed);
+            plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
         }
 
         if (this.module.displayOptionsSchema && this.pEl.attr.options && this.pEl.attr.options.display && this.pEl.attr.options.display.options) {
-            validateModuleSchema('displayOptionsSchema', this.pEl.attr.options.display.options);
+            plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.options.display.options, 'Display Options invalid!');
         }
 
 

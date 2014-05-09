@@ -20,6 +20,15 @@ plastic.options = {
     debug: true,
 
     /**
+     *
+     * If true, plastic.js will keep a log object
+     *
+     * It is stored in plastic.msg._logs and can be JSON Dumped via plastic.msg.dumpLog();
+     *
+     */
+    log: true,
+
+    /**
      * Logs Benchmark Infos to the console
      *
      * @type {boolean}

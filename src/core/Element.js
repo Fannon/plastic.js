@@ -46,7 +46,7 @@ plastic.Element = function(el) {
     this.options = plastic.options;
 
     if (this.options.debug) {
-        console.log('[#' + this.id + '] new plastic.Element()');
+        plastic.msg.log('[#' + this.id + '] new plastic.Element()');
     }
 
     /**
@@ -193,7 +193,7 @@ plastic.Element.prototype = {
         if (this.attr.data && this.attr.data.url) {
 
             if (this.options.debug) {
-                console.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
+                plastic.msg.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
 
             // TODO: Catch Timeout Error
@@ -225,7 +225,7 @@ plastic.Element.prototype = {
                     }
                 });
             } catch(e) {
-                console.error(e);
+                plastic.msg.error(e);
                 throw new Error('Data Request failed');
             }
 
@@ -284,7 +284,7 @@ plastic.Element.prototype = {
         this.eventsProgress += 1;
 
         if (this.options.debug) {
-            console.log('[#' + this.id + '] Current Progress: ' + this.eventsProgress + '/' + this.eventsTotal);
+            plastic.msg.log('[#' + this.id + '] Current Progress: ' + this.eventsProgress + '/' + this.eventsTotal);
         }
 
         // If all events are run (dependencies loaded): continue with processing of the element
@@ -334,7 +334,6 @@ plastic.Element.prototype = {
     registerDependencies: function() {
         "use strict";
 
-        console.dir(this.attr);
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
         plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
 
@@ -371,7 +370,7 @@ plastic.Element.prototype = {
         }
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
-        console.log(msg);
+        plastic.msg.log(msg);
 
     },
 

@@ -81,7 +81,7 @@ plastic.execute = function() {
     "use strict";
 
     if (this.options.debug) {
-        console.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
+        plastic.msg.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
     }
 
 
@@ -113,7 +113,7 @@ plastic.execute = function() {
                 try {
                     plastic.elements.push(new plastic.Element(el));
                 } catch(e) {
-                    plastic.msg('plastic element crashed while init', 'error', el);
+                    plastic.msg.error('plastic element crashed while init', 'error', el);
                 }
             }
 
@@ -131,7 +131,7 @@ plastic.execute = function() {
             try {
                 el.execute();
             } catch(e) {
-                console.error('plastic.js Element Crash on init');
+                plastic.message.error('plastic.js Element Crash on init');
             }
         }
 
@@ -139,6 +139,7 @@ plastic.execute = function() {
 
 };
 
+// Execute plastic.js on DOM Ready
 $(document).ready(function() {
     plastic.execute();
 });
@@ -154,6 +155,15 @@ plastic.options = {
      * @type {boolean}
      */
     debug: true,
+
+    /**
+     *
+     * If true, plastic.js will keep a log object
+     *
+     * It is stored in plastic.msg._logs and can be JSON Dumped via plastic.msg.dumpLog();
+     *
+     */
+    log: true,
 
     /**
      * Logs Benchmark Infos to the console
@@ -217,7 +227,7 @@ plastic.Element = function(el) {
     this.options = plastic.options;
 
     if (this.options.debug) {
-        console.log('[#' + this.id + '] new plastic.Element()');
+        plastic.msg.log('[#' + this.id + '] new plastic.Element()');
     }
 
     /**
@@ -364,7 +374,7 @@ plastic.Element.prototype = {
         if (this.attr.data && this.attr.data.url) {
 
             if (this.options.debug) {
-                console.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
+                plastic.msg.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
 
             // TODO: Catch Timeout Error
@@ -396,7 +406,7 @@ plastic.Element.prototype = {
                     }
                 });
             } catch(e) {
-                console.error(e);
+                plastic.msg.error(e);
                 throw new Error('Data Request failed');
             }
 
@@ -455,7 +465,7 @@ plastic.Element.prototype = {
         this.eventsProgress += 1;
 
         if (this.options.debug) {
-            console.log('[#' + this.id + '] Current Progress: ' + this.eventsProgress + '/' + this.eventsTotal);
+            plastic.msg.log('[#' + this.id + '] Current Progress: ' + this.eventsProgress + '/' + this.eventsTotal);
         }
 
         // If all events are run (dependencies loaded): continue with processing of the element
@@ -505,7 +515,6 @@ plastic.Element.prototype = {
     registerDependencies: function() {
         "use strict";
 
-        console.dir(this.attr);
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
         plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
 
@@ -542,7 +551,7 @@ plastic.Element.prototype = {
         }
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
-        console.log(msg);
+        plastic.msg.log(msg);
 
     },
 
@@ -766,7 +775,7 @@ plastic.ElementAttributes.prototype = {
         this.getDataDescription();
 
         if (this.pEl.options.debug) {
-            console.log(this.getAttrObj());
+            plastic.msg.dir(this.getAttrObj());
         }
 
     },
@@ -937,51 +946,169 @@ plastic.ElementAttributes.prototype = {
 
 };
 
-plastic.msg = (function () {
+plastic.msg = {
+    /**
+     * Log Array
+     *
+     * If debugging is enabled, all infos, warnings and errors will be saved here
+     *
+     * @type {Array}
+     * @private
+     */
+    _logs: [],
 
     /**
+     * Logs a Message or Object to the Log Object and the console
      *
-     * @param type      enum: info, warning, error)
-     * @param msg       Log Message
-     * @param el        plastic element to append the message on
+     * @example
+     * plastic.msg.log('For your information', this.$el);
+     *
+     * @param {string|Object}   msg     Message String or Object
+     * @param {Object}          [el]    concerning plastic.js DOM element
      */
-    var message = function (msg, type, el) {
+    log: function(msg, el) {
+        "use strict";
+        this.createLogEntry(msg, 'info', el);
+        console.log(msg);
+    },
 
-        if (type) {
+    /**
+     * Logs an Object to the Log Object and the console
+     *
+     * @example
+     * plastic.msg.dir(myObject);
+     *
+     * @param {Object}   obj     Message String or Object
+     */
+    dir: function(obj) {
+        "use strict";
+        this.createLogEntry(obj, 'dump');
+        console.dir(obj);
+    },
 
-            if (type === 'error') {
+    /**
+     * Logs a Warning Message or Object to the Log Object and the console
+     *
+     * @param {string|Object}   msg     Message String or Object
+     * @param {Object}          [el]    concerning plastic.js DOM element
+     */
+    warn: function(msg, el) {
+        "use strict";
+        this.createLogEntry(msg, 'warning', el);
+        console.warn(msg);
+    },
 
-                if (msg !== null && typeof msg === 'object') {
-                    console.error(msg);
-                    createNotification(msg, type, el);
-                } else {
-                    console.error(type + ' :: ' + msg);
-                    createNotification(msg, type, el);
-                }
 
-            } else if (type === 'warning') {
-                console.warn(type + ' :: ' + msg);
-            } else if (type === 'info') {
-                console.info(type + ' :: ' + msg);
-            } else {
-                console.log(type + ' :: ' + msg);
+    /**
+     * Logs and outputs an error
+     *
+     * Can be given an error string or object
+     *
+     * @param {string}  msg       Log Message
+     * @param {Object}  [el]      plastic element to append the message on
+     */
+    error: function (msg, el) {
+
+        console.error(msg);
+        this.createLogEntry(msg, 'error', el);
+        this.createNotification(msg, 'error', el);
+
+    },
+
+    /**
+     * Creates a new log entry object if logging is enabled
+     *
+     * @param {string|Object}   msg     Message String or Object
+     * @param {string}          type    Message Type
+     * @param {Object}          [el]    concerning plastic.js DOM element
+     *
+     */
+    createLogEntry: function(msg, type, el) {
+        "use strict";
+
+        if (plastic.options.log) {
+            var logObj = {
+                timestamp: (new Date()).getTime(),
+                type: type,
+                msg: msg
+            };
+
+            if (el) {
+                logObj.el = el;
             }
 
-
-        } else {
-            console.log('--> ' + msg);
+            this._logs.push(logObj);
         }
 
-    };
+    },
 
-    var createNotification = function(msg, type, el) {
+    /**
+     * Creates a new notification within the plastic-js-messages div
+     *
+     * @todo Check if msg is an Object, if it is use pre tag for displaying it
+     *
+     * @param {string|Object}   msg     Message String or Object
+     * @param {string}          type    Message Type
+     * @param {Object}          [el]    concerning plastic.js DOM element
+     */
+    createNotification: function(msg, type, el) {
 
-        el.find('.plastic-js-messages').append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
-    };
+        msg = this.prettyPrintJSON(msg);
 
-    return message;
+        el.find('.plastic-js-messages').append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong>' + msg + '</div>');
+    },
 
-})();
+    /**
+     * Parses the Log Object to a JSON string and dumps the string and the object into the console
+     */
+    dumpLogObject: function() {
+        "use strict";
+        console.log('> Dumping plastic.js log as Object:');
+        console.dir(this._logs);
+    },
+
+    /**
+     * Parses the Log Object to a JSON string and dumps the string and the object into the console
+     */
+    dumpLogJSON: function() {
+        "use strict";
+        console.log('> Dumping plastic.js log as JSON String:');
+        console.log(JSON.stringify(this._logs, null, 4));
+    },
+
+    /**
+     * Pretty prints an JSON Object to an HTML string
+     *
+     * @link http://stackoverflow.com/a/7220510
+     *
+     * @todo Wrap it into a pre tag
+     *
+     * @param   {Object} json   JSON Object
+     * @returns {string} HTML String
+     */
+    prettyPrintJSON: function (json) {
+        if (typeof json !== 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+};
+
 
 
 plastic.helper.Events = function() {
@@ -1124,6 +1251,27 @@ plastic.helper.Events.prototype = {
     }
 };
 
+plastic.helper.schemaValidation = function(schema, data, errorMessage) {
+    "use strict";
+
+    var env = jjv();
+    env.addSchema('schema', schema);
+    var errors = env.validate('schema', data);
+
+    // validation was successful
+    if (errors) {
+
+        plastic.errors.push(errors);
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        } else {
+            throw new Error('Object validation failed! Fore more informations look into the development console.');
+        }
+
+    }
+
+};
 /**
 LazyLoad makes it easy and painless to lazily load one or more external
 JavaScript or CSS files on demand either during or after the rendering of a web
