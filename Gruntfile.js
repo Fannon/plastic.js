@@ -47,7 +47,7 @@ module.exports = function (grunt) {
                     'src/schemaParser/**/*.js',
                     'src/display/**/*.js',
                     'src/helper/**/*.js',
-                    'bower_components/yepnope/yepnope.js',
+                    'bower_components/rgrove-lazyload/lazyload.js',
                     'bower_components/jjv/lib/jjv.js'
                 ],
                 dest: 'dist/plastic.js'

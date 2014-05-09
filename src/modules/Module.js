@@ -41,7 +41,7 @@ plastic.modules.Module = function(pEl, type, name) {
      * Module Infos (like className, Dependencies, etc.)
      * @type {Object}
      */
-    this.info = plastic.modules.registry.get(type, name);
+    this.info = plastic.modules.moduleManager.get(type, name);
 
     if (!this.info)  {
         throw new Error('Module of type "' + type + '" and name "' + name + '" not found!');

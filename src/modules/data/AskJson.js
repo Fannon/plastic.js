@@ -1,5 +1,5 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add({
+plastic.modules.moduleManager.register({
     moduleType: 'data',
     apiName: 'ask-json',
     className: 'AskJson',
@@ -72,7 +72,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "format": "phone"
+            "forbmat": "phone"
         }
     };
 

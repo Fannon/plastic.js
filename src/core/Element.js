@@ -335,12 +335,12 @@ plastic.Element.prototype = {
         "use strict";
 
         console.dir(this.attr);
-        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.display.module);
-        plastic.modules.dependencies.add(displayModuleInfo.dependencies);
+        var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
+        plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
 
         if (this.attr.data && this.attr.data.module) {
-            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.module);
-            plastic.modules.dependencies.add(dataModuleInfo.dependencies);
+            var dataModuleInfo = plastic.modules.moduleManager.get('data', this.attr.data.module);
+            plastic.modules.dependencyManager.add(dataModuleInfo.dependencies);
         }
 
         this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));

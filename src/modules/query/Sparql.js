@@ -1,5 +1,5 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add({
+plastic.modules.moduleManager.register({
     moduleType: 'query',
     apiName: 'application/sparql-query',
     className: 'Sparql',

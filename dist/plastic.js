@@ -122,7 +122,7 @@ plastic.execute = function() {
     });
 
     // Fetch all registered Dependencies
-    plastic.modules.dependencies.fetch();
+    plastic.modules.dependencyManager.fetch();
 
     $.each(plastic.elements, function(i, el ) {
         if (el.options.debug) {
@@ -506,12 +506,12 @@ plastic.Element.prototype = {
         "use strict";
 
         console.dir(this.attr);
-        var displayModuleInfo = plastic.modules.registry.get('display', this.attr.display.module);
-        plastic.modules.dependencies.add(displayModuleInfo.dependencies);
+        var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
+        plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
 
         if (this.attr.data && this.attr.data.module) {
-            var dataModuleInfo = plastic.modules.registry.get('data', this.attr.data.module);
-            plastic.modules.dependencies.add(dataModuleInfo.dependencies);
+            var dataModuleInfo = plastic.modules.moduleManager.get('data', this.attr.data.module);
+            plastic.modules.dependencyManager.add(dataModuleInfo.dependencies);
         }
 
         this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
@@ -1124,568 +1124,394 @@ plastic.helper.Events.prototype = {
     }
 };
 
-// yepnope.js
-// Version - 1.5.4pre
-//
-// by
-// Alex Sexton - @SlexAxton - AlexSexton[at]gmail.com
-// Ralph Holzmann - @ralphholzmann - ralphholzmann[at]gmail.com
-//
-// http://yepnopejs.com/
-// https://github.com/SlexAxton/yepnope.js/
-//
-// Tri-license - WTFPL | MIT | BSD
-//
-// Please minify before use.
-// Also available as Modernizr.load via the Modernizr Project
-//
-( function ( window, doc, undef ) {
+/**
+LazyLoad makes it easy and painless to lazily load one or more external
+JavaScript or CSS files on demand either during or after the rendering of a web
+page.
 
-var docElement            = doc.documentElement,
-    sTimeout              = window.setTimeout,
-    firstScript           = doc.getElementsByTagName( "script" )[ 0 ],
-    toString              = {}.toString,
-    execStack             = [],
-    started               = 0,
-    noop                  = function () {},
-    // Before you get mad about browser sniffs, please read:
-    // https://github.com/Modernizr/Modernizr/wiki/Undetectables
-    // If you have a better solution, we are actively looking to solve the problem
-    isGecko               = ( "MozAppearance" in docElement.style ),
-    isGeckoLTE18          = isGecko && !! doc.createRange().compareNode,
-    insBeforeObj          = isGeckoLTE18 ? docElement : firstScript.parentNode,
-    // Thanks to @jdalton for showing us this opera detection (by way of @kangax) (and probably @miketaylr too, or whatever...)
-    isOpera               = window.opera && toString.call( window.opera ) == "[object Opera]",
-    isIE                  = !! doc.attachEvent && !isOpera,
-    strJsElem             = isGecko ? "object" : isIE  ? "script" : "img",
-    strCssElem            = isIE ? "script" : strJsElem,
-    isArray               = Array.isArray || function ( obj ) {
-      return toString.call( obj ) == "[object Array]";
-    },
-    isObject              = function ( obj ) {
-      return Object(obj) === obj;
-    },
-    isString              = function ( s ) {
-      return typeof s == "string";
-    },
-    isFunction            = function ( fn ) {
-      return toString.call( fn ) == "[object Function]";
-    },
-    globalFilters         = [],
-    scriptCache           = {},
-    prefixes              = {
-      // key value pair timeout options
-      timeout : function( resourceObj, prefix_parts ) {
-        if ( prefix_parts.length ) {
-          resourceObj['timeout'] = prefix_parts[ 0 ];
-        }
-        return resourceObj;
+Supported browsers include Firefox 2+, IE6+, Safari 3+ (including Mobile
+Safari), Google Chrome, and Opera 9+. Other browsers may or may not work and
+are not officially supported.
+
+Visit https://github.com/rgrove/lazyload/ for more info.
+
+Copyright (c) 2011 Ryan Grove <ryan@wonko.com>
+All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the 'Software'), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+@module lazyload
+@class LazyLoad
+@static
+*/
+
+LazyLoad = (function (doc) {
+  // -- Private Variables ------------------------------------------------------
+
+  // User agent and feature test information.
+  var env,
+
+  // Reference to the <head> element (populated lazily).
+  head,
+
+  // Requests currently in progress, if any.
+  pending = {},
+
+  // Number of times we've polled to check whether a pending stylesheet has
+  // finished loading. If this gets too high, we're probably stalled.
+  pollCount = 0,
+
+  // Queued requests.
+  queue = {css: [], js: []},
+
+  // Reference to the browser's list of stylesheets.
+  styleSheets = doc.styleSheets;
+
+  // -- Private Methods --------------------------------------------------------
+
+  /**
+  Creates and returns an HTML element with the specified name and attributes.
+
+  @method createNode
+  @param {String} name element name
+  @param {Object} attrs name/value mapping of element attributes
+  @return {HTMLElement}
+  @private
+  */
+  function createNode(name, attrs) {
+    var node = doc.createElement(name), attr;
+
+    for (attr in attrs) {
+      if (attrs.hasOwnProperty(attr)) {
+        node.setAttribute(attr, attrs[attr]);
       }
-    },
-    handler,
-    yepnope;
-
-  /* Loader helper functions */
-  function isFileReady ( readyState ) {
-    // Check to see if any of the ways a file can be ready are available as properties on the file's element
-    return ( ! readyState || readyState == "loaded" || readyState == "complete" || readyState == "uninitialized" );
-  }
-
-
-  // Takes a preloaded js obj (changes in different browsers) and injects it into the head
-  // in the appropriate order
-  function injectJs ( src, cb, attrs, timeout, /* internal use */ err, internal ) {
-    var script = doc.createElement( "script" ),
-        done, i;
-
-    timeout = timeout || yepnope['errorTimeout'];
-
-    script.src = src;
-
-    // Add our extra attributes to the script element
-    for ( i in attrs ) {
-        script.setAttribute( i, attrs[ i ] );
     }
 
-    cb = internal ? executeStack : ( cb || noop );
+    return node;
+  }
 
-    // Bind to load events
-    script.onreadystatechange = script.onload = function () {
+  /**
+  Called when the current pending resource of the specified type has finished
+  loading. Executes the associated callback (if any) and loads the next
+  resource in the queue.
 
-      if ( ! done && isFileReady( script.readyState ) ) {
+  @method finish
+  @param {String} type resource type ('css' or 'js')
+  @private
+  */
+  function finish(type) {
+    var p = pending[type],
+        callback,
+        urls;
 
-        // Set done to prevent this function from being called twice.
-        done = 1;
-        cb();
+    if (p) {
+      callback = p.callback;
+      urls     = p.urls;
 
-        // Handle memory leak in IE
-        script.onload = script.onreadystatechange = null;
+      urls.shift();
+      pollCount = 0;
+
+      // If this is the last of the pending URLs, execute the callback and
+      // start the next request in the queue (if any).
+      if (!urls.length) {
+        callback && callback.call(p.context, p.obj);
+        pending[type] = null;
+        queue[type].length && load(type);
       }
+    }
+  }
+
+  /**
+  Populates the <code>env</code> variable with user agent and feature test
+  information.
+
+  @method getEnv
+  @private
+  */
+  function getEnv() {
+    var ua = navigator.userAgent;
+
+    env = {
+      // True if this browser supports disabling async mode on dynamically
+      // created script nodes. See
+      // http://wiki.whatwg.org/wiki/Dynamic_Script_Execution_Order
+      async: doc.createElement('script').async === true
     };
 
-    // 404 Fallback
-    sTimeout(function () {
-      if ( ! done ) {
-        done = 1;
-        // Might as well pass in an error-state if we fire the 404 fallback
-        cb(1);
-      }
-    }, timeout );
-
-    // Inject script into to document
-    // or immediately callback if we know there
-    // was previously a timeout error
-    err ? script.onload() : firstScript.parentNode.insertBefore( script, firstScript );
+    (env.webkit = /AppleWebKit\//.test(ua))
+      || (env.ie = /MSIE|Trident/.test(ua))
+      || (env.opera = /Opera/.test(ua))
+      || (env.gecko = /Gecko\//.test(ua))
+      || (env.unknown = true);
   }
 
-  // Takes a preloaded css obj (changes in different browsers) and injects it into the head
-  function injectCss ( href, cb, attrs, timeout, /* Internal use */ err, internal ) {
+  /**
+  Loads the specified resources, or the next resource of the specified type
+  in the queue if no resources are specified. If a resource of the specified
+  type is already being loaded, the new request will be queued until the
+  first request has been finished.
 
-    // Create stylesheet link
-    var link = doc.createElement( "link" ),
-        done, i;
+  When an array of resource URLs is specified, those URLs will be loaded in
+  parallel if it is possible to do so while preserving execution order. All
+  browsers support parallel loading of CSS, but only Firefox and Opera
+  support parallel loading of scripts. In other browsers, scripts will be
+  queued and loaded one at a time to ensure correct execution order.
 
-    timeout = timeout || yepnope['errorTimeout'];
+  @method load
+  @param {String} type resource type ('css' or 'js')
+  @param {String|Array} urls (optional) URL or array of URLs to load
+  @param {Function} callback (optional) callback function to execute when the
+    resource is loaded
+  @param {Object} obj (optional) object to pass to the callback function
+  @param {Object} context (optional) if provided, the callback function will
+    be executed in this object's context
+  @private
+  */
+  function load(type, urls, callback, obj, context) {
+    var _finish = function () { finish(type); },
+        isCSS   = type === 'css',
+        nodes   = [],
+        i, len, node, p, pendingUrls, url;
 
-    cb = internal ? executeStack : ( cb || noop );
+    env || getEnv();
 
-    // Add attributes
-    link.href = href;
-    link.rel  = "stylesheet";
-    link.type = "text/css";
+    if (urls) {
+      // If urls is a string, wrap it in an array. Otherwise assume it's an
+      // array and create a copy of it so modifications won't be made to the
+      // original.
+      urls = typeof urls === 'string' ? [urls] : urls.concat();
 
-    // Add our extra attributes to the link element
-    for ( i in attrs ) {
-      link.setAttribute( i, attrs[ i ] );
-    }
-
-    if ( ! err ) {
-      firstScript.parentNode.insertBefore( link, firstScript );
-      sTimeout(cb, 0);
-    }
-  }
-
-  function executeStack ( ) {
-    // shift an element off of the stack
-    var i   = execStack.shift();
-    started = 1;
-
-    // if a is truthy and the first item in the stack has an src
-    if ( i ) {
-      // if it's a script, inject it into the head with no type attribute
-      if ( i['t'] ) {
-        // Inject after a timeout so FF has time to be a jerk about it and
-        // not double load (ignore the cache)
-        sTimeout( function () {
-          (i['t'] == "c" ?  yepnope['injectCss'] : yepnope['injectJs'])( i['s'], 0, i['a'], i['x'], i['e'], 1 );
-        }, 0 );
+      // Create a request object for each URL. If multiple URLs are specified,
+      // the callback will only be executed after all URLs have been loaded.
+      //
+      // Sadly, Firefox and Opera are the only browsers capable of loading
+      // scripts in parallel while preserving execution order. In all other
+      // browsers, scripts must be loaded sequentially.
+      //
+      // All browsers respect CSS specificity based on the order of the link
+      // elements in the DOM, regardless of the order in which the stylesheets
+      // are actually downloaded.
+      if (isCSS || env.async || env.gecko || env.opera) {
+        // Load in parallel.
+        queue[type].push({
+          urls    : urls,
+          callback: callback,
+          obj     : obj,
+          context : context
+        });
+      } else {
+        // Load sequentially.
+        for (i = 0, len = urls.length; i < len; ++i) {
+          queue[type].push({
+            urls    : [urls[i]],
+            callback: i === len - 1 ? callback : null, // callback is only added to the last URL
+            obj     : obj,
+            context : context
+          });
+        }
       }
-      // Otherwise, just call the function and potentially run the stack
-      else {
-        i();
-        executeStack();
+    }
+
+    // If a previous load request of this type is currently in progress, we'll
+    // wait our turn. Otherwise, grab the next item in the queue.
+    if (pending[type] || !(p = pending[type] = queue[type].shift())) {
+      return;
+    }
+
+    head || (head = doc.head || doc.getElementsByTagName('head')[0]);
+    pendingUrls = p.urls.concat();
+
+    for (i = 0, len = pendingUrls.length; i < len; ++i) {
+      url = pendingUrls[i];
+
+      if (isCSS) {
+          node = env.gecko ? createNode('style') : createNode('link', {
+            href: url,
+            rel : 'stylesheet'
+          });
+      } else {
+        node = createNode('script', {src: url});
+        node.async = false;
       }
-    }
-    else {
-      // just reset out of recursive mode
-      started = 0;
-    }
-  }
 
-  function preloadFile ( elem, url, type, splicePoint, dontExec, attrObj, timeout ) {
+      node.className = 'lazyload';
+      node.setAttribute('charset', 'utf-8');
 
-    timeout = timeout || yepnope['errorTimeout'];
-
-    // Create appropriate element for browser and type
-    var preloadElem = doc.createElement( elem ),
-        done        = 0,
-        firstFlag   = 0,
-        stackObject = {
-          "t": type,     // type
-          "s": url,      // src
-        //r: 0,        // ready
-          "e": dontExec,// set to true if we don't want to reinject
-          "a": attrObj,
-          "x": timeout
+      if (env.ie && !isCSS && 'onreadystatechange' in node && !('draggable' in node)) {
+        node.onreadystatechange = function () {
+          if (/loaded|complete/.test(node.readyState)) {
+            node.onreadystatechange = null;
+            _finish();
+          }
         };
+      } else if (isCSS && (env.gecko || env.webkit)) {
+        // Gecko and WebKit don't support the onload event on link nodes.
+        if (env.webkit) {
+          // In WebKit, we can poll for changes to document.styleSheets to
+          // figure out when stylesheets have loaded.
+          p.urls[i] = node.href; // resolve relative URLs (or polling won't work)
+          pollWebKit();
+        } else {
+          // In Gecko, we can import the requested URL into a <style> node and
+          // poll for the existence of node.sheet.cssRules. Props to Zach
+          // Leatherman for calling my attention to this technique.
+          node.innerHTML = '@import "' + url + '";';
+          pollGecko(node);
+        }
+      } else {
+        node.onload = node.onerror = _finish;
+      }
 
-    // The first time (common-case)
-    if ( scriptCache[ url ] === 1 ) {
-      firstFlag = 1;
-      scriptCache[ url ] = [];
+      nodes.push(node);
     }
 
-    function onload ( first ) {
-      // If the script/css file is loaded
-      if ( ! done && isFileReady( preloadElem.readyState ) ) {
+    for (i = 0, len = nodes.length; i < len; ++i) {
+      head.appendChild(nodes[i]);
+    }
+  }
 
-        // Set done to prevent this function from being called twice.
-        stackObject['r'] = done = 1;
+  /**
+  Begins polling to determine when the specified stylesheet has finished loading
+  in Gecko. Polling stops when all pending stylesheets have loaded or after 10
+  seconds (to prevent stalls).
 
-        ! started && executeStack();
+  Thanks to Zach Leatherman for calling my attention to the @import-based
+  cross-domain technique used here, and to Oleg Slobodskoi for an earlier
+  same-domain implementation. See Zach's blog for more details:
+  http://www.zachleat.com/web/2010/07/29/load-css-dynamically/
 
-        // Handle memory leak in IE
-        preloadElem.onload = preloadElem.onreadystatechange = null;
-        if ( first ) {
-          if ( elem != "img" ) {
-            sTimeout(function(){ insBeforeObj.removeChild( preloadElem ) }, 50);
-          }
+  @method pollGecko
+  @param {HTMLElement} node Style node to poll.
+  @private
+  */
+  function pollGecko(node) {
+    var hasRules;
 
-          for ( var i in scriptCache[ url ] ) {
-            if ( scriptCache[ url ].hasOwnProperty( i ) ) {
-              scriptCache[ url ][ i ].onload();
-            }
-          }
+    try {
+      // We don't really need to store this value or ever refer to it again, but
+      // if we don't store it, Closure Compiler assumes the code is useless and
+      // removes it.
+      hasRules = !!node.sheet.cssRules;
+    } catch (ex) {
+      // An exception means the stylesheet is still loading.
+      pollCount += 1;
+
+      if (pollCount < 200) {
+        setTimeout(function () { pollGecko(node); }, 50);
+      } else {
+        // We've been polling for 10 seconds and nothing's happened. Stop
+        // polling and finish the pending requests to avoid blocking further
+        // requests.
+        hasRules && finish('css');
+      }
+
+      return;
+    }
+
+    // If we get here, the stylesheet has loaded.
+    finish('css');
+  }
+
+  /**
+  Begins polling to determine when pending stylesheets have finished loading
+  in WebKit. Polling stops when all pending stylesheets have loaded or after 10
+  seconds (to prevent stalls).
+
+  @method pollWebKit
+  @private
+  */
+  function pollWebKit() {
+    var css = pending.css, i;
+
+    if (css) {
+      i = styleSheets.length;
+
+      // Look for a stylesheet matching the pending URL.
+      while (--i >= 0) {
+        if (styleSheets[i].href === css.urls[0]) {
+          finish('css');
+          break;
         }
       }
-    }
 
+      pollCount += 1;
 
-    // Setting url to data for objects or src for img/scripts
-    if ( elem == "object" ) {
-      preloadElem.data = url;
-    } else {
-      preloadElem.src = url;
-
-      // Setting bogus script type to allow the script to be cached
-      preloadElem.type = elem;
-    }
-
-    // Don't let it show up visually
-    preloadElem.width = preloadElem.height = "0";
-
-    // Attach handlers for all browsers
-    preloadElem.onerror = preloadElem.onload = preloadElem.onreadystatechange = function(){
-      onload.call(this, firstFlag);
-    };
-    // inject the element into the stack depending on if it's
-    // in the middle of other scripts or not
-    execStack.splice( splicePoint, 0, stackObject );
-
-    // The only place these can't go is in the <head> element, since objects won't load in there
-    // so we have two options - insert before the head element (which is hard to assume) - or
-    // insertBefore technically takes null/undefined as a second param and it will insert the element into
-    // the parent last. We try the head, and it automatically falls back to undefined.
-    if ( elem != "img" ) {
-      // If it's the first time, or we've already loaded it all the way through
-      if ( firstFlag || scriptCache[ url ] === 2 ) {
-        insBeforeObj.insertBefore( preloadElem, isGeckoLTE18 ? null : firstScript );
-
-        // If something fails, and onerror doesn't fire,
-        // continue after a timeout.
-        sTimeout( onload, timeout );
-      }
-      else {
-        // instead of injecting, just hold on to it
-        scriptCache[ url ].push( preloadElem );
+      if (css) {
+        if (pollCount < 200) {
+          setTimeout(pollWebKit, 50);
+        } else {
+          // We've been polling for 10 seconds and nothing's happened, which may
+          // indicate that the stylesheet has been removed from the document
+          // before it had a chance to load. Stop polling and finish the pending
+          // request to prevent blocking further requests.
+          finish('css');
+        }
       }
     }
   }
 
-  function load ( resource, type, dontExec, attrObj, timeout ) {
-    // If this method gets hit multiple times, we should flag
-    // that the execution of other threads should halt.
-    started = 0;
+  return {
 
-    // We'll do 'j' for js and 'c' for css, yay for unreadable minification tactics
-    type = type || "j";
-    if ( isString( resource ) ) {
-      // if the resource passed in here is a string, preload the file
-      preloadFile( type == "c" ? strCssElem : strJsElem, resource, type, this['i']++, dontExec, attrObj, timeout );
-    } else {
-      // Otherwise it's a callback function and we can splice it into the stack to run
-      execStack.splice( this['i']++, 0, resource );
-      execStack.length == 1 && executeStack();
+    /**
+    Requests the specified CSS URL or URLs and executes the specified
+    callback (if any) when they have finished loading. If an array of URLs is
+    specified, the stylesheets will be loaded in parallel and the callback
+    will be executed after all stylesheets have finished loading.
+
+    @method css
+    @param {String|Array} urls CSS URL or array of CSS URLs to load
+    @param {Function} callback (optional) callback function to execute when
+      the specified stylesheets are loaded
+    @param {Object} obj (optional) object to pass to the callback function
+    @param {Object} context (optional) if provided, the callback function
+      will be executed in this object's context
+    @static
+    */
+    css: function (urls, callback, obj, context) {
+      load('css', urls, callback, obj, context);
+    },
+
+    /**
+    Requests the specified JavaScript URL or URLs and executes the specified
+    callback (if any) when they have finished loading. If an array of URLs is
+    specified and the browser supports it, the scripts will be loaded in
+    parallel and the callback will be executed after all scripts have
+    finished loading.
+
+    Currently, only Firefox and Opera support parallel loading of scripts while
+    preserving execution order. In other browsers, scripts will be
+    queued and loaded one at a time to ensure correct execution order.
+
+    @method js
+    @param {String|Array} urls JS URL or array of JS URLs to load
+    @param {Function} callback (optional) callback function to execute when
+      the specified scripts are loaded
+    @param {Object} obj (optional) object to pass to the callback function
+    @param {Object} context (optional) if provided, the callback function
+      will be executed in this object's context
+    @static
+    */
+    js: function (urls, callback, obj, context) {
+      load('js', urls, callback, obj, context);
     }
 
-    // OMG is this jQueries? For chaining...
-    return this;
-  }
-
-  // return the yepnope object with a fresh loader attached
-  function getYepnope () {
-    var y = yepnope;
-    y['loader'] = {
-      "load": load,
-      "i" : 0
-    };
-    return y;
-  }
-
-  /* End loader helper functions */
-  // Yepnope Function
-  yepnope = function ( needs ) {
-
-    var i,
-        need,
-        // start the chain as a plain instance
-        chain = this['yepnope']['loader'];
-
-    function satisfyPrefixes ( url ) {
-      // split all prefixes out
-      var parts   = url.split( "!" ),
-      gLen    = globalFilters.length,
-      origUrl = parts.pop(),
-      pLen    = parts.length,
-      res     = {
-        "url"      : origUrl,
-        // keep this one static for callback variable consistency
-        "origUrl"  : origUrl,
-        "prefixes" : parts
-      },
-      mFunc,
-      j,
-      prefix_parts;
-
-      // loop through prefixes
-      // if there are none, this automatically gets skipped
-      for ( j = 0; j < pLen; j++ ) {
-        prefix_parts = parts[ j ].split( '=' );
-        mFunc = prefixes[ prefix_parts.shift() ];
-        if ( mFunc ) {
-          res = mFunc( res, prefix_parts );
-        }
-      }
-
-      // Go through our global filters
-      for ( j = 0; j < gLen; j++ ) {
-        res = globalFilters[ j ]( res );
-      }
-
-      // return the final url
-      return res;
-    }
-
-    function getExtension ( url ) {
-        return url.split(".").pop().split("?").shift();
-    }
-
-    function loadScriptOrStyle ( input, callback, chain, index, testResult ) {
-      // run through our set of prefixes
-      var resource     = satisfyPrefixes( input ),
-          autoCallback = resource['autoCallback'],
-          extension    = getExtension( resource['url'] );
-
-      // if no object is returned or the url is empty/0 just exit the load
-      if ( resource['bypass'] ) {
-        return;
-      }
-
-      // Determine callback, if any
-      if ( callback ) {
-        callback = isFunction( callback ) ?
-          callback :
-          callback[ input ] ||
-          callback[ index ] ||
-          callback[ ( input.split( "/" ).pop().split( "?" )[ 0 ] ) ];
-      }
-
-      // if someone is overriding all normal functionality
-      if ( resource['instead'] ) {
-        return resource['instead']( input, callback, chain, index, testResult );
-      }
-      else {
-        // Handle if we've already had this url and it's completed loaded already
-        if ( scriptCache[ resource['url'] ] ) {
-          // don't let this execute again
-          resource['noexec'] = true;
-        }
-        else {
-          scriptCache[ resource['url'] ] = 1;
-        }
-
-        // Throw this into the queue
-        chain.load( resource['url'], ( ( resource['forceCSS'] || ( ! resource['forceJS'] && "css" == getExtension( resource['url'] ) ) ) ) ? "c" : undef, resource['noexec'], resource['attrs'], resource['timeout'] );
-
-        // If we have a callback, we'll start the chain over
-        if ( isFunction( callback ) || isFunction( autoCallback ) ) {
-          // Call getJS with our current stack of things
-          chain['load']( function () {
-            // Hijack yepnope and restart index counter
-            getYepnope();
-            // Call our callbacks with this set of data
-            callback && callback( resource['origUrl'], testResult, index );
-            autoCallback && autoCallback( resource['origUrl'], testResult, index );
-
-            // Override this to just a boolean positive
-            scriptCache[ resource['url'] ] = 2;
-          } );
-        }
-      }
-    }
-
-    function loadFromTestObject ( testObject, chain ) {
-        var testResult = !! testObject['test'],
-            group      = testResult ? testObject['yep'] : testObject['nope'],
-            always     = testObject['load'] || testObject['both'],
-            callback   = testObject['callback'] || noop,
-            cbRef      = callback,
-            complete   = testObject['complete'] || noop,
-            needGroupSize,
-            callbackKey;
-
-        // Reusable function for dealing with the different input types
-        // NOTE:: relies on closures to keep 'chain' up to date, a bit confusing, but
-        // much smaller than the functional equivalent in this case.
-        function handleGroup ( needGroup, moreToCome ) {
-          if ( ! needGroup ) {
-            // Call the complete callback when there's nothing to load.
-            ! moreToCome && complete();
-          }
-          // If it's a string
-          else if ( isString( needGroup ) ) {
-            // if it's a string, it's the last
-            if ( !moreToCome ) {
-              // Add in the complete callback to go at the end
-              callback = function () {
-                var args = [].slice.call( arguments );
-                cbRef.apply( this, args );
-                complete();
-              };
-            }
-            // Just load the script of style
-            loadScriptOrStyle( needGroup, callback, chain, 0, testResult );
-          }
-          // See if we have an object. Doesn't matter if it's an array or a key/val hash
-          // Note:: order cannot be guaranteed on an key value object with multiple elements
-          // since the for-in does not preserve order. Arrays _should_ go in order though.
-          else if ( isObject( needGroup ) ) {
-            // I hate this, but idk another way for objects.
-            needGroupSize = (function(){
-              var count = 0, i
-              for (i in needGroup ) {
-                if ( needGroup.hasOwnProperty( i ) ) {
-                  count++;
-                }
-              }
-              return count;
-            })();
-
-            for ( callbackKey in needGroup ) {
-              // Safari 2 does not have hasOwnProperty, but not worth the bytes for a shim
-              // patch if needed. Kangax has a nice shim for it. Or just remove the check
-              // and promise not to extend the object prototype.
-              if ( needGroup.hasOwnProperty( callbackKey ) ) {
-                // Find the last added resource, and append to it's callback.
-                if ( ! moreToCome && ! ( --needGroupSize ) ) {
-                  // If this is an object full of callbacks
-                  if ( ! isFunction( callback ) ) {
-                    // Add in the complete callback to go at the end
-                    callback[ callbackKey ] = (function( innerCb ) {
-                      return function () {
-                        var args = [].slice.call( arguments );
-                        innerCb && innerCb.apply( this, args );
-                        complete();
-                      };
-                    })( cbRef[ callbackKey ] );
-                  }
-                  // If this is just a single callback
-                  else {
-                    callback = function () {
-                      var args = [].slice.call( arguments );
-                      cbRef.apply( this, args );
-                      complete();
-                    };
-                  }
-                }
-                loadScriptOrStyle( needGroup[ callbackKey ], callback, chain, callbackKey, testResult );
-              }
-            }
-          }
-        }
-
-        // figure out what this group should do
-        handleGroup( group, !!always );
-
-        // Run our loader on the load/both group too
-        // the always stuff always loads second.
-        always && handleGroup( always );
-    }
-
-    // Someone just decides to load a single script or css file as a string
-    if ( isString( needs ) ) {
-      loadScriptOrStyle( needs, 0, chain, 0 );
-    }
-    // Normal case is likely an array of different types of loading options
-    else if ( isArray( needs ) ) {
-      // go through the list of needs
-      for( i = 0; i < needs.length; i++ ) {
-        need = needs[ i ];
-
-        // if it's a string, just load it
-        if ( isString( need ) ) {
-          loadScriptOrStyle( need, 0, chain, 0 );
-        }
-        // if it's an array, call our function recursively
-        else if ( isArray( need ) ) {
-          yepnope( need );
-        }
-        // if it's an object, use our modernizr logic to win
-        else if ( isObject( need ) ) {
-          loadFromTestObject( need, chain );
-        }
-      }
-    }
-    // Allow a single object to be passed in
-    else if ( isObject( needs ) ) {
-      loadFromTestObject( needs, chain );
-    }
   };
-
-  // This publicly exposed function is for allowing
-  // you to add functionality based on prefixes on the
-  // string files you add. 'css!' is a builtin prefix
-  //
-  // The arguments are the prefix (not including the !) as a string
-  // and
-  // A callback function. This function is passed a resource object
-  // that can be manipulated and then returned. (like middleware. har.)
-  //
-  // Examples of this can be seen in the officially supported ie prefix
-  yepnope['addPrefix'] = function ( prefix, callback ) {
-    prefixes[ prefix ] = callback;
-  };
-
-  // A filter is a global function that every resource
-  // object that passes through yepnope will see. You can
-  // of course conditionally choose to modify the resource objects
-  // or just pass them along. The filter function takes the resource
-  // object and is expected to return one.
-  //
-  // The best example of a filter is the 'autoprotocol' officially
-  // supported filter
-  yepnope['addFilter'] = function ( filter ) {
-    globalFilters.push( filter );
-  };
-
-  // Default error timeout to 10sec - modify to alter
-  yepnope['errorTimeout'] = 1e4;
-
-  // Webreflection readystate hack
-  // safe for jQuery 1.4+ ( i.e. don't use yepnope with jQuery 1.3.2 )
-  // if the readyState is null and we have a listener
-  if ( doc.readyState == null && doc.addEventListener ) {
-    // set the ready state to loading
-    doc.readyState = "loading";
-    // call the listener
-    doc.addEventListener( "DOMContentLoaded", handler = function () {
-      // Remove the listener
-      doc.removeEventListener( "DOMContentLoaded", handler, 0 );
-      // Set it to ready
-      doc.readyState = "complete";
-    }, 0 );
-  }
-
-  // Attach loader &
-  // Leak it
-  window['yepnope'] = getYepnope();
-
-  // Exposing executeStack to better facilitate plugins
-  window['yepnope']['executeStack'] = executeStack;
-  window['yepnope']['injectJs'] = injectJs;
-  window['yepnope']['injectCss'] = injectCss;
-
-})( this, document );
+})(this.document);
 
 /**
  * jjv.js -- A javascript library to validate json input through a json-schema.

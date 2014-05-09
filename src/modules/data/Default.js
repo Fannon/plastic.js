@@ -1,5 +1,5 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add({
+plastic.modules.moduleManager.register({
     moduleType: 'data',
     apiName: 'default',
     className: 'Default',

@@ -4,7 +4,7 @@
  * @singleton
  * @namespace
  */
-plastic.modules.dependencies = {
+plastic.modules.dependencyManager = {
 
     /**
      * Registry Object that collects all extnal dependencies by name, and ressources
@@ -108,8 +108,6 @@ plastic.modules.dependencies = {
                     console.info('[GLOBAL] Dependency ' + depName + ' not loaded, it already exists ');
                 }
             }
-
-
 
         }
     }

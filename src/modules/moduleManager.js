@@ -9,7 +9,7 @@
  * @singleton
  * @namespace
  */
-plastic.modules.registry = {
+plastic.modules.moduleManager = {
 
     /**
      * Module Registry Object
@@ -32,7 +32,6 @@ plastic.modules.registry = {
             "apiName": {"type": "string"},
             "className": {"type": "string"},
             "dependencies": {"type": "array"}
-
         },
         "required": ["moduleType", "apiName", "className"]
     },
@@ -44,7 +43,7 @@ plastic.modules.registry = {
      *
      * @param {Object}  paramsObj  ParameterObject
      */
-    add: function(paramsObj) {
+    register: function(paramsObj) {
         "use strict";
 
         var env = jjv();

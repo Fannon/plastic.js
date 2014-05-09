@@ -99,9 +99,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.dependencies">
+        <li class="item" data-name="plastic.modules.dependencyManager">
             <span class="title">
-                <a href="plastic.modules.dependencies.html">plastic.modules.dependencies</a>
+                <a href="plastic.modules.dependencyManager.html">plastic.modules.dependencyManager</a>
                 
                 <span class="static">static</span>
                 
@@ -110,9 +110,9 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.dependencies.registry"><a href="plastic.modules.dependencies.html#registry">registry</a></li>
+                <li data-name="plastic.modules.dependencyManager.registry"><a href="plastic.modules.dependencyManager.html#registry">registry</a></li>
             
-                <li data-name="plastic.modules.dependencies.usedDeps"><a href="plastic.modules.dependencies.html#usedDeps">usedDeps</a></li>
+                <li data-name="plastic.modules.dependencyManager.usedDeps"><a href="plastic.modules.dependencyManager.html#usedDeps">usedDeps</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -122,13 +122,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.dependencies.add"><a href="plastic.modules.dependencies.html#add">add</a></li>
+                <li data-name="plastic.modules.dependencyManager.add"><a href="plastic.modules.dependencyManager.html#add">add</a></li>
             
-                <li data-name="plastic.modules.dependencies.fetch"><a href="plastic.modules.dependencies.html#fetch">fetch</a></li>
+                <li data-name="plastic.modules.dependencyManager.fetch"><a href="plastic.modules.dependencyManager.html#fetch">fetch</a></li>
             
-                <li data-name="plastic.modules.dependencies.getDependency"><a href="plastic.modules.dependencies.html#getDependency">getDependency</a></li>
+                <li data-name="plastic.modules.dependencyManager.getDependency"><a href="plastic.modules.dependencyManager.html#getDependency">getDependency</a></li>
             
-                <li data-name="plastic.modules.dependencies.setDependency"><a href="plastic.modules.dependencies.html#setDependency">setDependency</a></li>
+                <li data-name="plastic.modules.dependencyManager.setDependency"><a href="plastic.modules.dependencyManager.html#setDependency">setDependency</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -136,9 +136,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="plastic.modules.registry">
+        <li class="item" data-name="plastic.modules.moduleManager">
             <span class="title">
-                <a href="plastic.modules.registry.html">plastic.modules.registry</a>
+                <a href="plastic.modules.moduleManager.html">plastic.modules.moduleManager</a>
                 
                 <span class="static">static</span>
                 
@@ -147,7 +147,7 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="plastic.modules.registry.modules"><a href="plastic.modules.registry.html#modules">modules</a></li>
+                <li data-name="plastic.modules.moduleManager.modules"><a href="plastic.modules.moduleManager.html#modules">modules</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -157,9 +157,9 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="plastic.modules.registry.add"><a href="plastic.modules.registry.html#add">add</a></li>
+                <li data-name="plastic.modules.moduleManager.get"><a href="plastic.modules.moduleManager.html#get">get</a></li>
             
-                <li data-name="plastic.modules.registry.get"><a href="plastic.modules.registry.html#get">get</a></li>
+                <li data-name="plastic.modules.moduleManager.register"><a href="plastic.modules.moduleManager.html#register">register</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -266,6 +266,8 @@
                 <li data-name="plastic.Element#updateAttributes"><a href="plastic.Element.html#updateAttributes">updateAttributes</a></li>
             
                 <li data-name="plastic.Element#updateProgress"><a href="plastic.Element.html#updateProgress">updateProgress</a></li>
+            
+                <li data-name="plastic.Element~depLoaded"><a href="plastic.Element.html#depLoaded">depLoaded</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -380,9 +382,38 @@
             
                 <li data-name="plastic.modules.data.AskJson#execute"><a href="plastic.modules.data.AskJson.html#execute">execute</a></li>
             
+                <li data-name="plastic.modules.data.AskJson#execute"><a href="plastic.modules.data.AskJson.html#execute">execute</a></li>
+            
+                <li data-name="plastic.modules.data.AskJson#setDataObj"><a href="plastic.modules.data.AskJson.html#setDataObj">setDataObj</a></li>
+            
                 <li data-name="plastic.modules.data.AskJson#setDataObj"><a href="plastic.modules.data.AskJson.html#setDataObj">setDataObj</a></li>
             
                 <li data-name="plastic.modules.data.AskJson#validate"><a href="plastic.modules.data.AskJson.html#validate">validate</a></li>
+            
+                <li data-name="plastic.modules.data.AskJson#validate"><a href="plastic.modules.data.AskJson.html#validate">validate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="plastic.modules.data.Default">
+            <span class="title">
+                <a href="plastic.modules.data.Default.html">plastic.modules.data.Default</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="plastic.modules.data.Default#dataObj"><a href="plastic.modules.data.Default.html#dataObj">dataObj</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -401,7 +432,7 @@
             
                 <li data-name="plastic.modules.data.SparqlJson#dataObj"><a href="plastic.modules.data.SparqlJson.html#dataObj">dataObj</a></li>
             
-                <li data-name="plastic.modules.data.SparqlJson#validationSchema"><a href="plastic.modules.data.SparqlJson.html#validationSchema">validationSchema</a></li>
+                <li data-name="plastic.modules.data.SparqlJson#rawDataSchema"><a href="plastic.modules.data.SparqlJson.html#rawDataSchema">rawDataSchema</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -882,7 +913,7 @@ This also ignores Exception handiling. If an error occurs it will crash hard and
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu May 08 2014 16:25:24 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri May 09 2014 14:37:34 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

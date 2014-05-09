@@ -132,7 +132,7 @@ plastic.execute = function() {
     });
 
     // Fetch all registered Dependencies
-    plastic.modules.dependencies.fetch();
+    plastic.modules.dependencyManager.fetch();
 
     $.each(plastic.elements, function(i, el ) {
         if (el.options.debug) {
