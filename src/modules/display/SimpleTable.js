@@ -1,5 +1,10 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add('display', 'simple-table', 'SimpleTable', ["d3"]);
+plastic.modules.registry.add({
+    moduleType: 'display',
+    apiName: 'simple-table',
+    className: 'SimpleTable',
+    dependencies: ["d3"]
+});
 
 /**
  * Table Display Module

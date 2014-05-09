@@ -1,5 +1,10 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/sparql-query', 'Sparql', []);
+plastic.modules.registry.add({
+    moduleType: 'query',
+    apiName: 'application/sparql-query',
+    className: 'Sparql',
+    dependencies: []
+});
 
 /**
  * This is a SPARQL Query Parser

@@ -1,5 +1,10 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add('data', 'ask-json', 'AskJson', []);
+plastic.modules.registry.add({
+    moduleType: 'data',
+    apiName: 'ask-json',
+    className: 'AskJson',
+    dependencies: []
+});
 
 /**
  * Parses tabular data from an ASK Semantic MediaWiki API

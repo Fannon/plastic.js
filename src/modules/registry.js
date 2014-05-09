@@ -23,24 +23,42 @@ plastic.modules.registry = {
         query: {}
     },
 
+    parametersSchema: {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+
+        "properties": {
+            "moduleType": {"type": "string"},
+            "apiName": {"type": "string"},
+            "className": {"type": "string"},
+            "dependencies": {"type": "array"}
+
+        },
+        "required": ["moduleType", "apiName", "className"]
+    },
+
     /**
      * Register Modules to the Registry.
      *
      * Every Module has to register itself here, or it won't be found and exectuted!
      *
-     * @param {string}   moduleType
-     * @param {string}   apiName
-     * @param {string}   className
-     * @param {Array}    dependencies    Array with all dependencies. All Dependencies have to be listed dependencies.js
+     * @param {Object}  paramsObj  ParameterObject
      */
-    add: function(moduleType, apiName, className, dependencies) {
+    add: function(paramsObj) {
         "use strict";
+
+        var env = jjv();
+        env.addSchema('parameters', this.parametersSchema);
+        var errors = env.validate('parameters', paramsObj);
+
+        // validation was successful
+        if (errors) {
+            console.dir(errors);
+            throw new Error('ModuleRegistry parameters invalid!');
+        }
+
         try {
-            this.modules[moduleType][apiName] = {
-                "className": className,
-                "apiName": apiName,
-                "dependencies": dependencies
-            };
+            this.modules[paramsObj.moduleType][paramsObj.apiName] = paramsObj;
         } catch(e) {
             console.log(e);
             console.error('Wrong usage of Module Registry!');

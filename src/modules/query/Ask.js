@@ -1,5 +1,10 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add('query', 'application/ask-query', 'Ask', []);
+plastic.modules.registry.add({
+    moduleType: 'query',
+    apiName: 'application/ask-query',
+    className: 'Ask',
+    dependencies: []
+});
 
 /**
  * Parses tabular data from an ASK Semantic MediaWiki API

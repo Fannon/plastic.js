@@ -1,5 +1,10 @@
 // Register Module and define dependencies:
-plastic.modules.registry.add('data', 'sparql-json', 'SparqlJson', []);
+plastic.modules.registry.add({
+    moduleType: 'data',
+    apiName: 'sparql-json',
+    className: 'SparqlJson',
+    dependencies: []
+});
 
 /**
  * Parses tabular data from SPARQL Endpoints
