@@ -1,3 +1,0 @@
-Jekyll Documentation Source Files
----------------------------------
-
