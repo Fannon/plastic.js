@@ -41,14 +41,14 @@ module.exports = function (grunt) {
                 src: [
                     'src/main.js',
                     'src/options.js',
-                    'src/core/**/*.js',
-                    'src/data/**/*.js',
-                    'src/query/**/*.js',
-                    'src/schemaParser/**/*.js',
-                    'src/display/**/*.js',
-                    'src/helper/**/*.js',
                     'bower_components/rgrove-lazyload/lazyload.js',
-                    'bower_components/jjv/lib/jjv.js'
+                    'bower_components/jjv/lib/jjv.js',
+                    'src/core/*.js',
+                    'src/helper/*.js',
+                    'src/modules/*.js',
+                    'src/modules/data/*.js',
+                    'src/modules/display/*.js',
+                    'src/modules/query/*.js'
                 ],
                 dest: 'dist/plastic.js'
             },
@@ -141,6 +141,10 @@ module.exports = function (grunt) {
                         dest: 'docs/source/_static/plastic.min.js'
                     },
                     {
+                        src: ['dist/plastic.js'],
+                        dest: 'docs/source/_static/plastic.js'
+                    },
+                    {
                         src: ['dist/plastic.min.css'],
                         dest: 'docs/source/_static/plastic.min.css'
                     }
@@ -194,6 +198,16 @@ module.exports = function (grunt) {
             }
         },
 
+        shell: {
+            sphinx: {
+                command: [
+                    'cd docs',
+                    'rm -rf dist/*',
+                    'sphinx-build -b html source dist'
+                ].join('&&')
+            }
+        },
+
         /** Puts some more Infos to the console */
         content: {
             options: {
@@ -230,6 +244,9 @@ module.exports = function (grunt) {
             jsdoc: {
                 text: "\n###################################################\n### GENERATING API DOCUMENTATION\n###################################################"
             },
+            sphinx: {
+                text: "\n###################################################\n### GENERATING SPHINX DOCUMENTATION\n###################################################"
+            },
             done: {
                 text: "\n###################################################\n### GRUNT COMPLETED \n###################################################"
             }
@@ -247,6 +264,13 @@ module.exports = function (grunt) {
         'content:jshint', 'jshint'
     ]);
 
+    grunt.registerTask('docs', [
+        'content:copy', 'copy:docs',
+        'content:sphinx', 'shell:sphinx',
+        'content:jsdoc', 'jsdoc',
+        'content:done'
+    ]);
+
     grunt.registerTask('build', [
         'test',
         'content:clean', 'clean:dist',
@@ -254,8 +278,8 @@ module.exports = function (grunt) {
         'content:uglify', 'uglify',
         'content:cssmin', 'cssmin',
         'content:sizediff', 'sizediff',
-        'content:copy', 'copy:documentation',
-        'content:jsdoc', 'jsdoc',
+        'content:copy', 'copy',
+
         'content:done'
     ]);
 };
