@@ -9,7 +9,7 @@
     "jquery": "~2.1.0",
     "d3": "~3.4.5",
     "jjv": "~1.0.0",
-    "rgrove-lazyload": "*"
-
+    "rgrove-lazyload": "*",
+    "jaguarjs-jsdoc": "Fannon/jaguarjs-jsdoc"
   }
 }
