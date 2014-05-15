@@ -1,10 +1,22 @@
-Welcome to plastic.js documentation!
-=====================================
+Welcome to the plastic.js documentation!
+========================================
 
-Contents:
+Codeblock-Test
+==============
+
+Test for the Codeblock.::
+
+    print 'hello'
+    >> hello
+
+Guide
+^^^^^
 
 .. toctree::
    :maxdepth: 2
+
+   intro
+   extend
 
 
 
