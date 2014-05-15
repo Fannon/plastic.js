@@ -28,6 +28,9 @@ module.exports = function (grunt) {
             ],
             apidoc: [
                 'docs/api/*'
+            ],
+            sphinx: [
+                'docs/dicst/*'
             ]
         },
 
@@ -160,11 +163,14 @@ module.exports = function (grunt) {
             },
             src: {
                 files: 'src/**/*.*',
-//                tasks: ['jshint:src', 'concat']
                 tasks: ['concat']
             },
+            docs: {
+                files: 'docs/source/**/*.*',
+                tasks: ['shell:sphinx']
+            },
             livereload: {
-                files: ['src/**/*.js', 'test/**/*.*'],
+                files: ['src/**/*.js', 'test/**/*.*', 'docs/dist/**/*.*'],
                 options: {
                     livereload: true
                 }
@@ -202,7 +208,6 @@ module.exports = function (grunt) {
             sphinx: {
                 command: [
                     'cd docs',
-                    'rm -rf dist/*',
                     'sphinx-build -b html source dist'
                 ].join('&&')
             }
@@ -266,7 +271,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docs', [
         'content:copy', 'copy:docs',
-        'content:sphinx', 'shell:sphinx',
+        'content:sphinx', 'clean:sphinx', 'shell:sphinx',
         'content:jsdoc', 'jsdoc',
         'content:done'
     ]);

@@ -7,7 +7,7 @@ Codeblock-Test
 Test for the Codeblock.::
 
     print 'hello'
-    >> hello
+    >> hello Moon
 
 Guide
 ^^^^^
