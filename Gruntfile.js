@@ -130,14 +130,21 @@ module.exports = function (grunt) {
 
         /** Copies Files */
         copy: {
-            documentation: {
-                files: [{
-                    src: ['bower_components/d3/d3.min.js'],
-                    dest: 'docs/lib/d3.min.js'
-                }, {
-                    src: ['bower_components/jquery/dist/jquery.min.js'],
-                    dest: 'docs/lib/jquery.min.js'
-                }]
+            docs: {
+                files: [
+                    {
+                        src: ['bower_components/jquery/dist/jquery.min.js'],
+                        dest: 'docs/source/_static/jquery.min.js'
+                    },
+                    {
+                        src: ['dist/plastic.min.js'],
+                        dest: 'docs/source/_static/plastic.min.js'
+                    },
+                    {
+                        src: ['dist/plastic.min.css'],
+                        dest: 'docs/source/_static/plastic.min.css'
+                    }
+                ]
             }
         },
 
