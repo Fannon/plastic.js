@@ -57,15 +57,6 @@ plastic.modules.display.SimpleTable.prototype = {
     },
 
     /**
-     * Set / Update elAttr by Hand
-     * @param elAttr
-     */
-    setElAttr: function(elAttr) {
-        "use strict";
-        this.elAttr = elAttr;
-    },
-
-    /**
      * Renders the Table
      *
      * @returns {*}

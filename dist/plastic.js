@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-05-15
+/*! plastic - v0.0.4 - 2014-05-16
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -3040,6 +3040,69 @@ plastic.modules.data.SparqlJson.prototype = {
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'display',
+    apiName: 'raw-data',
+    className: 'RawData',
+    dependencies: []
+});
+
+/**
+ * Displays the Raw Data (and Schema if provided) as formatted JSON
+ *
+ * @constructor
+ */
+plastic.modules.display.SimpleTable = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Display Element that is rendered
+     * @type {{}}
+     */
+    this.displayEl = undefined;
+
+};
+
+plastic.modules.display.SimpleTable.prototype = {
+
+    /**
+     * Renders the Table
+     *
+     * @returns {*}
+     */
+    execute: function() {
+
+//        var $displayEl = this.$el.find('.plastic-js-display')[0];
+//
+//        console.dir($displayEl);
+//
+//        this.displayEl = $('<pre></pre>')
+//            .append($('<code></code>'))
+//                .addClass("raw-data")
+//                .append($('<code></code>'))
+//        ;
+
+
+    },
+
+    update: function() {
+        "use strict";
+        this.execute(); // TODO: Write Update function
+    }
+
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
     apiName: 'simple-table',
     className: 'SimpleTable',
     dependencies: ["d3"]
@@ -3093,15 +3156,6 @@ plastic.modules.display.SimpleTable.prototype = {
     validate: function() {
         "use strict";
         return false; // No Errors
-    },
-
-    /**
-     * Set / Update elAttr by Hand
-     * @param elAttr
-     */
-    setElAttr: function(elAttr) {
-        "use strict";
-        this.elAttr = elAttr;
     },
 
     /**
