@@ -59,8 +59,6 @@ plastic.modules.display.SimpleTable.prototype = {
 
         var data = [];
 
-        console.info(this.$el);
-
         // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
             data = this.elAttr.data.processedHtml;
