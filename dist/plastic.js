@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-05-16
+/*! plastic - v0.0.4 - 2014-05-26
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -3050,7 +3050,7 @@ plastic.modules.moduleManager.register({
  *
  * @constructor
  */
-plastic.modules.display.SimpleTable = function($el, elAttr) {
+plastic.modules.display.RawData = function($el, elAttr) {
     "use strict";
 
     /**
@@ -3071,7 +3071,7 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
 
 };
 
-plastic.modules.display.SimpleTable.prototype = {
+plastic.modules.display.RawData.prototype = {
 
     /**
      * Renders the Table
@@ -3080,15 +3080,13 @@ plastic.modules.display.SimpleTable.prototype = {
      */
     execute: function() {
 
-//        var $displayEl = this.$el.find('.plastic-js-display')[0];
-//
-//        console.dir($displayEl);
-//
-//        this.displayEl = $('<pre></pre>')
-//            .append($('<code></code>'))
-//                .addClass("raw-data")
-//                .append($('<code></code>'))
-//        ;
+        var displayEl = this.$el.find('.plastic-js-display')[0];
+
+        this.$displayEl = $(displayEl);
+
+        var html = '<pre class="raw-data"><code>' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
+
+        this.$displayEl.html(html);
 
 
     },
