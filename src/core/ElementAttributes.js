@@ -32,13 +32,19 @@ plastic.ElementAttributes = function(pEl) {
      * Element Options Attributes
      * @type {Object|boolean}
      */
-    this.options = false;
+    this.options = {};
 
     /**
      * Element Query Attributes
      * @type {Object|boolean}
      */
     this.query = false;
+
+    /**
+     * Element Display Attributes
+     * @type {Object|boolean}
+     */
+    this.display = {};
 
     /**
      * Element Data Attributes
@@ -79,21 +85,15 @@ plastic.ElementAttributes.prototype = {
                 }
             },
             "options": {
+                "type": "object"
+            },
+            "display": {
                 "type": "object",
                 "properties": {
-                    "general": {
-                        type: "object"
-                    },
-                    "display": {
-                        "type": "object",
-                        "properties": {
-                            "module": {"type": "string"},
-                            "options": {"type": "object"}
-                        },
-                        required: ["module", "options"]
-                    }
+                    "module": {"type": "string"},
+                    "options": {"type": "object"}
                 },
-                "required": ["general", "display"]
+                required: ["module", "options"]
             },
             "query": {
                 "type": ["object", "boolean"],
@@ -160,6 +160,7 @@ plastic.ElementAttributes.prototype = {
         this.getQuery();
         this.getData();
         this.getDataDescription();
+        this.getDisplay();
 
         if (this.pEl.options.debug) {
             plastic.msg.dir(this.getAttrObj());
@@ -194,7 +195,7 @@ plastic.ElementAttributes.prototype = {
 
         if (optionsObject.length > 0) {
 
-            var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+            var optionsString = optionsObject[0].text;
 
             if (optionsString && optionsString !== '') {
 
@@ -202,8 +203,7 @@ plastic.ElementAttributes.prototype = {
                     options = $.parseJSON(optionsString);
 
                     // SUCCESS
-                    this.options = options;
-                    this.display = options.display;
+                    this.options.general = options;
 
                 } catch(e) {
                     console.dir(e);
@@ -216,9 +216,47 @@ plastic.ElementAttributes.prototype = {
                 throw new Error('Empty Obptions Element!');
             }
 
+        }
+    },
+
+    /**
+     * Gets all Option Attributes
+     */
+    getDisplay: function() {
+        "use strict";
+
+        /** Element Options */
+        var options = {}; // mandatory!
+
+        var displayObject = this.$el.find(".plastic-display");
+
+        if (displayObject.length > 0) {
+
+            this.display.module = displayObject.attr('data-display-module');
+
+            var optionsString = displayObject[0].text;
+
+            if (optionsString && optionsString !== '') {
+
+                try {
+                    options = $.parseJSON(optionsString);
+                    this.display.options = options;
+
+
+                } catch(e) {
+                    console.dir(e);
+                    plastic.msg('Invalid JSON in the Options Object!');
+                    throw new Error(e);
+                }
+
+            } else {
+                plastic.msg('Empty Display Element!', 'error', this.$el);
+                throw new Error('Empty Display Element!');
+            }
+
         } else {
-            plastic.msg('No options provided!', 'error', this.$el);
-            throw new Error('No options provided!');
+            plastic.msg('No Display Module set!', 'error', this.$el);
+            throw new Error('No Display Module set!');
         }
     },
 

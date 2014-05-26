@@ -69,17 +69,6 @@ plastic.modules.data.SparqlJson = function(dataObj) {
 plastic.modules.data.SparqlJson.prototype = {
 
     /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
-
-    /**
      * Custom Validation
      *
      * @returns {boolean}

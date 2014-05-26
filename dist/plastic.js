@@ -1730,13 +1730,19 @@ plastic.ElementAttributes = function(pEl) {
      * Element Options Attributes
      * @type {Object|boolean}
      */
-    this.options = false;
+    this.options = {};
 
     /**
      * Element Query Attributes
      * @type {Object|boolean}
      */
     this.query = false;
+
+    /**
+     * Element Display Attributes
+     * @type {Object|boolean}
+     */
+    this.display = {};
 
     /**
      * Element Data Attributes
@@ -1777,21 +1783,15 @@ plastic.ElementAttributes.prototype = {
                 }
             },
             "options": {
+                "type": "object"
+            },
+            "display": {
                 "type": "object",
                 "properties": {
-                    "general": {
-                        type: "object"
-                    },
-                    "display": {
-                        "type": "object",
-                        "properties": {
-                            "module": {"type": "string"},
-                            "options": {"type": "object"}
-                        },
-                        required: ["module", "options"]
-                    }
+                    "module": {"type": "string"},
+                    "options": {"type": "object"}
                 },
-                "required": ["general", "display"]
+                required: ["module", "options"]
             },
             "query": {
                 "type": ["object", "boolean"],
@@ -1858,6 +1858,7 @@ plastic.ElementAttributes.prototype = {
         this.getQuery();
         this.getData();
         this.getDataDescription();
+        this.getDisplay();
 
         if (this.pEl.options.debug) {
             plastic.msg.dir(this.getAttrObj());
@@ -1892,7 +1893,7 @@ plastic.ElementAttributes.prototype = {
 
         if (optionsObject.length > 0) {
 
-            var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+            var optionsString = optionsObject[0].text;
 
             if (optionsString && optionsString !== '') {
 
@@ -1900,8 +1901,7 @@ plastic.ElementAttributes.prototype = {
                     options = $.parseJSON(optionsString);
 
                     // SUCCESS
-                    this.options = options;
-                    this.display = options.display;
+                    this.options.general = options;
 
                 } catch(e) {
                     console.dir(e);
@@ -1914,9 +1914,47 @@ plastic.ElementAttributes.prototype = {
                 throw new Error('Empty Obptions Element!');
             }
 
+        }
+    },
+
+    /**
+     * Gets all Option Attributes
+     */
+    getDisplay: function() {
+        "use strict";
+
+        /** Element Options */
+        var options = {}; // mandatory!
+
+        var displayObject = this.$el.find(".plastic-display");
+
+        if (displayObject.length > 0) {
+
+            this.display.module = displayObject.attr('data-display-module');
+
+            var optionsString = displayObject[0].text;
+
+            if (optionsString && optionsString !== '') {
+
+                try {
+                    options = $.parseJSON(optionsString);
+                    this.display.options = options;
+
+
+                } catch(e) {
+                    console.dir(e);
+                    plastic.msg('Invalid JSON in the Options Object!');
+                    throw new Error(e);
+                }
+
+            } else {
+                plastic.msg('Empty Display Element!', 'error', this.$el);
+                throw new Error('Empty Display Element!');
+            }
+
         } else {
-            plastic.msg('No options provided!', 'error', this.$el);
-            throw new Error('No options provided!');
+            plastic.msg('No Display Module set!', 'error', this.$el);
+            throw new Error('No Display Module set!');
         }
     },
 
@@ -2747,7 +2785,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "forbmat": "phone"
+            "format": "phone"
         }
     };
 
@@ -2755,17 +2793,6 @@ plastic.modules.data.AskJson = function(dataObj) {
 };
 
 plastic.modules.data.AskJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
 
     /**
      * Custom Validation
@@ -2855,6 +2882,12 @@ plastic.modules.data.Default = function(dataObj) {
 
     this.dataDescription = {};
 
+    /**
+     * Raw Data Schema for validation
+     *
+     * TODO: Further describe "data" structure
+     * @type {{}}
+     */
     this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
@@ -2862,13 +2895,12 @@ plastic.modules.data.Default = function(dataObj) {
         "properties": {
             "data": {
                 "type": "array"
-
             },
             "schema": {
-
+                "type": "object"
             },
             "description": {
-
+                "type": "object"
             }
         },
         "required": ["data"]
@@ -2876,18 +2908,7 @@ plastic.modules.data.Default = function(dataObj) {
 
 };
 
-plastic.modules.data.AskJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
+plastic.modules.data.Default.prototype = {
 
     /**
      * Custom Validation
@@ -2900,23 +2921,13 @@ plastic.modules.data.AskJson.prototype = {
     },
 
     /**
-     * Parses the data into an internal used data format
+     * Since the data is already in the correct format, it has just to be returned
      *
      * @returns {Object}
      */
     execute: function() {
-
-        this.parseSchema();
-        this.parseData();
-
-        return this.dataObj;
-
-    },
-
-    parseData: function() {
-        "use strict";
-
         this.dataObj.processed = this.dataObj.raw.data;
+        return this.dataObj;
     }
 };
 
@@ -2989,17 +3000,6 @@ plastic.modules.data.SparqlJson = function(dataObj) {
 };
 
 plastic.modules.data.SparqlJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
 
     /**
      * Custom Validation
@@ -3137,12 +3137,6 @@ plastic.modules.display.RawData = function($el, elAttr) {
      */
     this.elAttr = elAttr;
 
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
-
 };
 
 plastic.modules.display.RawData.prototype = {
@@ -3156,11 +3150,11 @@ plastic.modules.display.RawData.prototype = {
 
         var displayEl = this.$el.find('.plastic-js-display')[0];
 
-        this.$displayEl = $(displayEl);
+        var $displayEl = $(displayEl);
 
-        var html = '<pre class="raw-data"><code>' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
+        var html = '<pre class="raw-data">' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
 
-        this.$displayEl.html(html);
+        $displayEl.html(html);
 
 
     },

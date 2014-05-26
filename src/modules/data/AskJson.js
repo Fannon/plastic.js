@@ -72,7 +72,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "forbmat": "phone"
+            "format": "phone"
         }
     };
 
@@ -80,17 +80,6 @@ plastic.modules.data.AskJson = function(dataObj) {
 };
 
 plastic.modules.data.AskJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
 
     /**
      * Custom Validation
