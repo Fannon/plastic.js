@@ -230,11 +230,11 @@ plastic.ElementAttributes.prototype = {
 
         var displayObject = this.$el.find(".plastic-display");
 
-        this.display.module = displayObject.attr('data-display-module');
-
         if (displayObject.length > 0) {
 
-            var optionsString = displayObject[0].text; // TODO: Or .innerText in some cases?
+            this.display.module = displayObject.attr('data-display-module');
+
+            var optionsString = displayObject[0].text;
 
             if (optionsString && optionsString !== '') {
 

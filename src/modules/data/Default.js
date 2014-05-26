@@ -20,6 +20,12 @@ plastic.modules.data.Default = function(dataObj) {
 
     this.dataDescription = {};
 
+    /**
+     * Raw Data Schema for validation
+     *
+     * TODO: Further describe "data" structure
+     * @type {{}}
+     */
     this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
@@ -29,10 +35,10 @@ plastic.modules.data.Default = function(dataObj) {
                 "type": "array"
             },
             "schema": {
-
+                "type": "object"
             },
             "description": {
-
+                "type": "object"
             }
         },
         "required": ["data"]
@@ -40,18 +46,7 @@ plastic.modules.data.Default = function(dataObj) {
 
 };
 
-plastic.modules.data.AskJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
+plastic.modules.data.Default.prototype = {
 
     /**
      * Custom Validation
@@ -64,22 +59,12 @@ plastic.modules.data.AskJson.prototype = {
     },
 
     /**
-     * Parses the data into an internal used data format
+     * Since the data is already in the correct format, it has just to be returned
      *
      * @returns {Object}
      */
     execute: function() {
-
-        this.parseSchema();
-        this.parseData();
-
-        return this.dataObj;
-
-    },
-
-    parseData: function() {
-        "use strict";
-
         this.dataObj.processed = this.dataObj.raw.data;
+        return this.dataObj;
     }
 };

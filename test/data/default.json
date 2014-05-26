@@ -1,0 +1,856 @@
+{
+    "data": [
+        {
+            "Vorname": [
+                "Arthur"
+            ],
+            "Nachname": [
+                "Chesterton"
+            ],
+            "Mail": [
+                "mailto:Arthur.Chesterton@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49142703493186"
+            ],
+            "Handy": [
+                "tel:+49133540893285"
+            ]
+        },
+        {
+            "Vorname": [
+                "Arthur"
+            ],
+            "Nachname": [
+                "Simmons"
+            ],
+            "Mail": [
+                "mailto:Arthur.Simmons@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4995787231498"
+            ],
+            "Handy": [
+                "tel:+49121946131296"
+            ]
+        },
+        {
+            "Vorname": [
+                "Clives Staples"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:Clives_Staples.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49117448735450"
+            ],
+            "Handy": [
+                "tel:+4987159059825"
+            ]
+        },
+        {
+            "Vorname": [
+                "Clives Staples"
+            ],
+            "Nachname": [
+                "Simmons"
+            ],
+            "Mail": [
+                "mailto:Clives_Staples.Simmons@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49163925701465"
+            ],
+            "Handy": [
+                "tel:+49115114195764"
+            ]
+        },
+        {
+            "Vorname": [
+                "Dan"
+            ],
+            "Nachname": [
+                "Bradbury"
+            ],
+            "Mail": [
+                "mailto:Dan.Bradbury@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4996202446591"
+            ],
+            "Handy": [
+                "tel:+49137745096773"
+            ]
+        },
+        {
+            "Vorname": [
+                "Dan"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:Dan.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49160773165219"
+            ],
+            "Handy": [
+                "tel:+49165195309863"
+            ]
+        },
+        {
+            "Vorname": [
+                "Dan"
+            ],
+            "Nachname": [
+                "Herbert"
+            ],
+            "Mail": [
+                "mailto:Dan.Herbert@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4983560388013"
+            ],
+            "Handy": [
+                "tel:+4994469530569"
+            ]
+        },
+        {
+            "Vorname": [
+                "Dan"
+            ],
+            "Nachname": [
+                "Morus"
+            ],
+            "Mail": [
+                "mailto:Dan.Morus@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49155303874392"
+            ],
+            "Handy": [
+                "tel:+49111451024331"
+            ]
+        },
+        {
+            "Vorname": [
+                "Douglas"
+            ],
+            "Nachname": [
+                "Bradbury"
+            ],
+            "Mail": [
+                "mailto:Douglas.Bradbury@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49130762940641"
+            ],
+            "Handy": [
+                "tel:+49129351691453"
+            ]
+        },
+        {
+            "Vorname": [
+                "Douglas"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:Douglas.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49151243910175"
+            ],
+            "Handy": [
+                "tel:+49166490684522"
+            ]
+        },
+        {
+            "Vorname": [
+                "Douglas"
+            ],
+            "Nachname": [
+                "Gibson"
+            ],
+            "Mail": [
+                "mailto:Douglas.Gibson@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4992814544987"
+            ],
+            "Handy": [
+                "tel:+49156685700268"
+            ]
+        },
+        {
+            "Vorname": [
+                "Douglas"
+            ],
+            "Nachname": [
+                "Orwell"
+            ],
+            "Mail": [
+                "mailto:Douglas.Orwell@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49132808560104"
+            ],
+            "Handy": [
+                "tel:+49127998300172"
+            ]
+        },
+        {
+            "Vorname": [
+                "Frank"
+            ],
+            "Nachname": [
+                "Adams"
+            ],
+            "Mail": [
+                "mailto:Frank.Adams@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49153587571013"
+            ],
+            "Handy": [
+                "tel:+49100758065319"
+            ]
+        },
+        {
+            "Vorname": [
+                "Frank"
+            ],
+            "Nachname": [
+                "Asimov"
+            ],
+            "Mail": [
+                "mailto:Frank.Asimov@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49152453482203"
+            ],
+            "Handy": [
+                "tel:+49144821370715"
+            ]
+        },
+        {
+            "Vorname": [
+                "Frank"
+            ],
+            "Nachname": [
+                "Bradbury"
+            ],
+            "Mail": [
+                "mailto:Frank.Bradbury@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49170453195127"
+            ],
+            "Handy": [
+                "tel:+49136228363670"
+            ]
+        },
+        {
+            "Vorname": [
+                "Frank"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:Frank.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49124159647538"
+            ],
+            "Handy": [
+                "tel:+4985631140002"
+            ]
+        },
+        {
+            "Vorname": [
+                "Frank"
+            ],
+            "Nachname": [
+                "Heinlein"
+            ],
+            "Mail": [
+                "mailto:Frank.Heinlein@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49105396791194"
+            ],
+            "Handy": [
+                "tel:+49105046555313"
+            ]
+        },
+        {
+            "Vorname": [
+                "Frank"
+            ],
+            "Nachname": [
+                "Lewis"
+            ],
+            "Mail": [
+                "mailto:Frank.Lewis@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49122137816838"
+            ],
+            "Handy": [
+                "tel:+4985898239220"
+            ]
+        },
+        {
+            "Vorname": [
+                "G. K."
+            ],
+            "Nachname": [
+                "Heinlein"
+            ],
+            "Mail": [
+                "mailto:G._K..Heinlein@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49119455182654"
+            ],
+            "Handy": [
+                "tel:+49129030350854"
+            ]
+        },
+        {
+            "Vorname": [
+                "G. K."
+            ],
+            "Nachname": [
+                "Herbert"
+            ],
+            "Mail": [
+                "mailto:G._K..Herbert@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49156680940338"
+            ],
+            "Handy": [
+                "tel:+49138237293241"
+            ]
+        },
+        {
+            "Vorname": [
+                "G. K."
+            ],
+            "Nachname": [
+                "Lewis"
+            ],
+            "Mail": [
+                "mailto:G._K..Lewis@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49118325992111"
+            ],
+            "Handy": [
+                "tel:+49154375667099"
+            ]
+        },
+        {
+            "Vorname": [
+                "G. K."
+            ],
+            "Nachname": [
+                "Verne"
+            ],
+            "Mail": [
+                "mailto:G._K..Verne@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49132199540289"
+            ],
+            "Handy": [
+                "tel:+49165165946247"
+            ]
+        },
+        {
+            "Vorname": [
+                "George"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:George.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49158858145974"
+            ],
+            "Handy": [
+                "tel:+49167812369257"
+            ]
+        },
+        {
+            "Vorname": [
+                "George"
+            ],
+            "Nachname": [
+                "Verne"
+            ],
+            "Mail": [
+                "mailto:George.Verne@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49168746456971"
+            ],
+            "Handy": [
+                "tel:+49129340322920"
+            ]
+        },
+        {
+            "Vorname": [
+                "H. G."
+            ],
+            "Nachname": [
+                "Clarke"
+            ],
+            "Mail": [
+                "mailto:H._G..Clarke@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49112992742067"
+            ],
+            "Handy": [
+                "tel:+49120470317888"
+            ]
+        },
+        {
+            "Vorname": [
+                "H. G."
+            ],
+            "Nachname": [
+                "Gibson"
+            ],
+            "Mail": [
+                "mailto:H._G..Gibson@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4991736947972"
+            ],
+            "Handy": [
+                "tel:+49118644394181"
+            ]
+        },
+        {
+            "Vorname": [
+                "H. G."
+            ],
+            "Nachname": [
+                "Herbert"
+            ],
+            "Mail": [
+                "mailto:H._G..Herbert@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49100468184335"
+            ],
+            "Handy": [
+                "tel:+49104912748409"
+            ]
+        },
+        {
+            "Vorname": [
+                "H. G."
+            ],
+            "Nachname": [
+                "Simmons"
+            ],
+            "Mail": [
+                "mailto:H._G..Simmons@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4993134901167"
+            ],
+            "Handy": [
+                "tel:+49100221494625"
+            ]
+        },
+        {
+            "Vorname": [
+                "H. G."
+            ],
+            "Nachname": [
+                "Verne"
+            ],
+            "Mail": [
+                "mailto:H._G..Verne@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49149556184962"
+            ],
+            "Handy": [
+                "tel:+49161336977586"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Adams"
+            ],
+            "Mail": [
+                "mailto:Isaac.Adams@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49100539898773"
+            ],
+            "Handy": [
+                "tel:+49155210117422"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Chesterton"
+            ],
+            "Mail": [
+                "mailto:Isaac.Chesterton@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49100458441703"
+            ],
+            "Handy": [
+                "tel:+49138539503746"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Clarke"
+            ],
+            "Mail": [
+                "mailto:Isaac.Clarke@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49113494030442"
+            ],
+            "Handy": [
+                "tel:+49153974414096"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Heinlein"
+            ],
+            "Mail": [
+                "mailto:Isaac.Heinlein@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49136404176051"
+            ],
+            "Handy": [
+                "tel:+49113443109678"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Herbert"
+            ],
+            "Mail": [
+                "mailto:Isaac.Herbert@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49146239417090"
+            ],
+            "Handy": [
+                "tel:+49145324551093"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Morus"
+            ],
+            "Mail": [
+                "mailto:Isaac.Morus@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4999929600604"
+            ],
+            "Handy": [
+                "tel:+49171070642641"
+            ]
+        },
+        {
+            "Vorname": [
+                "Isaac"
+            ],
+            "Nachname": [
+                "Verne"
+            ],
+            "Mail": [
+                "mailto:Isaac.Verne@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49144383298040"
+            ],
+            "Handy": [
+                "tel:+49116996761941"
+            ]
+        },
+        {
+            "Vorname": [
+                "Jules"
+            ],
+            "Nachname": [
+                "Clarke"
+            ],
+            "Mail": [
+                "mailto:Jules.Clarke@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49112993450205"
+            ],
+            "Handy": [
+                "tel:+4992910013375"
+            ]
+        },
+        {
+            "Vorname": [
+                "Jules"
+            ],
+            "Nachname": [
+                "Heinlein"
+            ],
+            "Mail": [
+                "mailto:Jules.Heinlein@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49147672137308"
+            ],
+            "Handy": [
+                "tel:+49123505317290"
+            ]
+        },
+        {
+            "Vorname": [
+                "Jules"
+            ],
+            "Nachname": [
+                "Orwell"
+            ],
+            "Mail": [
+                "mailto:Jules.Orwell@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4996415115242"
+            ],
+            "Handy": [
+                "tel:+49141977299861"
+            ]
+        },
+        {
+            "Vorname": [
+                "Jules"
+            ],
+            "Nachname": [
+                "Verne"
+            ],
+            "Mail": [
+                "mailto:Jules.Verne@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49105225390075"
+            ],
+            "Handy": [
+                "tel:+49158135214318"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Adams"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Adams@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4992704230958"
+            ],
+            "Handy": [
+                "tel:+49119366926341"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49170394084933"
+            ],
+            "Handy": [
+                "tel:+49165664705872"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Chesterton"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Chesterton@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49168658226477"
+            ],
+            "Handy": [
+                "tel:+49128407433964"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Gibson"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Gibson@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49166184975991"
+            ],
+            "Handy": [
+                "tel:+49124746792860"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Herbert"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Herbert@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4989208715480"
+            ],
+            "Handy": [
+                "tel:+4990833992308"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Lewis"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Lewis@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49134938394599"
+            ],
+            "Handy": [
+                "tel:+49164473699184"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Morus"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Morus@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49168326905145"
+            ],
+            "Handy": [
+                "tel:+49135672756375"
+            ]
+        },
+        {
+            "Vorname": [
+                "Orson Scott"
+            ],
+            "Nachname": [
+                "Verne"
+            ],
+            "Mail": [
+                "mailto:Orson_Scott.Verne@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49151958543433"
+            ],
+            "Handy": [
+                "tel:+4997334395117"
+            ]
+        },
+        {
+            "Vorname": [
+                "Philip"
+            ],
+            "Nachname": [
+                "Card"
+            ],
+            "Mail": [
+                "mailto:Philip.Card@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49156512009082"
+            ],
+            "Handy": [
+                "tel:+49106205612825"
+            ]
+        },
+        {
+            "Vorname": [
+                "Philip"
+            ],
+            "Nachname": [
+                "Morus"
+            ],
+            "Mail": [
+                "mailto:Philip.Morus@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4986861953224"
+            ],
+            "Handy": [
+                "tel:+49100269871413"
+            ]
+        }
+    ]
+
+}
+
