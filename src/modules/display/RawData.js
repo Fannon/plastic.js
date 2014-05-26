@@ -24,6 +24,13 @@ plastic.modules.display.RawData = function($el, elAttr) {
      */
     this.elAttr = elAttr;
 
+    /**
+     * Current Display Element
+     *
+     * @type {{}}
+     */
+    this.$displayEl = undefined;
+
 };
 
 plastic.modules.display.RawData.prototype = {
@@ -35,13 +42,11 @@ plastic.modules.display.RawData.prototype = {
      */
     execute: function() {
 
-        var displayEl = this.$el.find('.plastic-js-display')[0];
-
-        var $displayEl = $(displayEl);
+        this.$displayEl = $(this.$el.find('.plastic-js-display')[0]);
 
         var html = '<pre class="raw-data">' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
 
-        $displayEl.html(html);
+        this.$displayEl.html(html);
 
 
     },

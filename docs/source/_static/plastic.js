@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-05-15
+/*! plastic - v0.0.4 - 2014-05-26
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -1613,7 +1613,7 @@ plastic.Element.prototype = {
 
     mergeOptions: function() {
         "use strict";
-        this.options = $.extend(true, {}, plastic.options, this.attr.options.general);
+        this.options = $.extend(true, {}, plastic.options, this.attr.options);
     },
 
     /**
@@ -1730,13 +1730,19 @@ plastic.ElementAttributes = function(pEl) {
      * Element Options Attributes
      * @type {Object|boolean}
      */
-    this.options = false;
+    this.options = {};
 
     /**
      * Element Query Attributes
      * @type {Object|boolean}
      */
     this.query = false;
+
+    /**
+     * Element Display Attributes
+     * @type {Object|boolean}
+     */
+    this.display = {};
 
     /**
      * Element Data Attributes
@@ -1777,21 +1783,15 @@ plastic.ElementAttributes.prototype = {
                 }
             },
             "options": {
+                "type": "object"
+            },
+            "display": {
                 "type": "object",
                 "properties": {
-                    "general": {
-                        type: "object"
-                    },
-                    "display": {
-                        "type": "object",
-                        "properties": {
-                            "module": {"type": "string"},
-                            "options": {"type": "object"}
-                        },
-                        required: ["module", "options"]
-                    }
+                    "module": {"type": "string"},
+                    "options": {"type": "object"}
                 },
-                "required": ["general", "display"]
+                required: ["module", "options"]
             },
             "query": {
                 "type": ["object", "boolean"],
@@ -1807,7 +1807,15 @@ plastic.ElementAttributes.prototype = {
                 "properties": {
                     "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
-                    "processed": {"type": "array"},
+                    "processed": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array"
+                            }
+                        }
+                    },
                     "processedHtml": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
@@ -1858,6 +1866,7 @@ plastic.ElementAttributes.prototype = {
         this.getQuery();
         this.getData();
         this.getDataDescription();
+        this.getDisplay();
 
         if (this.pEl.options.debug) {
             plastic.msg.dir(this.getAttrObj());
@@ -1892,7 +1901,7 @@ plastic.ElementAttributes.prototype = {
 
         if (optionsObject.length > 0) {
 
-            var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
+            var optionsString = optionsObject[0].text;
 
             if (optionsString && optionsString !== '') {
 
@@ -1901,7 +1910,6 @@ plastic.ElementAttributes.prototype = {
 
                     // SUCCESS
                     this.options = options;
-                    this.display = options.display;
 
                 } catch(e) {
                     console.dir(e);
@@ -1914,9 +1922,47 @@ plastic.ElementAttributes.prototype = {
                 throw new Error('Empty Obptions Element!');
             }
 
+        }
+    },
+
+    /**
+     * Gets all Option Attributes
+     */
+    getDisplay: function() {
+        "use strict";
+
+        /** Element Options */
+        var options = {}; // mandatory!
+
+        var displayObject = this.$el.find(".plastic-display");
+
+        if (displayObject.length > 0) {
+
+            this.display.module = displayObject.attr('data-display-module');
+
+            var optionsString = displayObject[0].text;
+
+            if (optionsString && optionsString !== '') {
+
+                try {
+                    options = $.parseJSON(optionsString);
+                    this.display.options = options;
+
+
+                } catch(e) {
+                    console.dir(e);
+                    plastic.msg('Invalid JSON in the Options Object!');
+                    throw new Error(e);
+                }
+
+            } else {
+                plastic.msg('Empty Display Element!', 'error', this.$el);
+                throw new Error('Empty Display Element!');
+            }
+
         } else {
-            plastic.msg('No options provided!', 'error', this.$el);
-            throw new Error('No options provided!');
+            plastic.msg('No Display Module set!', 'error', this.$el);
+            throw new Error('No Display Module set!');
         }
     },
 
@@ -2747,7 +2793,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "forbmat": "phone"
+            "format": "phone"
         }
     };
 
@@ -2755,17 +2801,6 @@ plastic.modules.data.AskJson = function(dataObj) {
 };
 
 plastic.modules.data.AskJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
 
     /**
      * Custom Validation
@@ -2855,20 +2890,34 @@ plastic.modules.data.Default = function(dataObj) {
 
     this.dataDescription = {};
 
+    /**
+     * Raw Data Schema for validation
+     *
+     * TODO: Further describe "data" structure
+     * @type {{}}
+     */
     this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 
         "properties": {
             "data": {
-                "type": "array"
-
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array"
+                    }
+                }
             },
             "schema": {
-
+                "type": "object",
+                "additionalProperties": {
+                    "type": "object"
+                }
             },
             "description": {
-
+                "type": "object"
             }
         },
         "required": ["data"]
@@ -2876,18 +2925,7 @@ plastic.modules.data.Default = function(dataObj) {
 
 };
 
-plastic.modules.data.AskJson.prototype = {
-
-    /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
+plastic.modules.data.Default.prototype = {
 
     /**
      * Custom Validation
@@ -2900,23 +2938,13 @@ plastic.modules.data.AskJson.prototype = {
     },
 
     /**
-     * Parses the data into an internal used data format
+     * Since the data is already in the correct format, it has just to be returned
      *
      * @returns {Object}
      */
     execute: function() {
-
-        this.parseSchema();
-        this.parseData();
-
-        return this.dataObj;
-
-    },
-
-    parseData: function() {
-        "use strict";
-
         this.dataObj.processed = this.dataObj.raw.data;
+        return this.dataObj;
     }
 };
 
@@ -2991,17 +3019,6 @@ plastic.modules.data.SparqlJson = function(dataObj) {
 plastic.modules.data.SparqlJson.prototype = {
 
     /**
-     * Sets Raw Data Object after Instanciation
-     *
-     * @param {{}} dataObj
-     */
-    setDataObj: function(dataObj) {
-        "use strict";
-
-        this.dataObj = dataObj;
-    },
-
-    /**
      * Custom Validation
      *
      * @returns {boolean}
@@ -3027,12 +3044,142 @@ plastic.modules.data.SparqlJson.prototype = {
             var row = this.dataObj.raw.results.bindings[i];
 
             for (var o in row) {
-                this.dataObj.processed[i][o] = row[o].value;
+                this.dataObj.processed[i][o] = [];
+                this.dataObj.processed[i][o].push(row[o].value);
             }
         }
 
         return this.dataObj;
 
+    }
+
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
+    apiName: 'discrete-bar-chart',
+    className: 'DiscreteBarChart',
+    dependencies: ["nvd3"]
+});
+
+/**
+ * Bar Chart Display Module
+ *
+ * @constructor
+ */
+plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.displayOptionsSchema = {};
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.processedDataSchema = {};
+
+    /**
+     * Display Element that is rendered
+     * @type {{}}
+     */
+    this.displayEl = undefined;
+
+};
+
+plastic.modules.display.DiscreteBarChart.prototype = {
+
+    /**
+     * Validates ElementAttributes
+     *
+     * @returns {Object|boolean}
+     */
+    validate: function () {
+        "use strict";
+        return false; // No Errors
+    },
+
+    /**
+     * Renders the Bar Chart
+     *
+     * @returns {*}
+     */
+    execute: function () {
+
+
+
+    },
+
+    update: function() {
+        "use strict";
+        this.execute(); // TODO: Write Update function
+    }
+};
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
+    apiName: 'raw-data',
+    className: 'RawData',
+    dependencies: []
+});
+
+/**
+ * Displays the Raw Data (and Schema if provided) as formatted JSON
+ *
+ * @constructor
+ */
+plastic.modules.display.RawData = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+};
+
+plastic.modules.display.RawData.prototype = {
+
+    /**
+     * Renders the Table
+     *
+     * @returns {*}
+     */
+    execute: function() {
+
+        var displayEl = this.$el.find('.plastic-js-display')[0];
+
+        var $displayEl = $(displayEl);
+
+        var html = '<pre class="raw-data">' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
+
+        $displayEl.html(html);
+
+
+    },
+
+    update: function() {
+        "use strict";
+        this.execute(); // TODO: Write Update function
     }
 
 };
@@ -3096,15 +3243,6 @@ plastic.modules.display.SimpleTable.prototype = {
     },
 
     /**
-     * Set / Update elAttr by Hand
-     * @param elAttr
-     */
-    setElAttr: function(elAttr) {
-        "use strict";
-        this.elAttr = elAttr;
-    },
-
-    /**
      * Renders the Table
      *
      * @returns {*}
@@ -3114,12 +3252,12 @@ plastic.modules.display.SimpleTable.prototype = {
         var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
 
+        // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
             data = this.elAttr.data.processedHtml;
         } else {
             data = this.elAttr.data.processed;
         }
-
 
         var vis = d3.select($el);
 
@@ -3157,7 +3295,7 @@ plastic.modules.display.SimpleTable.prototype = {
                 return columns.map(function(column) {
                     return {
                         column: column,
-                        value: row[column]
+                        value: row[column].join(', ')
                     };
                 });
             })
@@ -3168,7 +3306,7 @@ plastic.modules.display.SimpleTable.prototype = {
             });
 
         // Twitter Bootstrap Classes
-        $('table').addClass('table table-condensed');
+        $('table').addClass('table table-condensed simple-table');
 
         this.displayEl = table;
 
