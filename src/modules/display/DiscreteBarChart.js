@@ -62,9 +62,54 @@ plastic.modules.display.DiscreteBarChart.prototype = {
      * @returns {*}
      */
     execute: function () {
+        var $el = this.$el.find('.plastic-js-display')[0];
+        var data = this.elAttr.data.processed;
+
+        var chart = nv.models.discreteBarChart()
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.value })
+            .staggerLabels(true)
+            .tooltips(false)
+            .showValues(true)
+            .transitionDuration(350)
+        ;
+
+        var mappedData = this.mapData(data);
+
+        d3.select('#chart svg')
+            .datum(mappedData)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+
+    },
+
+    mapData: function(data) {
+        "use strict";
+        var mappedData = [{}];
+
+        mappedData[0].key = "free key";
+        mappedData[0].values = [];
 
 
+        // TODO: Process Schema
+        var description = this.elAttr.data.description;
+        for (var o in description) {
+            console.log(o);
+        }
 
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+
+            mappedData[0].values.push({
+                "label": row.country_name[0],
+                "value": parseInt(row.population[0], 10)
+            });
+        }
+
+        return mappedData;
     },
 
     update: function() {
