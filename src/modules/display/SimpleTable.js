@@ -103,8 +103,6 @@ plastic.modules.display.SimpleTable.prototype = {
             .enter()
             .append("tr");
 
-
-
         // Create a cell in each row for each column
         var cells = rows.selectAll("td")
             .data(function(row) {

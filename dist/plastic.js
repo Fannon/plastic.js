@@ -3027,7 +3027,8 @@ plastic.modules.data.SparqlJson.prototype = {
             var row = this.dataObj.raw.results.bindings[i];
 
             for (var o in row) {
-                this.dataObj.processed[i][o] = row[o].value;
+                this.dataObj.processed[i][o] = [];
+                this.dataObj.processed[i][o].push(row[o].value);
             }
         }
 
@@ -3270,8 +3271,6 @@ plastic.modules.display.SimpleTable.prototype = {
             .data(data)
             .enter()
             .append("tr");
-
-
 
         // Create a cell in each row for each column
         var cells = rows.selectAll("td")
