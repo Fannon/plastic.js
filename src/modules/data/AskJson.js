@@ -72,7 +72,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "forbmat": "phone"
+            "format": "phone"
         }
     };
 

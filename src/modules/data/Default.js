@@ -27,7 +27,6 @@ plastic.modules.data.Default = function(dataObj) {
         "properties": {
             "data": {
                 "type": "array"
-
             },
             "schema": {
 
