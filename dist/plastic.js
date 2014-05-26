@@ -3160,12 +3160,12 @@ plastic.modules.display.SimpleTable.prototype = {
         var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
 
+        // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
             data = this.elAttr.data.processedHtml;
         } else {
             data = this.elAttr.data.processed;
         }
-
 
         var vis = d3.select($el);
 
@@ -3197,13 +3197,15 @@ plastic.modules.display.SimpleTable.prototype = {
             .enter()
             .append("tr");
 
+
+
         // Create a cell in each row for each column
         var cells = rows.selectAll("td")
             .data(function(row) {
                 return columns.map(function(column) {
                     return {
                         column: column,
-                        value: row[column]
+                        value: row[column].join(', ')
                     };
                 });
             })
@@ -3214,7 +3216,7 @@ plastic.modules.display.SimpleTable.prototype = {
             });
 
         // Twitter Bootstrap Classes
-        $('table').addClass('table table-condensed');
+        $('table').addClass('table table-condensed simple-table');
 
         this.displayEl = table;
 
