@@ -1,3 +1,5 @@
+/* global nv */
+
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'display',
@@ -36,11 +38,6 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
      */
     this.processedDataSchema = {};
 
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
 
 };
 
@@ -62,12 +59,15 @@ plastic.modules.display.DiscreteBarChart.prototype = {
      * @returns {*}
      */
     execute: function () {
-        var $el = this.$el.find('.plastic-js-display')[0];
         var data = this.elAttr.data.processed;
 
+        var svg = this.$el.append('<svg></svg>');
+
+        console.dir(this.$el[0].children[0]);
+
         var chart = nv.models.discreteBarChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
             .staggerLabels(true)
             .tooltips(false)
             .showValues(true)
@@ -76,12 +76,11 @@ plastic.modules.display.DiscreteBarChart.prototype = {
 
         var mappedData = this.mapData(data);
 
-        d3.select('#chart svg')
+        d3.select(this.$el[0].children[0])
             .datum(mappedData)
             .call(chart);
 
         nv.utils.windowResize(chart.update);
-
         return chart;
 
     },

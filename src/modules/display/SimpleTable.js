@@ -36,12 +36,6 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
      */
     this.processedDataSchema = {};
 
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
-
 };
 
 plastic.modules.display.SimpleTable.prototype = {
@@ -63,8 +57,9 @@ plastic.modules.display.SimpleTable.prototype = {
      */
     execute: function() {
 
-        var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
+
+        console.info(this.$el);
 
         // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
@@ -73,7 +68,7 @@ plastic.modules.display.SimpleTable.prototype = {
             data = this.elAttr.data.processed;
         }
 
-        var vis = d3.select($el);
+        var vis = d3.select(this.$el[0]);
 
         var table = vis.append("table");
         var thead = table.append("thead");

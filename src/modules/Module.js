@@ -56,7 +56,8 @@ plastic.modules.Module = function(pEl, type, name) {
 
     // Specific case handling for each module-type
     if (type === 'display') {
-        this.module = new Module(pEl.$el, pEl.attr);
+        var $el = $(pEl.$el.find('.plastic-js-display')[0]);
+        this.module = new Module($el, pEl.attr);
         this.execute();
 
     } else if (type === 'data') {

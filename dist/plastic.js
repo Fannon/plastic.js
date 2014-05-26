@@ -2446,7 +2446,8 @@ plastic.modules.Module = function(pEl, type, name) {
 
     // Specific case handling for each module-type
     if (type === 'display') {
-        this.module = new Module(pEl.$el, pEl.attr);
+        var $el = $(pEl.$el.find('.plastic-js-display')[0]);
+        this.module = new Module($el, pEl.attr);
         this.execute();
 
     } else if (type === 'data') {
@@ -3091,11 +3092,6 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
      */
     this.processedDataSchema = {};
 
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
 
 };
 
@@ -3117,12 +3113,15 @@ plastic.modules.display.DiscreteBarChart.prototype = {
      * @returns {*}
      */
     execute: function () {
-        var $el = this.$el.find('.plastic-js-display')[0];
         var data = this.elAttr.data.processed;
 
+        var svg = this.$el.append('<svg></svg>');
+
+        console.dir(this.$el[0].children[0]);
+
         var chart = nv.models.discreteBarChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
             .staggerLabels(true)
             .tooltips(false)
             .showValues(true)
@@ -3131,12 +3130,11 @@ plastic.modules.display.DiscreteBarChart.prototype = {
 
         var mappedData = this.mapData(data);
 
-        d3.select('#chart svg')
+        d3.select(this.$el[0].children[0])
             .datum(mappedData)
             .call(chart);
 
         nv.utils.windowResize(chart.update);
-
         return chart;
 
     },
@@ -3172,6 +3170,7 @@ plastic.modules.display.DiscreteBarChart.prototype = {
         this.execute(); // TODO: Write Update function
     }
 };
+
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'display',
@@ -3198,13 +3197,6 @@ plastic.modules.display.RawData = function($el, elAttr) {
      */
     this.elAttr = elAttr;
 
-    /**
-     * Current Display Element
-     *
-     * @type {{}}
-     */
-    this.$displayEl = undefined;
-
 };
 
 plastic.modules.display.RawData.prototype = {
@@ -3216,11 +3208,11 @@ plastic.modules.display.RawData.prototype = {
      */
     execute: function() {
 
-        this.$displayEl = $(this.$el.find('.plastic-js-display')[0]);
+        console.info(this.$el);
 
         var html = '<pre class="raw-data">' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
 
-        this.$displayEl.html(html);
+        this.$el.html(html);
 
 
     },
@@ -3270,12 +3262,6 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
      */
     this.processedDataSchema = {};
 
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
-
 };
 
 plastic.modules.display.SimpleTable.prototype = {
@@ -3297,8 +3283,9 @@ plastic.modules.display.SimpleTable.prototype = {
      */
     execute: function() {
 
-        var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
+
+        console.info(this.$el);
 
         // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
@@ -3307,7 +3294,7 @@ plastic.modules.display.SimpleTable.prototype = {
             data = this.elAttr.data.processed;
         }
 
-        var vis = d3.select($el);
+        var vis = d3.select(this.$el[0]);
 
         var table = vis.append("table");
         var thead = table.append("thead");
