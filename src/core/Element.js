@@ -347,7 +347,7 @@ plastic.Element.prototype = {
 
     mergeOptions: function() {
         "use strict";
-        this.options = $.extend(true, {}, plastic.options, this.attr.options.general);
+        this.options = $.extend(true, {}, plastic.options, this.attr.options);
     },
 
     /**

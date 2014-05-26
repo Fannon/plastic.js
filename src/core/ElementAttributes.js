@@ -109,7 +109,15 @@ plastic.ElementAttributes.prototype = {
                 "properties": {
                     "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
-                    "processed": {"type": "array"},
+                    "processed": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array"
+                            }
+                        }
+                    },
                     "processedHtml": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
@@ -203,7 +211,7 @@ plastic.ElementAttributes.prototype = {
                     options = $.parseJSON(optionsString);
 
                     // SUCCESS
-                    this.options.general = options;
+                    this.options = options;
 
                 } catch(e) {
                     console.dir(e);

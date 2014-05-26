@@ -32,10 +32,19 @@ plastic.modules.data.Default = function(dataObj) {
 
         "properties": {
             "data": {
-                "type": "array"
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array"
+                    }
+                }
             },
             "schema": {
-                "type": "object"
+                "type": "object",
+                "additionalProperties": {
+                    "type": "object"
+                }
             },
             "description": {
                 "type": "object"
