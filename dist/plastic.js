@@ -1947,8 +1947,6 @@ plastic.ElementAttributes.prototype = {
                 try {
                     options = $.parseJSON(optionsString);
                     this.display.options = options;
-
-
                 } catch(e) {
                     console.dir(e);
                     plastic.msg('Invalid JSON in the Options Object!');
@@ -1956,14 +1954,14 @@ plastic.ElementAttributes.prototype = {
                 }
 
             } else {
-                plastic.msg('Empty Display Element!', 'error', this.$el);
-                throw new Error('Empty Display Element!');
+                this.display.options = {};
             }
 
         } else {
             plastic.msg('No Display Module set!', 'error', this.$el);
             throw new Error('No Display Module set!');
         }
+
     },
 
     /**
