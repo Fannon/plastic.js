@@ -18,21 +18,19 @@ plastic.modules.data.SimpleDefault = function(dataObj) {
      */
     this.dataObj = dataObj;
 
-    this.dataDescription = {};
-
     /**
      * Raw Data Schema for validation
      *
      * @type {{}}
      */
-//    this.rawDataSchema = {
-//        "$schema": "http://json-schema.org/draft-04/schema#",
-//
-//        "type": "array",
-//        "items": {
-//            "type": "object"
-//        }
-//    };
+    this.rawDataSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "array",
+        "items": {
+            "type": "object"
+        }
+    };
 
 };
 
@@ -64,8 +62,6 @@ plastic.modules.data.SimpleDefault.prototype = {
                 processedData[i][cell] = [col[cell]];
             }
         }
-
-        console.info(processedData);
 
         this.dataObj.processed = processedData;
         return this.dataObj;

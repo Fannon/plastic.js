@@ -3,7 +3,7 @@
 }
 
 .plastic-js-display {
-    overflow: scroll;
+    overflow: auto;
 }
 
 .plastic-js-messages {
