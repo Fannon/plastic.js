@@ -89,22 +89,39 @@ plastic.modules.display.DiscreteBarChart.prototype = {
         "use strict";
         var mappedData = [{}];
 
-        mappedData[0].key = "free key";
+        mappedData[0].key = "";
         mappedData[0].values = [];
 
+        var labelColumn = '';
+        var valueColumn = '';
 
-        // TODO: Process Schema
-        var description = this.elAttr.data.description;
-        for (var o in description) {
-            console.log(o);
+        // Decides data types / mapping via data description if available:
+        if (this.elAttr.data.description) {
+            var description = this.elAttr.data.description;
+
+            for (var o in description) {
+                if (labelColumn === '' && description[o].type === "string") {
+                    labelColumn = o;
+                }
+
+                if (valueColumn === '' && description[o].type === "number") {
+                    valueColumn = o;
+                }
+            }
         }
 
+        if (labelColumn === '' || valueColumn === '') {
+            throw new Error('Could not map data to label and value! Please provide a correct data description / schema!');
+        }
+
+
+        // Do the actual mapping:
         for (var i = 0; i < data.length; i++) {
             var row = data[i];
 
             mappedData[0].values.push({
-                "label": row.country_name[0],
-                "value": parseInt(row.population[0], 10)
+                "label": row[labelColumn][0],
+                "value": parseInt(row[valueColumn][0], 10)
             });
         }
 

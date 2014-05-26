@@ -88,6 +88,9 @@ plastic.modules.data.SparqlJson = function(dataObj) {
         "uri": {
             "type": "string",
             "format": "uri"
+        },
+        "literal": {
+           "type": "string"
         }
     };
 
@@ -139,9 +142,15 @@ plastic.modules.data.SparqlJson.prototype = {
                     mappedType = this.schemaTypeMap[col.type];
                 }
 
-                if (mappedType) {
-                    this.dataDescription[o] = mappedType;
+                // Default Data Description Type
+                if (!mappedType) {
+                    mappedType = {
+                        "type": "string"
+                    };
                 }
+
+                this.dataDescription[o] = mappedType;
+
 
                 this.dataObj.description = this.dataDescription;
             }
