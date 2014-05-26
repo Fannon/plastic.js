@@ -418,15 +418,18 @@ plastic.Element.prototype = {
                 for (var cellType in row) {
 
                     var cellValue = row[cellType];
-                    var format = dataDescription[cellType].format;
 
-                    // TODO: Case-Handling: value could be no array (?)
-                    for (var j = 0; j < cellValue.length; j++) {
+                    if (dataDescription[cellType] && dataDescription[cellType].format) {
+                        var format = dataDescription[cellType].format;
 
-                        if (format) {
-                            cellValue[j] = htmlMapper[format](cellValue[j]);
+                        for (var j = 0; j < cellValue.length; j++) {
+
+                            if (format && htmlMapper[format]) {
+                                cellValue[j] = htmlMapper[format](cellValue[j]);
+                            }
                         }
                     }
+
                 }
 
             }

@@ -1684,15 +1684,18 @@ plastic.Element.prototype = {
                 for (var cellType in row) {
 
                     var cellValue = row[cellType];
-                    var format = dataDescription[cellType].format;
 
-                    // TODO: Case-Handling: value could be no array (?)
-                    for (var j = 0; j < cellValue.length; j++) {
+                    if (dataDescription[cellType] && dataDescription[cellType].format) {
+                        var format = dataDescription[cellType].format;
 
-                        if (format) {
-                            cellValue[j] = htmlMapper[format](cellValue[j]);
+                        for (var j = 0; j < cellValue.length; j++) {
+
+                            if (format && htmlMapper[format]) {
+                                cellValue[j] = htmlMapper[format](cellValue[j]);
+                            }
                         }
                     }
+
                 }
 
             }
@@ -3013,6 +3016,35 @@ plastic.modules.data.SparqlJson = function(dataObj) {
         "required": ["head", "results"]
     };
 
+    /**
+     * Maps ASK-Result-Format Schema to JSON-Schema
+     *
+     * @type {{}}
+     */
+    this.schemaDatatypeMap = {
+        "http://www.w3.org/2001/XMLSchema#integer": {
+            "type": "number"
+        },
+        "http://www.w3.org/2001/XMLSchema#date": {
+            "type": "string",
+            "format": "date"
+        }
+    };
+
+    /**
+     * Maps ASK-Result-Format Schema to JSON-Schema
+     *
+     * @type {{}}
+     */
+    this.schemaTypeMap = {
+        "uri": {
+            "type": "string",
+            "format": "uri"
+        }
+    };
+
+    this.dataDescription = {};
+
 };
 
 plastic.modules.data.SparqlJson.prototype = {
@@ -3033,6 +3065,44 @@ plastic.modules.data.SparqlJson.prototype = {
      * @returns {{}}
      */
     execute: function() {
+
+        this.parseSchema();
+        this.parseData();
+
+        return this.dataObj;
+
+    },
+
+    parseSchema: function() {
+        "use strict";
+
+        if (!this.dataObj.description) {
+
+            var schema = this.dataObj.raw.results.bindings[0];
+
+            for (var o in schema) {
+
+                var col = schema[o];
+                var mappedType = false;
+
+                if (col.datatype) {
+                    mappedType = this.schemaDatatypeMap[col.datatype];
+                } else if (col.type) {
+                    mappedType = this.schemaTypeMap[col.type];
+                }
+
+                if (mappedType) {
+                    this.dataDescription[o] = mappedType;
+                }
+
+                this.dataObj.description = this.dataDescription;
+            }
+
+        }
+    },
+
+    parseData: function() {
+        "use strict";
 
         this.dataObj.processed = [];
 
