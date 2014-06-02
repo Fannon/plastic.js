@@ -5,7 +5,8 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'discrete-bar-chart',
     className: 'DiscreteBarChart',
-    dependencies: ["nvd3"]
+    dependencies: ["nvd3"],
+    requirements: ["data-description"]
 });
 
 /**
@@ -30,7 +31,32 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
      * Display Options Validation Schema
      * @type {{}}
      */
-    this.displayOptionsSchema = {};
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "staggerLabels": {
+                "description": "Too many bars and not enough room? Try staggering labels.",
+                "type": "boolean"
+            },
+            "tooltips": {
+                "type": "boolean"
+            },
+            "showValues": {
+                "type": "boolean",
+                "default": true
+            },
+            "transitionDuration": {
+                "type": "number",
+                "minimum": 0
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
 
     /**
      * Display Options Validation Schema
