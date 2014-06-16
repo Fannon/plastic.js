@@ -65,50 +65,52 @@ plastic.modules.display.SimpleTable.prototype = {
         } else {
             data = this.elAttr.data.processed;
         }
-        var table = this.$el.append('<table>');
-        console.log(table);
-        var thead = table;
-        var tbody = table.append('<tbody>');
 
-        for (var column in data[0]) {
-            if (data[0].hasOwnProperty(column)) {
-                thead.append('<th>' + column + '</th>');
+        var vis = d3.select(this.$el[0]);
+
+        var table = vis.append("table");
+        var thead = table.append("thead");
+        var tbody = table.append("tbody");
+
+        // Get Columns from Data
+        var columns = [];
+        for (var o in data[0]) {
+            if (data[0].hasOwnProperty(o)) {
+                columns.push(o);
             }
         }
 
-
-
         // Create Header Row (TH)
-//        thead.append("tr")
-//            .selectAll("th")
-//            .data(columns)
-//            .enter()
-//            .append("th")
-//            .text(function(column) {
-//                return column;
-//            });
-//
-//        // Create a row for each object in the data
-//        var rows = tbody.selectAll("tr")
-//            .data(data)
-//            .enter()
-//            .append("tr");
-//
-//        // Create a cell in each row for each column
-//        var cells = rows.selectAll("td")
-//            .data(function(row) {
-//                return columns.map(function(column) {
-//                    return {
-//                        column: column,
-//                        value: row[column].join(', ')
-//                    };
-//                });
-//            })
-//            .enter()
-//            .append("td")
-//            .html(function(d) {
-//                return d.value;
-//            });
+        thead.append("tr")
+            .selectAll("th")
+            .data(columns)
+            .enter()
+            .append("th")
+            .text(function(column) {
+                return column;
+            });
+
+        // Create a row for each object in the data
+        var rows = tbody.selectAll("tr")
+            .data(data)
+            .enter()
+            .append("tr");
+
+        // Create a cell in each row for each column
+        var cells = rows.selectAll("td")
+            .data(function(row) {
+                return columns.map(function(column) {
+                    return {
+                        column: column,
+                        value: row[column].join(', ')
+                    };
+                });
+            })
+            .enter()
+            .append("td")
+            .html(function(d) {
+                return d.value;
+            });
 
         // Twitter Bootstrap Classes
         $('table').addClass('table table-condensed simple-table');

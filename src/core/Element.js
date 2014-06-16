@@ -312,6 +312,10 @@ plastic.Element.prototype = {
         // Instanciate new Data Module
         this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
 
+        if (!this.attr.data.description) {
+            this.attr.data.description = plastic.helper.duckTyping(this.attr.data.processed);
+        }
+
         // Apply Data Description if available
         this.applySchema();
 

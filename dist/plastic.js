@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-06-02
+/*! plastic - v0.0.4 - 2014-06-16
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -1578,6 +1578,10 @@ plastic.Element.prototype = {
         // Instanciate new Data Module
         this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
 
+        if (!this.attr.data.description) {
+            this.attr.data.description = plastic.helper.duckTyping(this.attr.data.processed);
+        }
+
         // Apply Data Description if available
         this.applySchema();
 
@@ -2382,6 +2386,47 @@ plastic.helper.Events.prototype = {
         }
     }
 };
+
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
+};
+
 
 plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     "use strict";
@@ -3626,50 +3671,52 @@ plastic.modules.display.SimpleTable.prototype = {
         } else {
             data = this.elAttr.data.processed;
         }
-        var table = this.$el.append('<table>');
-        console.log(table);
-        var thead = table;
-        var tbody = table.append('<tbody>');
 
-        for (var column in data[0]) {
-            if (data[0].hasOwnProperty(column)) {
-                thead.append('<th>' + column + '</th>');
+        var vis = d3.select(this.$el[0]);
+
+        var table = vis.append("table");
+        var thead = table.append("thead");
+        var tbody = table.append("tbody");
+
+        // Get Columns from Data
+        var columns = [];
+        for (var o in data[0]) {
+            if (data[0].hasOwnProperty(o)) {
+                columns.push(o);
             }
         }
 
-
-
         // Create Header Row (TH)
-//        thead.append("tr")
-//            .selectAll("th")
-//            .data(columns)
-//            .enter()
-//            .append("th")
-//            .text(function(column) {
-//                return column;
-//            });
-//
-//        // Create a row for each object in the data
-//        var rows = tbody.selectAll("tr")
-//            .data(data)
-//            .enter()
-//            .append("tr");
-//
-//        // Create a cell in each row for each column
-//        var cells = rows.selectAll("td")
-//            .data(function(row) {
-//                return columns.map(function(column) {
-//                    return {
-//                        column: column,
-//                        value: row[column].join(', ')
-//                    };
-//                });
-//            })
-//            .enter()
-//            .append("td")
-//            .html(function(d) {
-//                return d.value;
-//            });
+        thead.append("tr")
+            .selectAll("th")
+            .data(columns)
+            .enter()
+            .append("th")
+            .text(function(column) {
+                return column;
+            });
+
+        // Create a row for each object in the data
+        var rows = tbody.selectAll("tr")
+            .data(data)
+            .enter()
+            .append("tr");
+
+        // Create a cell in each row for each column
+        var cells = rows.selectAll("td")
+            .data(function(row) {
+                return columns.map(function(column) {
+                    return {
+                        column: column,
+                        value: row[column].join(', ')
+                    };
+                });
+            })
+            .enter()
+            .append("td")
+            .html(function(d) {
+                return d.value;
+            });
 
         // Twitter Bootstrap Classes
         $('table').addClass('table table-condensed simple-table');
@@ -3684,7 +3731,6 @@ plastic.modules.display.SimpleTable.prototype = {
     }
 
 };
-
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'query',
