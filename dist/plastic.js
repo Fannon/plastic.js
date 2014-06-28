@@ -3661,7 +3661,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'simple-table',
     className: 'SimpleTable',
-    dependencies: ["d3"]
+    dependencies: []
 });
 
 /**
@@ -3686,7 +3686,22 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
      * Display Options Validation Schema
      * @type {{}}
      */
-    this.displayOptionsSchema = {};
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "tableClasses": {
+                "description": "Table CSS Classes",
+                "type": "string",
+                "default": ""
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
 
     /**
      * Display Options Validation Schema
@@ -3716,6 +3731,7 @@ plastic.modules.display.SimpleTable.prototype = {
     execute: function() {
 
         var data = [];
+        var options = this.elAttr.display.options;
 
         // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
@@ -3724,56 +3740,46 @@ plastic.modules.display.SimpleTable.prototype = {
             data = this.elAttr.data.processed;
         }
 
-        var vis = d3.select(this.$el[0]);
+        var $table = $('<table class="' + options.tableClasses + '" />');
 
-        var table = vis.append("table");
-        var thead = table.append("thead");
-        var tbody = table.append("tbody");
+        
+        //////////////////////////////////////////
+        // Table Head                           //
+        //////////////////////////////////////////
 
-        // Get Columns from Data
-        var columns = [];
-        for (var o in data[0]) {
-            if (data[0].hasOwnProperty(o)) {
-                columns.push(o);
+        var $tableHead = $('<thead />');
+        var $headRow = $('<tr/>');
+
+        for (var column in data[0]) {
+            if (data[0].hasOwnProperty(column)) {
+                $headRow.append('<th>' + column + '</th>');
             }
         }
 
-        // Create Header Row (TH)
-        thead.append("tr")
-            .selectAll("th")
-            .data(columns)
-            .enter()
-            .append("th")
-            .text(function(column) {
-                return column;
-            });
+        $tableHead.append($headRow);
+        $table.append($tableHead);
 
-        // Create a row for each object in the data
-        var rows = tbody.selectAll("tr")
-            .data(data)
-            .enter()
-            .append("tr");
 
-        // Create a cell in each row for each column
-        var cells = rows.selectAll("td")
-            .data(function(row) {
-                return columns.map(function(column) {
-                    return {
-                        column: column,
-                        value: row[column].join(', ')
-                    };
-                });
-            })
-            .enter()
-            .append("td")
-            .html(function(d) {
-                return d.value;
-            });
+        //////////////////////////////////////////
+        // Table Body                           //
+        //////////////////////////////////////////
 
-        // Twitter Bootstrap Classes
-        $('table').addClass('table table-condensed simple-table');
+        var $tableBody = $('<tbody />');
 
-        this.displayEl = table;
+        $.each(data, function(index, row) {
+
+            var $row = $('<tr/>');
+
+            for (var colName in row) {
+                $('<td/>').html(row[colName]).appendTo($row);
+            }
+            $tableBody.append($row);
+        });
+
+        $table.append($tableBody);
+
+
+        this.$el.append($table);
 
     },
 
@@ -3783,6 +3789,7 @@ plastic.modules.display.SimpleTable.prototype = {
     }
 
 };
+
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'query',
