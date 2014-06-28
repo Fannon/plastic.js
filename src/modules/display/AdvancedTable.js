@@ -65,7 +65,7 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
                 "default": true
             }
         },
-        "additionalProperties": true,
+        "additionalProperties": false,
         "required": []
 
     };

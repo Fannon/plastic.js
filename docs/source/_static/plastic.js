@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-05-26
+/*! plastic - v0.0.4 - 2014-06-28
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -68,7 +68,10 @@ var plastic = {
      * @namespace
      * @ignore
      */
-    helper: {}
+    helper: {},
+
+
+    errors: []
 
 };
 
@@ -1486,12 +1489,12 @@ plastic.Element.prototype = {
                         self.events.pub('data-sucess');
                     },
                     error: function() {
-                        plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
+                        plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
                         self.cancelProgress();
                     }
                 });
             } catch(e) {
-                plastic.msg.error(e);
+                plastic.msg.error(e, self.$el);
                 throw new Error('Data Request failed');
             }
 
@@ -1522,7 +1525,7 @@ plastic.Element.prototype = {
         this.$el.append('<div class="plastic-js-messages"></div>');
         var msgEl = this.$el.find('.plastic-js-messages');
         msgEl
-            .width(this.$el.width())
+            .width(this.$el.innerWidth())
         ;
     },
 
@@ -1535,10 +1538,14 @@ plastic.Element.prototype = {
 
         this.$el.append('<div class="plastic-js-display"></div>');
         var displayEl = this.$el.find('.plastic-js-display');
-        displayEl
-            .height(this.$el.height())
-            .width(this.$el.width())
-        ;
+
+        if (this.$el.height() > 0) {
+            displayEl.height(this.$el.height());
+        } else {
+            displayEl.height('auto');
+        }
+
+
     },
 
     /**
@@ -1578,6 +1585,10 @@ plastic.Element.prototype = {
         // Instanciate new Data Module
         this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
 
+        if (!this.attr.data.description) {
+            this.attr.data.description = plastic.helper.duckTyping(this.attr.data.processed);
+        }
+
         // Apply Data Description if available
         this.applySchema();
 
@@ -1601,7 +1612,17 @@ plastic.Element.prototype = {
         "use strict";
 
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
-        plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
+
+        if (displayModuleInfo) {
+            if (displayModuleInfo.dependencies) {
+                plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
+            } else {
+                plastic.msg.warn('No Dependencies set!', this.$el);
+            }
+
+        } else {
+            plastic.msg.error('Display Module not found!', this.$el);
+        }
 
         if (this.attr.data && this.attr.data.module) {
             var dataModuleInfo = plastic.modules.moduleManager.get('data', this.attr.data.module);
@@ -1684,15 +1705,18 @@ plastic.Element.prototype = {
                 for (var cellType in row) {
 
                     var cellValue = row[cellType];
-                    var format = dataDescription[cellType].format;
 
-                    // TODO: Case-Handling: value could be no array (?)
-                    for (var j = 0; j < cellValue.length; j++) {
+                    if (dataDescription[cellType] && dataDescription[cellType].format) {
+                        var format = dataDescription[cellType].format;
 
-                        if (format) {
-                            cellValue[j] = htmlMapper[format](cellValue[j]);
+                        for (var j = 0; j < cellValue.length; j++) {
+
+                            if (format && htmlMapper[format]) {
+                                cellValue[j] = htmlMapper[format](cellValue[j]);
+                            }
                         }
                     }
+
                 }
 
             }
@@ -1947,8 +1971,6 @@ plastic.ElementAttributes.prototype = {
                 try {
                     options = $.parseJSON(optionsString);
                     this.display.options = options;
-
-
                 } catch(e) {
                     console.dir(e);
                     plastic.msg('Invalid JSON in the Options Object!');
@@ -1956,14 +1978,14 @@ plastic.ElementAttributes.prototype = {
                 }
 
             } else {
-                plastic.msg('Empty Display Element!', 'error', this.$el);
-                throw new Error('Empty Display Element!');
+                this.display.options = {};
             }
 
         } else {
             plastic.msg('No Display Module set!', 'error', this.$el);
             throw new Error('No Display Module set!');
         }
+
     },
 
     /**
@@ -2382,6 +2404,47 @@ plastic.helper.Events.prototype = {
     }
 };
 
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
+};
+
+
 plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     "use strict";
 
@@ -2393,16 +2456,22 @@ plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     if (errors) {
 
         plastic.errors.push(errors);
+        var error;
 
         if (errorMessage) {
-            throw new Error(errorMessage);
+            error = new Error(errorMessage);
+            error.schemaValidation = errors;
+            throw error;
         } else {
-            throw new Error('Object validation failed! Fore more informations look into the development console.');
+            error = new Error('Object validation failed! Fore more informations look into the development console.');
+            error.schemaValidation = errors;
+            throw error;
         }
 
     }
 
 };
+
 plastic.modules.Module = function(pEl, type, name) {
 
     /**
@@ -2448,7 +2517,8 @@ plastic.modules.Module = function(pEl, type, name) {
 
     // Specific case handling for each module-type
     if (type === 'display') {
-        this.module = new Module(pEl.$el, pEl.attr);
+        var $el = $(pEl.$el.find('.plastic-js-display')[0]);
+        this.module = new Module($el, pEl.attr);
         this.execute();
 
     } else if (type === 'data') {
@@ -2508,24 +2578,47 @@ plastic.modules.Module.prototype = {
             // validation was successful
             if (validationErrors) {
                 plastic.msg.log(validationErrors, self.pEl.$el);
+                console.dir(validationErrors);
                 throw new Error('Module ' + this.name + ': Validation Error!');
             }
         }
 
+        try {
+            // Schema Validation (by schema objects)
+            if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
+                plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
+            }
 
-        // Schema Validation (by schema objects)
-        if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
-            plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
+            if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
+                plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
+            }
+
+            if (this.module.displayOptionsSchema) {
+
+                plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+
+                // If an (optional) option is not given, inherit the default from the option schema
+                for (var propName in this.module.displayOptionsSchema.properties) {
+
+                    if (this.module.displayOptionsSchema.properties[propName]) {
+                        if (!this.pEl.attr.display.options.hasOwnProperty(propName)) {
+//                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
+                            console.info(propName);
+                            console.info(this.pEl.attr.display.options[propName]);
+                        }
+                    } else {
+                        plastic.msg.warn('Option given that is not defined in the Option Schema');
+                    }
+
+
+                }
+            }
+
+        } catch (e) {
+            console.error(e);
+            // TODO: Stop Display Processing
+            // TODO: Message to the User
         }
-
-        if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
-            plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
-        }
-
-        if (this.module.displayOptionsSchema && this.pEl.attr.options && this.pEl.attr.options.display && this.pEl.attr.options.display.options) {
-            plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.options.display.options, 'Display Options invalid!');
-        }
-
 
     },
 
@@ -2561,6 +2654,10 @@ plastic.modules.dependencyManager = {
         "nvd3": {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
             "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"]
+        },
+        "dataTable": {
+            "js": ["//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"],
+            "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"]
         }
     },
 
@@ -2607,9 +2704,14 @@ plastic.modules.dependencyManager = {
      */
     add: function(dependencyArray) {
         "use strict";
-        for (var i = 0; i < dependencyArray.length; i++) {
-            var depName = dependencyArray[i];
-            this.usedDeps[depName] = this.registry[depName];
+
+        console.dir(dependencyArray);
+
+        if (dependencyArray) {
+            for (var i = 0; i < dependencyArray.length; i++) {
+                var depName = dependencyArray[i];
+                this.usedDeps[depName] = this.registry[depName];
+            }
         }
 
     },
@@ -2951,6 +3053,76 @@ plastic.modules.data.Default.prototype = {
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'data',
+    apiName: 'simple-default',
+    className: 'SimpleDefault',
+    dependencies: []
+});
+/**
+ * Parses tabular data from an ASK Semantic MediaWiki API
+ *
+ * @constructor
+ */
+plastic.modules.data.SimpleDefault = function(dataObj) {
+
+    /**
+     * Incoming Raw Data
+     * @type {{}}
+     */
+    this.dataObj = dataObj;
+
+    /**
+     * Raw Data Schema for validation
+     *
+     * @type {{}}
+     */
+    this.rawDataSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "array",
+        "items": {
+            "type": "object"
+        }
+    };
+
+};
+
+plastic.modules.data.SimpleDefault.prototype = {
+
+    /**
+     * Custom Validation
+     *
+     * @returns {boolean}
+     */
+    validate: function() {
+        "use strict";
+        return false;
+    },
+
+    /**
+     * Since the data is already in the correct format, it has just to be returned
+     *
+     * @returns {Object}
+     */
+    execute: function() {
+
+        var processedData = [];
+
+        for (var i = 0; i < this.dataObj.raw.length; i++) {
+            var col = this.dataObj.raw[i];
+            processedData[i] = {};
+            for (var cell in col) {
+                processedData[i][cell] = [col[cell]];
+            }
+        }
+
+        this.dataObj.processed = processedData;
+        return this.dataObj;
+    }
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'data',
     apiName: 'sparql-json',
     className: 'SparqlJson',
     dependencies: []
@@ -3014,6 +3186,41 @@ plastic.modules.data.SparqlJson = function(dataObj) {
         "required": ["head", "results"]
     };
 
+    /**
+     * Maps ASK-Result-Format Schema to JSON-Schema
+     *
+     * @type {{}}
+     */
+    this.schemaDatatypeMap = {
+        "http://www.w3.org/2001/XMLSchema#integer": {
+            "type": "number"
+        },
+        "http://www.w3.org/2001/XMLSchema#double": {
+            "type": "number"
+        },
+        "http://www.w3.org/2001/XMLSchema#date": {
+            "type": "string",
+            "format": "date"
+        }
+    };
+
+    /**
+     * Maps ASK-Result-Format Schema to JSON-Schema
+     *
+     * @type {{}}
+     */
+    this.schemaTypeMap = {
+        "uri": {
+            "type": "string",
+            "format": "uri"
+        },
+        "literal": {
+           "type": "string"
+        }
+    };
+
+    this.dataDescription = {};
+
 };
 
 plastic.modules.data.SparqlJson.prototype = {
@@ -3034,6 +3241,50 @@ plastic.modules.data.SparqlJson.prototype = {
      * @returns {{}}
      */
     execute: function() {
+
+        this.parseSchema();
+        this.parseData();
+
+        return this.dataObj;
+
+    },
+
+    parseSchema: function() {
+        "use strict";
+
+        if (!this.dataObj.description) {
+
+            var schema = this.dataObj.raw.results.bindings[0];
+
+            for (var o in schema) {
+
+                var col = schema[o];
+                var mappedType = false;
+
+                if (col.datatype) {
+                    mappedType = this.schemaDatatypeMap[col.datatype];
+                } else if (col.type) {
+                    mappedType = this.schemaTypeMap[col.type];
+                }
+
+                // Default Data Description Type
+                if (!mappedType) {
+                    mappedType = {
+                        "type": "string"
+                    };
+                }
+
+                this.dataDescription[o] = mappedType;
+
+
+                this.dataObj.description = this.dataDescription;
+            }
+
+        }
+    },
+
+    parseData: function() {
+        "use strict";
 
         this.dataObj.processed = [];
 
@@ -3058,9 +3309,305 @@ plastic.modules.data.SparqlJson.prototype = {
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'display',
+    apiName: 'advanced-table',
+    className: 'AdvancedTable',
+    dependencies: []
+});
+
+/**
+ * Table Display Module
+ *
+ * @constructor
+ */
+plastic.modules.display.AdvancedTable = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "tableClasses": {
+                "description": "Table CSS Classes",
+                "type": "string",
+                "default": ""
+            },
+            "paging": {
+                "description": "Enable Pagination of Table Elements",
+                "type": "boolean",
+                "default": false
+            },
+            "lengthMenu": {
+                "description": "Enable Pagination of Table Elements",
+                "type": "array",
+                "default": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+            },
+            "searching": {
+                "description": "Enable Searching of Table Elements",
+                "type": "boolean",
+                "default": true
+            },
+            "ordering": {
+                "description": "Feature control ordering (sorting) abilities in DataTables.",
+                "type": "boolean",
+                "default": true
+            },
+            "orderMulti": {
+                "description": "Multiple column ordering ability control.",
+                "type": "boolean",
+                "default": true
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.processedDataSchema = {};
+
+};
+
+plastic.modules.display.AdvancedTable.prototype = {
+
+    /**
+     * Validates ElementAttributes
+     *
+     * @returns {Object|boolean}
+     */
+    validate: function() {
+        "use strict";
+        return false; // No Errors
+    },
+
+    /**
+     * Renders the Table
+     *
+     * @returns {*}
+     */
+    execute: function() {
+
+        var data = [];
+        var options = this.elAttr.display.options;
+
+        // Use schema-processed HTML data if available:
+        if (this.elAttr.data.processedHtml) {
+            data = this.elAttr.data.processedHtml;
+        } else {
+            data = this.elAttr.data.processed;
+        }
+
+        var $table = $('<table class="' + options.tableClasses + '" />');
+
+
+        //////////////////////////////////////////
+        // Table Head                           //
+        //////////////////////////////////////////
+
+        var $tableHead = $('<thead />');
+        var $headRow = $('<tr/>');
+
+        for (var column in data[0]) {
+            if (data[0].hasOwnProperty(column)) {
+                $headRow.append('<th>' + column + '</th>');
+            }
+        }
+
+        $tableHead.append($headRow);
+        $table.append($tableHead);
+
+
+        //////////////////////////////////////////
+        // Table Body                           //
+        //////////////////////////////////////////
+
+        var $tableBody = $('<tbody />');
+
+        $.each(data, function(index, row) {
+
+            var $row = $('<tr/>');
+
+            for (var colName in row) {
+                $('<td/>').html(row[colName]).appendTo($row);
+            }
+            $tableBody.append($row);
+        });
+
+        $table.append($tableBody);
+
+        this.$el.append($table);
+
+        $table.DataTable(options);
+
+    },
+
+    update: function() {
+        "use strict";
+        this.execute();
+    }
+
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
+    apiName: 'line-chart',
+    className: 'CumulativeLineChart',
+    dependencies: []
+});
+
+/**
+ * Line Chart Display Module
+ *
+ * @constructor
+ */
+plastic.modules.display.CumulativeLineChart = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+//            "showLabels": {
+//                "description": "Show the labels.",
+//                "type": "boolean",
+//                "default": true
+//            },
+//            "tooltips": {
+//                "description": "Show tooltips",
+//                "type": "boolean",
+//                "default": true
+//            },
+//            "transitionDuration": {
+//                "description": "Duration of the animation in milliseconds.",
+//                "type": "number",
+//                "minimum": 0,
+//                "default": 350
+//            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.processedDataSchema = {};
+
+
+};
+
+plastic.modules.display.CumulativeLineChart.prototype = {
+
+    /**
+     * Validates ElementAttributes
+     *
+     * @returns {Object|boolean}
+     */
+    validate: function () {
+        "use strict";
+        return false; // No Errors
+    },
+
+    /**
+     * Renders the Bar Chart
+     *
+     * @returns {*}
+     */
+    execute: function () {
+        var data = this.elAttr.data.processed;
+
+        var svg = this.$el.append('<svg></svg>');
+
+//        var options = this.elAttr.display.options;
+
+        console.dir('Data: ' + data);
+
+        var chart = nv.models.cumulativeLineChart()
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .color(d3.scale.category10().range())
+            .useInteractiveGuideline(true)
+        ;
+
+        var mappedData = this.mapData(data);
+
+        chart.xAxis
+            .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
+            .tickFormat(function(d) {
+                return d3.time.format('%x')(new Date(d));
+            });
+
+        chart.yAxis
+            .tickFormat(d3.format(',.1%'));
+
+        d3.select(this.$el[0].children[0])
+            .datum(mappedData)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+
+    },
+
+    mapData: function(data) {
+        "use strict";
+        var mappedData = [];
+
+
+
+        return mappedData;
+    },
+
+    update: function() {
+        "use strict";
+        this.execute(); // TODO: Write Update function
+    }
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
     apiName: 'discrete-bar-chart',
     className: 'DiscreteBarChart',
-    dependencies: ["nvd3"]
+    dependencies: ["nvd3"],
+    requirements: ["data-description"]
 });
 
 /**
@@ -3085,7 +3632,38 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
      * Display Options Validation Schema
      * @type {{}}
      */
-    this.displayOptionsSchema = {};
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "staggerLabels": {
+                "description": "Too many bars and not enough room? Try staggering labels.",
+                "type": "boolean",
+                "default": false
+            },
+            "tooltips": {
+                "description": "Show tooltips",
+                "type": "boolean",
+                "default": true
+            },
+            "showValues": {
+                "description": "Show the bar value right on top of each bar.",
+                "type": "boolean",
+                "default": true
+            },
+            "transitionDuration": {
+                "description": "Duration of the animation in milliseconds.",
+                "type": "number",
+                "minimum": 0,
+                "default": 350
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
 
     /**
      * Display Options Validation Schema
@@ -3093,11 +3671,6 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
      */
     this.processedDataSchema = {};
 
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
 
 };
 
@@ -3119,9 +3692,73 @@ plastic.modules.display.DiscreteBarChart.prototype = {
      * @returns {*}
      */
     execute: function () {
+        var data = this.elAttr.data.processed;
+
+        var svg = this.$el.append('<svg></svg>');
+
+        var options = this.elAttr.display.options;
+
+        var chart = nv.models.discreteBarChart()
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .staggerLabels(options.staggerLabels)
+            .tooltips(options.tooltips)
+            .showValues(options.showValues)
+        ;
+
+        var mappedData = this.mapData(data);
+
+        d3.select(this.$el[0].children[0])
+            .datum(mappedData)
+            .transition().duration(options.transitionDuration)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+
+    },
+
+    mapData: function(data) {
+        "use strict";
+        var mappedData = [{}];
+
+        mappedData[0].key = "";
+        mappedData[0].values = [];
+
+        var labelColumn = '';
+        var valueColumn = '';
+
+        // Decides data types / mapping via data description if available:
+        if (this.elAttr.data.description) {
+            var description = this.elAttr.data.description;
+
+            for (var o in description) {
+                if (labelColumn === '' && description[o].type === "string") {
+                    labelColumn = o;
+                }
+
+                if (valueColumn === '' && description[o].type === "number") {
+                    valueColumn = o;
+                }
+            }
+        }
+
+        if (labelColumn === '' || valueColumn === '') {
+            throw new Error('Could not map data to label and value! Please provide a correct data description / schema!');
+        }
 
 
+        // Do the actual mapping:
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
 
+            mappedData[0].values.push({
+                "label": row[labelColumn][0],
+                "value": parseInt(row[valueColumn][0], 10)
+            });
+        }
+
+        return mappedData;
     },
 
     update: function() {
@@ -3129,6 +3766,163 @@ plastic.modules.display.DiscreteBarChart.prototype = {
         this.execute(); // TODO: Write Update function
     }
 };
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
+    apiName: 'pie-chart',
+    className: 'PieChart',
+    dependencies: ["nvd3"]
+});
+
+/**
+ * Pie Chart Display Module
+ *
+ * @constructor
+ */
+plastic.modules.display.PieChart = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "showLabels": {
+                "description": "Show the labels.",
+                "type": "boolean",
+                "default": true
+            },
+            "tooltips": {
+                "description": "Show tooltips",
+                "type": "boolean",
+                "default": true
+            },
+            "transitionDuration": {
+                "description": "Duration of the animation in milliseconds.",
+                "type": "number",
+                "minimum": 0,
+                "default": 350
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.processedDataSchema = {};
+
+
+};
+
+plastic.modules.display.PieChart.prototype = {
+
+    /**
+     * Validates ElementAttributes
+     *
+     * @returns {Object|boolean}
+     */
+    validate: function () {
+        "use strict";
+        return false; // No Errors
+    },
+
+    /**
+     * Renders the Bar Chart
+     *
+     * @returns {*}
+     */
+    execute: function () {
+        var data = this.elAttr.data.processed;
+
+        var svg = this.$el.append('<svg></svg>');
+
+        var options = this.elAttr.display.options;
+
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .showLabels(options.showLabels)
+            .tooltips(options.tooltips)
+        ;
+
+        var mappedData = this.mapData(data);
+
+
+        d3.select(this.$el[0].children[0])
+            .datum(mappedData)
+            .transition().duration(options.transitionDuration)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+
+    },
+
+    mapData: function(data) {
+        "use strict";
+        var mappedData = [];
+
+        var labelColumn = '';
+        var valueColumn = '';
+
+        // Decides data types / mapping via data description if available:
+        if (this.elAttr.data.description) {
+            var description = this.elAttr.data.description;
+
+            for (var o in description) {
+                if (labelColumn === '' && description[o].type === "string") {
+                    labelColumn = o;
+                }
+
+                if (valueColumn === '' && description[o].type === "number") {
+                    valueColumn = o;
+                }
+            }
+        }
+
+        if (labelColumn === '' || valueColumn === '') {
+            throw new Error('Could not map data to label and value! Please provide a correct data description / schema!');
+        }
+
+        // Do the actual mapping:
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+
+            mappedData.push({
+                "label": row[labelColumn][0],
+                "value": parseInt(row[valueColumn][0])
+            });
+        }
+
+        return mappedData;
+    },
+
+    update: function() {
+        "use strict";
+        this.execute(); // TODO: Write Update function
+    }
+};
+
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'display',
@@ -3166,13 +3960,11 @@ plastic.modules.display.RawData.prototype = {
      */
     execute: function() {
 
-        var displayEl = this.$el.find('.plastic-js-display')[0];
-
-        var $displayEl = $(displayEl);
+        console.info(this.$el);
 
         var html = '<pre class="raw-data">' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
 
-        $displayEl.html(html);
+        this.$el.html(html);
 
 
     },
@@ -3189,7 +3981,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'simple-table',
     className: 'SimpleTable',
-    dependencies: ["d3"]
+    dependencies: []
 });
 
 /**
@@ -3214,19 +4006,28 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
      * Display Options Validation Schema
      * @type {{}}
      */
-    this.displayOptionsSchema = {};
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "tableClasses": {
+                "description": "Table CSS Classes",
+                "type": "string",
+                "default": ""
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
 
     /**
      * Display Options Validation Schema
      * @type {{}}
      */
     this.processedDataSchema = {};
-
-    /**
-     * Display Element that is rendered
-     * @type {{}}
-     */
-    this.displayEl = undefined;
 
 };
 
@@ -3249,8 +4050,8 @@ plastic.modules.display.SimpleTable.prototype = {
      */
     execute: function() {
 
-        var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
+        var options = this.elAttr.display.options;
 
         // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
@@ -3259,62 +4060,52 @@ plastic.modules.display.SimpleTable.prototype = {
             data = this.elAttr.data.processed;
         }
 
-        var vis = d3.select($el);
+        var $table = $('<table class="' + options.tableClasses + '" />');
 
-        var table = vis.append("table");
-        var thead = table.append("thead");
-        var tbody = table.append("tbody");
 
-        // Get Columns from Data
-        var columns = [];
-        for (var o in data[0]) {
-            if (data[0].hasOwnProperty(o)) {
-                columns.push(o);
+        //////////////////////////////////////////
+        // Table Head                           //
+        //////////////////////////////////////////
+
+        var $tableHead = $('<thead />');
+        var $headRow = $('<tr/>');
+
+        for (var column in data[0]) {
+            if (data[0].hasOwnProperty(column)) {
+                $headRow.append('<th>' + column + '</th>');
             }
         }
 
-        // Create Header Row (TH)
-        thead.append("tr")
-            .selectAll("th")
-            .data(columns)
-            .enter()
-            .append("th")
-            .text(function(column) {
-                return column;
-            });
+        $tableHead.append($headRow);
+        $table.append($tableHead);
 
-        // Create a row for each object in the data
-        var rows = tbody.selectAll("tr")
-            .data(data)
-            .enter()
-            .append("tr");
 
-        // Create a cell in each row for each column
-        var cells = rows.selectAll("td")
-            .data(function(row) {
-                return columns.map(function(column) {
-                    return {
-                        column: column,
-                        value: row[column].join(', ')
-                    };
-                });
-            })
-            .enter()
-            .append("td")
-            .html(function(d) {
-                return d.value;
-            });
+        //////////////////////////////////////////
+        // Table Body                           //
+        //////////////////////////////////////////
 
-        // Twitter Bootstrap Classes
-        $('table').addClass('table table-condensed simple-table');
+        var $tableBody = $('<tbody />');
 
-        this.displayEl = table;
+        $.each(data, function(index, row) {
+
+            var $row = $('<tr/>');
+
+            for (var colName in row) {
+                $('<td/>').html(row[colName]).appendTo($row);
+            }
+            $tableBody.append($row);
+        });
+
+        $table.append($tableBody);
+
+
+        this.$el.append($table);
 
     },
 
     update: function() {
         "use strict";
-        this.execute(); // TODO: Write Update function
+        this.execute();
     }
 
 };
