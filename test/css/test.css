@@ -44,7 +44,8 @@ h5 {
 }
 
 plastic, .plastic-js {
-    border: 1px solid #CCC;
+    border: 3px solid rgba(0, 0, 0, 0.04);
+    padding: 3px;
     display: block;
 }
 

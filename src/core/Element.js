@@ -256,7 +256,7 @@ plastic.Element.prototype = {
         this.$el.append('<div class="plastic-js-messages"></div>');
         var msgEl = this.$el.find('.plastic-js-messages');
         msgEl
-            .width(this.$el.width())
+            .width(this.$el.innerWidth())
         ;
     },
 
@@ -271,7 +271,6 @@ plastic.Element.prototype = {
         var displayEl = this.$el.find('.plastic-js-display');
         displayEl
             .height(this.$el.height())
-            .width(this.$el.width())
         ;
     },
 
