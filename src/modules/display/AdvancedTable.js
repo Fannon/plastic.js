@@ -38,6 +38,16 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
                 "description": "Table CSS Classes",
                 "type": "string",
                 "default": ""
+            },
+            "paging": {
+                "description": "Enable Pagination of Table Elements",
+                "type": "boolean",
+                "default": false
+            },
+            "searching": {
+                "description": "Enable Searching of Table Elements",
+                "type": "boolean",
+                "default": true
             }
         },
         "additionalProperties": false,
@@ -121,7 +131,8 @@ plastic.modules.display.AdvancedTable.prototype = {
         $table.append($tableBody);
 
         this.$el.append($table);
-        $table.dataTable();
+
+        $table.DataTable(options);
 
     },
 

@@ -70,7 +70,7 @@
         <h3 id="visualisation">Advanced Table Display Module</h3>
 
         <h4>Data via ASK Query</h4>
-        <div id="table-ask-query" class="plastic-js" style="height: 300px; width: 100%;">
+        <div id="table-ask-query" class="plastic-js" style="height: auto; width: 100%;">
 
             <script class="plastic-query" type="application/ask-query" data-query-url="http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php">
                 [[Kategorie:Mitarbeiter]]
@@ -91,20 +91,12 @@
 
             <script class="plastic-display" data-display-module="advanced-table" type="application/json">
                 {
-                    "tableClasses": "table table-condensed"
+                    "tableClasses": "table table-condensed",
+                    "paging": true
                 }
             </script>
 
         </div>
-
-        <h4>Data via JSON File</h4>
-        <plastic id="table-json-file" style="height: 400px; width: 100%;">
-
-            <script class="plastic-data" type="application/json" data-url="data/simple-default.json" data-format="simple-default"></script>
-
-            <script class="plastic-display" data-display-module="advanced-table" type="application/json"></script>
-
-        </plastic>
 
     </div>
 

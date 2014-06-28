@@ -269,9 +269,14 @@ plastic.Element.prototype = {
 
         this.$el.append('<div class="plastic-js-display"></div>');
         var displayEl = this.$el.find('.plastic-js-display');
-        displayEl
-            .height(this.$el.height())
-        ;
+
+        if (this.$el.height() > 0) {
+            displayEl.height(this.$el.height());
+        } else {
+            displayEl.height('auto');
+        }
+
+
     },
 
     /**
@@ -339,12 +344,13 @@ plastic.Element.prototype = {
 
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
 
-        console.dir(displayModuleInfo);
-
-        console.dir(displayModuleInfo.dependencies);
         if (displayModuleInfo) {
+            if (displayModuleInfo.dependencies) {
+                plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
+            } else {
+                plastic.msg.warn('No Dependencies set!', this.$el);
+            }
 
-            plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
         } else {
             plastic.msg.error('Display Module not found!', this.$el);
         }

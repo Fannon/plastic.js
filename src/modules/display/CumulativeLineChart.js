@@ -4,8 +4,8 @@
 plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'line-chart',
-    className: 'LineChart',
-    dependencies: ["nvd3"]
+    className: 'CumulativeLineChart',
+    dependencies: []
 });
 
 /**
@@ -13,7 +13,7 @@ plastic.modules.moduleManager.register({
  *
  * @constructor
  */
-plastic.modules.display.LineChart = function($el, elAttr) {
+plastic.modules.display.CumulativeLineChart = function($el, elAttr) {
     "use strict";
 
     /**
@@ -67,7 +67,7 @@ plastic.modules.display.LineChart = function($el, elAttr) {
 
 };
 
-plastic.modules.display.LineChart.prototype = {
+plastic.modules.display.CumulativeLineChart.prototype = {
 
     /**
      * Validates ElementAttributes
@@ -105,7 +105,7 @@ plastic.modules.display.LineChart.prototype = {
         chart.xAxis
             .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
             .tickFormat(function(d) {
-                return d3.time.format('%x')(new Date(d))
+                return d3.time.format('%x')(new Date(d));
             });
 
         chart.yAxis

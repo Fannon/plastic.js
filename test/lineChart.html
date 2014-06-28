@@ -11,7 +11,6 @@
     <link href="css/test.css" type="text/css" rel="stylesheet" />
     <link href="../src/main.css" type="text/css" rel="stylesheet" />
     <link href="../bower_components/nvd3/nv.d3.css" type="text/css" rel="stylesheet" />
-    <link href="../src/modules/display/SimpleTable.css" type="text/css" rel="stylesheet" />
 
 </head>
 <body>
@@ -46,6 +45,7 @@
 <script src="../src/modules/data/SparqlJson.js"></script>
 <script src="../src/modules/data/AskJson.js"></script>
 <script src="../src/modules/data/Default.js"></script>
+<script src="../src/modules/data/SimpleDefault.js"></script>
 
 <!-- Display Modules -->
 <script src="../src/modules/display/SimpleTable.js"></script>
@@ -53,8 +53,6 @@
 <script src="../src/modules/display/DiscreteBarChart.js"></script>
 <script src="../src/modules/display/PieChart.js"></script>
 <script src="../src/modules/display/CumulativeLineChart.js"></script>
-
-
 
 <!-- Query Parser Modules -->
 <script src="../src/modules/query/Ask.js"></script>
@@ -79,7 +77,7 @@
     <h4>Data via JSON File</h4>
     <div class="plastic-js" style="height: 400px">
 
-        <script class="plastic-data" type="application/json" data-url="data/linechart.json" data-format="simple-default"></script>
+        <script class="plastic-data" type="application/json" data-url="data/linechart.json" data-format="default"></script>
         <script class="plastic-display" data-display-module="line-chart" type="application/json"></script>
 
     </div>

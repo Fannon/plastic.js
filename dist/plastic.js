@@ -1538,9 +1538,14 @@ plastic.Element.prototype = {
 
         this.$el.append('<div class="plastic-js-display"></div>');
         var displayEl = this.$el.find('.plastic-js-display');
-        displayEl
-            .height(this.$el.height())
-        ;
+
+        if (this.$el.height() > 0) {
+            displayEl.height(this.$el.height());
+        } else {
+            displayEl.height('auto');
+        }
+
+
     },
 
     /**
@@ -1608,12 +1613,13 @@ plastic.Element.prototype = {
 
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
 
-        console.dir(displayModuleInfo);
-
-        console.dir(displayModuleInfo.dependencies);
         if (displayModuleInfo) {
+            if (displayModuleInfo.dependencies) {
+                plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
+            } else {
+                plastic.msg.warn('No Dependencies set!', this.$el);
+            }
 
-            plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
         } else {
             plastic.msg.error('Display Module not found!', this.$el);
         }
@@ -2258,46 +2264,6 @@ plastic.msg = {
 
 
 
-plastic.helper.duckTyping = function(data) {
-    "use strict";
-
-    var dataDescription = {};
-
-    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    for (var attrName in data[0]) {
-
-        var attrValue = data[0][attrName][0];
-
-        if ($.isNumeric(attrValue)) {
-
-            dataDescription[attrName] = {
-                type: "number"
-            };
-
-        } else {
-
-            dataDescription[attrName] = {
-                type: "string"
-            };
-
-            if (attrValue.indexOf("http://") > -1) {
-                dataDescription[attrName].format = "url";
-            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
-                dataDescription[attrName].format = "email";
-            } else if (attrValue.indexOf("tel:") > -1) {
-                dataDescription[attrName].format = "phone";
-            }
-
-
-        }
-
-    }
-
-    return dataDescription;
-
-};
-
 plastic.helper.Events = function() {
     "use strict";
 
@@ -2436,6 +2402,46 @@ plastic.helper.Events.prototype = {
             }
         }
     }
+};
+
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
 };
 
 
@@ -2696,10 +2702,14 @@ plastic.modules.dependencyManager = {
      */
     add: function(dependencyArray) {
         "use strict";
-        console.dir(dependencyArray.length);
-        for (var i = 0; i < dependencyArray.length; i++) {
-            var depName = dependencyArray[i];
-            this.usedDeps[depName] = this.registry[depName];
+
+        console.dir(dependencyArray);
+
+        if (dependencyArray) {
+            for (var i = 0; i < dependencyArray.length; i++) {
+                var depName = dependencyArray[i];
+                this.usedDeps[depName] = this.registry[depName];
+            }
         }
 
     },
@@ -3334,6 +3344,16 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
                 "description": "Table CSS Classes",
                 "type": "string",
                 "default": ""
+            },
+            "paging": {
+                "description": "Enable Pagination of Table Elements",
+                "type": "boolean",
+                "default": false
+            },
+            "searching": {
+                "description": "Enable Searching of Table Elements",
+                "type": "boolean",
+                "default": true
             }
         },
         "additionalProperties": false,
@@ -3417,7 +3437,8 @@ plastic.modules.display.AdvancedTable.prototype = {
         $table.append($tableBody);
 
         this.$el.append($table);
-        $table.dataTable();
+
+        $table.DataTable(options);
 
     },
 
@@ -3432,8 +3453,8 @@ plastic.modules.display.AdvancedTable.prototype = {
 plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'line-chart',
-    className: 'LineChart',
-    dependencies: ["nvd3"]
+    className: 'CumulativeLineChart',
+    dependencies: []
 });
 
 /**
@@ -3441,7 +3462,7 @@ plastic.modules.moduleManager.register({
  *
  * @constructor
  */
-plastic.modules.display.LineChart = function($el, elAttr) {
+plastic.modules.display.CumulativeLineChart = function($el, elAttr) {
     "use strict";
 
     /**
@@ -3495,7 +3516,7 @@ plastic.modules.display.LineChart = function($el, elAttr) {
 
 };
 
-plastic.modules.display.LineChart.prototype = {
+plastic.modules.display.CumulativeLineChart.prototype = {
 
     /**
      * Validates ElementAttributes
@@ -3533,7 +3554,7 @@ plastic.modules.display.LineChart.prototype = {
         chart.xAxis
             .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
             .tickFormat(function(d) {
-                return d3.time.format('%x')(new Date(d))
+                return d3.time.format('%x')(new Date(d));
             });
 
         chart.yAxis

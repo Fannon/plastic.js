@@ -74,10 +74,14 @@ plastic.modules.dependencyManager = {
      */
     add: function(dependencyArray) {
         "use strict";
-        console.dir(dependencyArray.length);
-        for (var i = 0; i < dependencyArray.length; i++) {
-            var depName = dependencyArray[i];
-            this.usedDeps[depName] = this.registry[depName];
+
+        console.dir(dependencyArray);
+
+        if (dependencyArray) {
+            for (var i = 0; i < dependencyArray.length; i++) {
+                var depName = dependencyArray[i];
+                this.usedDeps[depName] = this.registry[depName];
+            }
         }
 
     },
