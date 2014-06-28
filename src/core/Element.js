@@ -220,12 +220,12 @@ plastic.Element.prototype = {
                         self.events.pub('data-sucess');
                     },
                     error: function() {
-                        plastic.msg('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
+                        plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
                         self.cancelProgress();
                     }
                 });
             } catch(e) {
-                plastic.msg.error(e);
+                plastic.msg.error(e, self.$el);
                 throw new Error('Data Request failed');
             }
 

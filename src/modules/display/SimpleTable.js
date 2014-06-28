@@ -84,7 +84,7 @@ plastic.modules.display.SimpleTable.prototype = {
 
         var $table = $('<table class="' + options.tableClasses + '" />');
 
-        
+
         //////////////////////////////////////////
         // Table Head                           //
         //////////////////////////////////////////
@@ -127,7 +127,7 @@ plastic.modules.display.SimpleTable.prototype = {
 
     update: function() {
         "use strict";
-        this.execute(); // TODO: Write Update function
+        this.execute();
     }
 
 };
