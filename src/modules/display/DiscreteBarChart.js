@@ -39,18 +39,24 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
         "properties": {
             "staggerLabels": {
                 "description": "Too many bars and not enough room? Try staggering labels.",
-                "type": "boolean"
+                "type": "boolean",
+                "default": false
             },
             "tooltips": {
-                "type": "boolean"
+                "description": "Show tooltips",
+                "type": "boolean",
+                "default": true
             },
             "showValues": {
+                "description": "Show the bar value right on top of each bar.",
                 "type": "boolean",
                 "default": true
             },
             "transitionDuration": {
+                "description": "Duration of the animation in milliseconds.",
                 "type": "number",
-                "minimum": 0
+                "minimum": 0,
+                "default": 350
             }
         },
         "additionalProperties": false,
@@ -89,15 +95,15 @@ plastic.modules.display.DiscreteBarChart.prototype = {
 
         var svg = this.$el.append('<svg></svg>');
 
-        console.dir(this.$el[0].children[0]);
+        var options = this.elAttr.display.options;
 
         var chart = nv.models.discreteBarChart()
             .x(function(d) { return d.label; })
             .y(function(d) { return d.value; })
-            .staggerLabels(true)
-            .tooltips(false)
-            .showValues(true)
-            .transitionDuration(350)
+            .staggerLabels(options.staggerLabels)
+            .tooltips(options.tooltips)
+            .showValues(options.showValues)
+            .transitionDuration(options.transitionDuration)
         ;
 
         var mappedData = this.mapData(data);

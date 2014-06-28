@@ -117,24 +117,45 @@ plastic.modules.Module.prototype = {
             // validation was successful
             if (validationErrors) {
                 plastic.msg.log(validationErrors, self.pEl.$el);
+                console.dir(validationErrors);
                 throw new Error('Module ' + this.name + ': Validation Error!');
             }
         }
 
+        try {
+            // Schema Validation (by schema objects)
+            if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
+                plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
+            }
 
-        // Schema Validation (by schema objects)
-        if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
-            plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
+            if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
+                plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
+            }
+
+            if (this.module.displayOptionsSchema) {
+
+                plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+
+                // If an (optional) option is not given, inherit the default from the option schema
+                for (var propName in this.module.displayOptionsSchema.properties) {
+
+                    if (this.module.displayOptionsSchema.properties[propName]) {
+                        if (!this.pEl.attr.display.options.hasOwnProperty(propName)) {
+                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
+                        }
+                    } else {
+                        plastic.msg.warn('Option given that is not defined in the Option Schema');
+                    }
+
+
+                }
+            }
+
+        } catch (e) {
+            console.error(e);
+            // TODO: Stop Display Processing
+            // TODO: Message to the User
         }
-
-        if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
-            plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
-        }
-
-        if (this.module.displayOptionsSchema && this.pEl.attr.options && this.pEl.attr.options.display && this.pEl.attr.options.display.options) {
-            plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.options.display.options, 'Display Options invalid!');
-        }
-
 
     },
 

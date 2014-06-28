@@ -68,7 +68,10 @@ var plastic = {
      * @namespace
      * @ignore
      */
-    helper: {}
+    helper: {},
+
+
+    errors: []
 
 };
 
@@ -2439,16 +2442,22 @@ plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     if (errors) {
 
         plastic.errors.push(errors);
+        var error;
 
         if (errorMessage) {
-            throw new Error(errorMessage);
+            error = new Error(errorMessage);
+            error.schemaValidation = errors;
+            throw error;
         } else {
-            throw new Error('Object validation failed! Fore more informations look into the development console.');
+            error = new Error('Object validation failed! Fore more informations look into the development console.');
+            error.schemaValidation = errors;
+            throw error;
         }
 
     }
 
 };
+
 plastic.modules.Module = function(pEl, type, name) {
 
     /**
@@ -2555,24 +2564,45 @@ plastic.modules.Module.prototype = {
             // validation was successful
             if (validationErrors) {
                 plastic.msg.log(validationErrors, self.pEl.$el);
+                console.dir(validationErrors);
                 throw new Error('Module ' + this.name + ': Validation Error!');
             }
         }
 
+        try {
+            // Schema Validation (by schema objects)
+            if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
+                plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
+            }
 
-        // Schema Validation (by schema objects)
-        if (this.module.rawDataSchema && this.pEl.attr.data && this.pEl.attr.data.raw) {
-            plastic.helper.schemaValidation(this.module.rawDataSchema, this.pEl.attr.data.raw, 'Raw Data invalid!');
+            if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
+                plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
+            }
+
+            if (this.module.displayOptionsSchema) {
+
+                plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+
+                // If an (optional) option is not given, inherit the default from the option schema
+                for (var propName in this.module.displayOptionsSchema.properties) {
+
+                    if (this.module.displayOptionsSchema.properties[propName]) {
+                        if (!this.pEl.attr.display.options.hasOwnProperty(propName)) {
+                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
+                        }
+                    } else {
+                        plastic.msg.warn('Option given that is not defined in the Option Schema');
+                    }
+
+
+                }
+            }
+
+        } catch (e) {
+            console.error(e);
+            // TODO: Stop Display Processing
+            // TODO: Message to the User
         }
-
-        if (this.module.processedDataSchema && this.pEl.attr.data && this.pEl.attr.data.processed) {
-            plastic.helper.schemaValidation(this.module.processedDataSchema, this.pEl.attr.data.processed, 'Processed Data invalid!');
-        }
-
-        if (this.module.displayOptionsSchema && this.pEl.attr.options && this.pEl.attr.options.display && this.pEl.attr.options.display.options) {
-            plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.options.display.options, 'Display Options invalid!');
-        }
-
 
     },
 
@@ -3287,18 +3317,24 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
         "properties": {
             "staggerLabels": {
                 "description": "Too many bars and not enough room? Try staggering labels.",
-                "type": "boolean"
+                "type": "boolean",
+                "default": false
             },
             "tooltips": {
-                "type": "boolean"
+                "description": "Show tooltips",
+                "type": "boolean",
+                "default": true
             },
             "showValues": {
+                "description": "Show the bar value right on top of each bar.",
                 "type": "boolean",
                 "default": true
             },
             "transitionDuration": {
+                "description": "Duration of the animation in milliseconds.",
                 "type": "number",
-                "minimum": 0
+                "minimum": 0,
+                "default": 350
             }
         },
         "additionalProperties": false,
@@ -3337,15 +3373,15 @@ plastic.modules.display.DiscreteBarChart.prototype = {
 
         var svg = this.$el.append('<svg></svg>');
 
-        console.dir(this.$el[0].children[0]);
+        var options = this.elAttr.display.options;
 
         var chart = nv.models.discreteBarChart()
             .x(function(d) { return d.label; })
             .y(function(d) { return d.value; })
-            .staggerLabels(true)
-            .tooltips(false)
-            .showValues(true)
-            .transitionDuration(350)
+            .staggerLabels(options.staggerLabels)
+            .tooltips(options.tooltips)
+            .showValues(options.showValues)
+            .transitionDuration(options.transitionDuration)
         ;
 
         var mappedData = this.mapData(data);

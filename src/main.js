@@ -78,7 +78,10 @@ var plastic = {
      * @namespace
      * @ignore
      */
-    helper: {}
+    helper: {},
+
+
+    errors: []
 
 };
 

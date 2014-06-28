@@ -21,11 +21,16 @@ plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     if (errors) {
 
         plastic.errors.push(errors);
+        var error;
 
         if (errorMessage) {
-            throw new Error(errorMessage);
+            error = new Error(errorMessage);
+            error.schemaValidation = errors;
+            throw error;
         } else {
-            throw new Error('Object validation failed! Fore more informations look into the development console.');
+            error = new Error('Object validation failed! Fore more informations look into the development console.');
+            error.schemaValidation = errors;
+            throw error;
         }
 
     }
