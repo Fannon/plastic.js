@@ -24,6 +24,10 @@ plastic.modules.dependencyManager = {
         "nvd3": {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
             "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"]
+        },
+        "dataTable": {
+            "js": ["//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"],
+            "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"]
         }
     },
 

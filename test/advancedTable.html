@@ -10,14 +10,14 @@
 
     <link href="css/test.css" type="text/css" rel="stylesheet" />
     <link href="../src/main.css" type="text/css" rel="stylesheet" />
-    <link href="../src/modules/display/SimpleTable.css" type="text/css" rel="stylesheet" />
+    <link href="http://cdn.datatables.net/1.10.0/css/jquery.dataTables.css" type="text/css" rel="stylesheet" />
 
 </head>
 <body>
 
     <!-- 3rd Party Dependencies -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
-    <script src="../bower_components/d3/d3.js"></script>
+    <script src="http://cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
     <script src="../bower_components/rgrove-lazyload/lazyload.js"></script>
     <script src="../bower_components/jjv/lib/jjv.js"></script>
 
@@ -47,7 +47,7 @@
     <script src="../src/modules/data/SimpleDefault.js"></script>
 
     <!-- Display Modules -->
-    <script src="../src/modules/display/SimpleTable.js"></script>
+    <script src="../src/modules/display/AdvancedTable.js"></script>
     <script src="../src/modules/display/RawData.js"></script>
 
     <!-- Query Parser Modules -->
@@ -67,7 +67,7 @@
 
     <div class="container">
 
-        <h3 id="visualisation">Table Display Module</h3>
+        <h3 id="visualisation">Advanced Table Display Module</h3>
 
         <h4>Data via ASK Query</h4>
         <div id="table-ask-query" class="plastic-js" style="height: 300px; width: 100%;">
@@ -89,7 +89,7 @@
                 }
             </script>
 
-            <script class="plastic-display" data-display-module="simple-table" type="application/json">
+            <script class="plastic-display" data-display-module="advanced-table" type="application/json">
                 {
                     "tableClasses": "table table-condensed"
                 }
@@ -97,49 +97,12 @@
 
         </div>
 
-        <h4>Data via SPARQL Query</h4>
-        <plastic id="table-sparql-query" style="height: 300px; width: 100%;">
-
-            <script class="plastic-query" type="application/sparql-query" data-query-url="http://dbpedia.org/sparql">
-                PREFIX owl: <http://www.w3.org/2002/07/owl#>
-                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                PREFIX dc: <http://purl.org/dc/elements/1.1/>
-                PREFIX : <http://dbpedia.org/resource/>
-                PREFIX dbpedia2: <http://dbpedia.org/property/>
-                PREFIX dbpedia: <http://dbpedia.org/>
-                PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-                PREFIX dbo: <http://dbpedia.org/ontology/>
-
-                PREFIX dbo: <http://dbpedia.org/ontology/>
-
-                SELECT ?name ?birth ?death ?person WHERE {
-                     ?person dbo:birthPlace :Berlin .
-                     ?person dbo:birthDate ?birth .
-                     ?person foaf:name ?name .
-                     ?person dbo:deathDate ?death .
-                     FILTER (?birth < "1900-01-01"^^xsd:date) .
-                }
-                ORDER BY ?name
-                LIMIT 16
-            </script>
-
-            <script class="plastic-display" data-display-module="simple-table" type="application/json">
-                {
-                    "tableClasses": "table table-condensed"
-                }
-            </script>
-
-        </plastic>
-
         <h4>Data via JSON File</h4>
         <plastic id="table-json-file" style="height: 400px; width: 100%;">
 
             <script class="plastic-data" type="application/json" data-url="data/simple-default.json" data-format="simple-default"></script>
 
-            <script class="plastic-display" data-display-module="simple-table" type="application/json"></script>
+            <script class="plastic-display" data-display-module="advanced-table" type="application/json"></script>
 
         </plastic>
 

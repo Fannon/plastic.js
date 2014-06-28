@@ -339,7 +339,12 @@ plastic.Element.prototype = {
         "use strict";
 
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
-        plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
+
+        if (displayModuleInfo) {
+            plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
+        } else {
+            plastic.msg.error('Display Module not found!', this.$el);
+        }
 
         if (this.attr.data && this.attr.data.module) {
             var dataModuleInfo = plastic.modules.moduleManager.get('data', this.attr.data.module);
