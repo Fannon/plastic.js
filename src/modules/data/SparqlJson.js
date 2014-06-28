@@ -73,6 +73,9 @@ plastic.modules.data.SparqlJson = function(dataObj) {
         "http://www.w3.org/2001/XMLSchema#integer": {
             "type": "number"
         },
+        "http://www.w3.org/2001/XMLSchema#double": {
+            "type": "number"
+        },
         "http://www.w3.org/2001/XMLSchema#date": {
             "type": "string",
             "format": "date"

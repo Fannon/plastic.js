@@ -3170,6 +3170,9 @@ plastic.modules.data.SparqlJson = function(dataObj) {
         "http://www.w3.org/2001/XMLSchema#integer": {
             "type": "number"
         },
+        "http://www.w3.org/2001/XMLSchema#double": {
+            "type": "number"
+        },
         "http://www.w3.org/2001/XMLSchema#date": {
             "type": "string",
             "format": "date"
@@ -3381,13 +3384,13 @@ plastic.modules.display.DiscreteBarChart.prototype = {
             .staggerLabels(options.staggerLabels)
             .tooltips(options.tooltips)
             .showValues(options.showValues)
-            .transitionDuration(options.transitionDuration)
         ;
 
         var mappedData = this.mapData(data);
 
         d3.select(this.$el[0].children[0])
             .datum(mappedData)
+            .transition().duration(options.transitionDuration)
             .call(chart);
 
         nv.utils.windowResize(chart.update);
@@ -3474,7 +3477,33 @@ plastic.modules.display.PieChart = function($el, elAttr) {
      * Display Options Validation Schema
      * @type {{}}
      */
-    this.displayOptionsSchema = {};
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+            "showLabels": {
+                "description": "Show the labels.",
+                "type": "boolean",
+                "default": true
+            },
+            "tooltips": {
+                "description": "Show tooltips",
+                "type": "boolean",
+                "default": true
+            },
+            "transitionDuration": {
+                "description": "Duration of the animation in milliseconds.",
+                "type": "number",
+                "minimum": 0,
+                "default": 350
+            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
 
     /**
      * Display Options Validation Schema
@@ -3507,14 +3536,13 @@ plastic.modules.display.PieChart.prototype = {
 
         var svg = this.$el.append('<svg></svg>');
 
-/*
-        console.dir(this.$el[0].children[0]);
-*/
+        var options = this.elAttr.display.options;
 
         var chart = nv.models.pieChart()
                 .x(function(d) { return d.label; })
                 .y(function(d) { return d.value; })
-                .showLabels(true)
+                .showLabels(options.showLabels)
+                .tooltips(options.tooltips)
             ;
 
         var mappedData = this.mapData(data);
@@ -3522,7 +3550,7 @@ plastic.modules.display.PieChart.prototype = {
 
         d3.select(this.$el[0].children[0])
             .datum(mappedData)
-            .transition().duration(350)
+            .transition().duration(options.transitionDuration)
             .call(chart);
 
         nv.utils.windowResize(chart.update);

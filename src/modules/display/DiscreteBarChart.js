@@ -103,13 +103,13 @@ plastic.modules.display.DiscreteBarChart.prototype = {
             .staggerLabels(options.staggerLabels)
             .tooltips(options.tooltips)
             .showValues(options.showValues)
-            .transitionDuration(options.transitionDuration)
         ;
 
         var mappedData = this.mapData(data);
 
         d3.select(this.$el[0].children[0])
             .datum(mappedData)
+            .transition().duration(options.transitionDuration)
             .call(chart);
 
         nv.utils.windowResize(chart.update);
