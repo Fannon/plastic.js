@@ -116,22 +116,10 @@ plastic.modules.display.PieChart.prototype = {
         for (var i = 0; i < data.length; i++) {
             var row = data[i];
 
-            console.log(typeof row[valueColumn][0]);
-
-
-            if ((typeof row[labelColumn][0]) === "string" && (typeof row[valueColumn][0]) === "number") {
-                mappedData.push({
-                    "label": row[labelColumn][0],
-                    "value": parseInt(row[valueColumn][0])
-                });
-            } else {
-                mappedData.push({
-                    "label": row[valueColumn][0],
-                    "value": parseInt(row[labelColumn][0])
-                });
-                console.log('Switched Label and Value!');
-            }
-
+            mappedData.push({
+                "label": row[labelColumn][0],
+                "value": parseInt(row[valueColumn][0])
+            });
         }
 
         return mappedData;

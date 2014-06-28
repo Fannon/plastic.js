@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-06-28
+/*! plastic - v0.0.4 - 2014-05-15
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -1578,10 +1578,6 @@ plastic.Element.prototype = {
         // Instanciate new Data Module
         this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
 
-        if (!this.attr.data.description) {
-            this.attr.data.description = plastic.helper.duckTyping(this.attr.data.processed);
-        }
-
         // Apply Data Description if available
         this.applySchema();
 
@@ -1617,7 +1613,7 @@ plastic.Element.prototype = {
 
     mergeOptions: function() {
         "use strict";
-        this.options = $.extend(true, {}, plastic.options, this.attr.options);
+        this.options = $.extend(true, {}, plastic.options, this.attr.options.general);
     },
 
     /**
@@ -1688,18 +1684,15 @@ plastic.Element.prototype = {
                 for (var cellType in row) {
 
                     var cellValue = row[cellType];
+                    var format = dataDescription[cellType].format;
 
-                    if (dataDescription[cellType] && dataDescription[cellType].format) {
-                        var format = dataDescription[cellType].format;
+                    // TODO: Case-Handling: value could be no array (?)
+                    for (var j = 0; j < cellValue.length; j++) {
 
-                        for (var j = 0; j < cellValue.length; j++) {
-
-                            if (format && htmlMapper[format]) {
-                                cellValue[j] = htmlMapper[format](cellValue[j]);
-                            }
+                        if (format) {
+                            cellValue[j] = htmlMapper[format](cellValue[j]);
                         }
                     }
-
                 }
 
             }
@@ -1737,19 +1730,13 @@ plastic.ElementAttributes = function(pEl) {
      * Element Options Attributes
      * @type {Object|boolean}
      */
-    this.options = {};
+    this.options = false;
 
     /**
      * Element Query Attributes
      * @type {Object|boolean}
      */
     this.query = false;
-
-    /**
-     * Element Display Attributes
-     * @type {Object|boolean}
-     */
-    this.display = {};
 
     /**
      * Element Data Attributes
@@ -1790,15 +1777,21 @@ plastic.ElementAttributes.prototype = {
                 }
             },
             "options": {
-                "type": "object"
-            },
-            "display": {
                 "type": "object",
                 "properties": {
-                    "module": {"type": "string"},
-                    "options": {"type": "object"}
+                    "general": {
+                        type: "object"
+                    },
+                    "display": {
+                        "type": "object",
+                        "properties": {
+                            "module": {"type": "string"},
+                            "options": {"type": "object"}
+                        },
+                        required: ["module", "options"]
+                    }
                 },
-                required: ["module", "options"]
+                "required": ["general", "display"]
             },
             "query": {
                 "type": ["object", "boolean"],
@@ -1814,15 +1807,7 @@ plastic.ElementAttributes.prototype = {
                 "properties": {
                     "module": {"type": "string"},
                     "raw": {"type": ["object", "array", "string"]},
-                    "processed": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array"
-                            }
-                        }
-                    },
+                    "processed": {"type": "array"},
                     "processedHtml": {"type": "array"},
                     "url": {"type": "string"},
                     "description": {"type": "object"} // TODO: Define Description SCHEMA
@@ -1873,7 +1858,6 @@ plastic.ElementAttributes.prototype = {
         this.getQuery();
         this.getData();
         this.getDataDescription();
-        this.getDisplay();
 
         if (this.pEl.options.debug) {
             plastic.msg.dir(this.getAttrObj());
@@ -1908,7 +1892,7 @@ plastic.ElementAttributes.prototype = {
 
         if (optionsObject.length > 0) {
 
-            var optionsString = optionsObject[0].text;
+            var optionsString = optionsObject[0].text; // TODO: Or .innerText in some cases?
 
             if (optionsString && optionsString !== '') {
 
@@ -1917,6 +1901,7 @@ plastic.ElementAttributes.prototype = {
 
                     // SUCCESS
                     this.options = options;
+                    this.display = options.display;
 
                 } catch(e) {
                     console.dir(e);
@@ -1929,46 +1914,10 @@ plastic.ElementAttributes.prototype = {
                 throw new Error('Empty Obptions Element!');
             }
 
-        }
-    },
-
-    /**
-     * Gets all Option Attributes
-     */
-    getDisplay: function() {
-        "use strict";
-
-        /** Element Options */
-        var options = {}; // mandatory!
-
-        var displayObject = this.$el.find(".plastic-display");
-
-        if (displayObject.length > 0) {
-
-            this.display.module = displayObject.attr('data-display-module');
-
-            var optionsString = displayObject[0].text;
-
-            if (optionsString && optionsString !== '') {
-
-                try {
-                    options = $.parseJSON(optionsString);
-                    this.display.options = options;
-                } catch(e) {
-                    console.dir(e);
-                    plastic.msg('Invalid JSON in the Options Object!');
-                    throw new Error(e);
-                }
-
-            } else {
-                this.display.options = {};
-            }
-
         } else {
-            plastic.msg('No Display Module set!', 'error', this.$el);
-            throw new Error('No Display Module set!');
+            plastic.msg('No options provided!', 'error', this.$el);
+            throw new Error('No options provided!');
         }
-
     },
 
     /**
@@ -2387,47 +2336,6 @@ plastic.helper.Events.prototype = {
     }
 };
 
-plastic.helper.duckTyping = function(data) {
-    "use strict";
-
-    var dataDescription = {};
-
-    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    for (var attrName in data[0]) {
-
-        var attrValue = data[0][attrName][0];
-
-        if ($.isNumeric(attrValue)) {
-
-            dataDescription[attrName] = {
-                type: "number"
-            };
-
-        } else {
-
-            dataDescription[attrName] = {
-                type: "string"
-            };
-
-            if (attrValue.indexOf("http://") > -1) {
-                dataDescription[attrName].format = "url";
-            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
-                dataDescription[attrName].format = "email";
-            } else if (attrValue.indexOf("tel:") > -1) {
-                dataDescription[attrName].format = "phone";
-            }
-
-
-        }
-
-    }
-
-    return dataDescription;
-
-};
-
-
 plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     "use strict";
 
@@ -2494,8 +2402,7 @@ plastic.modules.Module = function(pEl, type, name) {
 
     // Specific case handling for each module-type
     if (type === 'display') {
-        var $el = $(pEl.$el.find('.plastic-js-display')[0]);
-        this.module = new Module($el, pEl.attr);
+        this.module = new Module(pEl.$el, pEl.attr);
         this.execute();
 
     } else if (type === 'data') {
@@ -2840,7 +2747,7 @@ plastic.modules.data.AskJson = function(dataObj) {
         },
         "_tel": {
             "type": "string",
-            "format": "phone"
+            "forbmat": "phone"
         }
     };
 
@@ -2848,6 +2755,17 @@ plastic.modules.data.AskJson = function(dataObj) {
 };
 
 plastic.modules.data.AskJson.prototype = {
+
+    /**
+     * Sets Raw Data Object after Instanciation
+     *
+     * @param {{}} dataObj
+     */
+    setDataObj: function(dataObj) {
+        "use strict";
+
+        this.dataObj = dataObj;
+    },
 
     /**
      * Custom Validation
@@ -2937,34 +2855,20 @@ plastic.modules.data.Default = function(dataObj) {
 
     this.dataDescription = {};
 
-    /**
-     * Raw Data Schema for validation
-     *
-     * TODO: Further describe "data" structure
-     * @type {{}}
-     */
     this.rawDataSchema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 
         "properties": {
             "data": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "array"
-                    }
-                }
+                "type": "array"
+
             },
             "schema": {
-                "type": "object",
-                "additionalProperties": {
-                    "type": "object"
-                }
+
             },
             "description": {
-                "type": "object"
+
             }
         },
         "required": ["data"]
@@ -2972,7 +2876,18 @@ plastic.modules.data.Default = function(dataObj) {
 
 };
 
-plastic.modules.data.Default.prototype = {
+plastic.modules.data.AskJson.prototype = {
+
+    /**
+     * Sets Raw Data Object after Instanciation
+     *
+     * @param {{}} dataObj
+     */
+    setDataObj: function(dataObj) {
+        "use strict";
+
+        this.dataObj = dataObj;
+    },
 
     /**
      * Custom Validation
@@ -2985,83 +2900,23 @@ plastic.modules.data.Default.prototype = {
     },
 
     /**
-     * Since the data is already in the correct format, it has just to be returned
+     * Parses the data into an internal used data format
      *
      * @returns {Object}
      */
     execute: function() {
+
+        this.parseSchema();
+        this.parseData();
+
+        return this.dataObj;
+
+    },
+
+    parseData: function() {
+        "use strict";
+
         this.dataObj.processed = this.dataObj.raw.data;
-        return this.dataObj;
-    }
-};
-
-// Register Module and define dependencies:
-plastic.modules.moduleManager.register({
-    moduleType: 'data',
-    apiName: 'simple-default',
-    className: 'SimpleDefault',
-    dependencies: []
-});
-/**
- * Parses tabular data from an ASK Semantic MediaWiki API
- *
- * @constructor
- */
-plastic.modules.data.SimpleDefault = function(dataObj) {
-
-    /**
-     * Incoming Raw Data
-     * @type {{}}
-     */
-    this.dataObj = dataObj;
-
-    /**
-     * Raw Data Schema for validation
-     *
-     * @type {{}}
-     */
-    this.rawDataSchema = {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-
-        "type": "array",
-        "items": {
-            "type": "object"
-        }
-    };
-
-};
-
-plastic.modules.data.SimpleDefault.prototype = {
-
-    /**
-     * Custom Validation
-     *
-     * @returns {boolean}
-     */
-    validate: function() {
-        "use strict";
-        return false;
-    },
-
-    /**
-     * Since the data is already in the correct format, it has just to be returned
-     *
-     * @returns {Object}
-     */
-    execute: function() {
-
-        var processedData = [];
-
-        for (var i = 0; i < this.dataObj.raw.length; i++) {
-            var col = this.dataObj.raw[i];
-            processedData[i] = {};
-            for (var cell in col) {
-                processedData[i][cell] = [col[cell]];
-            }
-        }
-
-        this.dataObj.processed = processedData;
-        return this.dataObj;
     }
 };
 
@@ -3131,41 +2986,20 @@ plastic.modules.data.SparqlJson = function(dataObj) {
         "required": ["head", "results"]
     };
 
-    /**
-     * Maps ASK-Result-Format Schema to JSON-Schema
-     *
-     * @type {{}}
-     */
-    this.schemaDatatypeMap = {
-        "http://www.w3.org/2001/XMLSchema#integer": {
-            "type": "number"
-        },
-        "http://www.w3.org/2001/XMLSchema#date": {
-            "type": "string",
-            "format": "date"
-        }
-    };
-
-    /**
-     * Maps ASK-Result-Format Schema to JSON-Schema
-     *
-     * @type {{}}
-     */
-    this.schemaTypeMap = {
-        "uri": {
-            "type": "string",
-            "format": "uri"
-        },
-        "literal": {
-           "type": "string"
-        }
-    };
-
-    this.dataDescription = {};
-
 };
 
 plastic.modules.data.SparqlJson.prototype = {
+
+    /**
+     * Sets Raw Data Object after Instanciation
+     *
+     * @param {{}} dataObj
+     */
+    setDataObj: function(dataObj) {
+        "use strict";
+
+        this.dataObj = dataObj;
+    },
 
     /**
      * Custom Validation
@@ -3184,50 +3018,6 @@ plastic.modules.data.SparqlJson.prototype = {
      */
     execute: function() {
 
-        this.parseSchema();
-        this.parseData();
-
-        return this.dataObj;
-
-    },
-
-    parseSchema: function() {
-        "use strict";
-
-        if (!this.dataObj.description) {
-
-            var schema = this.dataObj.raw.results.bindings[0];
-
-            for (var o in schema) {
-
-                var col = schema[o];
-                var mappedType = false;
-
-                if (col.datatype) {
-                    mappedType = this.schemaDatatypeMap[col.datatype];
-                } else if (col.type) {
-                    mappedType = this.schemaTypeMap[col.type];
-                }
-
-                // Default Data Description Type
-                if (!mappedType) {
-                    mappedType = {
-                        "type": "string"
-                    };
-                }
-
-                this.dataDescription[o] = mappedType;
-
-
-                this.dataObj.description = this.dataDescription;
-            }
-
-        }
-    },
-
-    parseData: function() {
-        "use strict";
-
         this.dataObj.processed = [];
 
         for (var i = 0; i < this.dataObj.raw.results.bindings.length; i++) {
@@ -3237,357 +3027,12 @@ plastic.modules.data.SparqlJson.prototype = {
             var row = this.dataObj.raw.results.bindings[i];
 
             for (var o in row) {
-                this.dataObj.processed[i][o] = [];
-                this.dataObj.processed[i][o].push(row[o].value);
+                this.dataObj.processed[i][o] = row[o].value;
             }
         }
 
         return this.dataObj;
 
-    }
-
-};
-
-// Register Module and define dependencies:
-plastic.modules.moduleManager.register({
-    moduleType: 'display',
-    apiName: 'discrete-bar-chart',
-    className: 'DiscreteBarChart',
-    dependencies: ["nvd3"],
-    requirements: ["data-description"]
-});
-
-/**
- * Bar Chart Display Module
- *
- * @constructor
- */
-plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
-    "use strict";
-
-    /**
-     * plastic.js DOM Element
-     */
-    this.$el = $el;
-
-    /**
-     * plastic.js ElementAttributes
-     */
-    this.elAttr = elAttr;
-
-    /**
-     * Display Options Validation Schema
-     * @type {{}}
-     */
-    this.displayOptionsSchema = {
-
-        "$schema": "http://json-schema.org/draft-04/schema#",
-
-        "type": "object",
-        "properties": {
-            "staggerLabels": {
-                "description": "Too many bars and not enough room? Try staggering labels.",
-                "type": "boolean"
-            },
-            "tooltips": {
-                "type": "boolean"
-            },
-            "showValues": {
-                "type": "boolean",
-                "default": true
-            },
-            "transitionDuration": {
-                "type": "number",
-                "minimum": 0
-            }
-        },
-        "additionalProperties": false,
-        "required": []
-
-    };
-
-    /**
-     * Display Options Validation Schema
-     * @type {{}}
-     */
-    this.processedDataSchema = {};
-
-
-};
-
-plastic.modules.display.DiscreteBarChart.prototype = {
-
-    /**
-     * Validates ElementAttributes
-     *
-     * @returns {Object|boolean}
-     */
-    validate: function () {
-        "use strict";
-        return false; // No Errors
-    },
-
-    /**
-     * Renders the Bar Chart
-     *
-     * @returns {*}
-     */
-    execute: function () {
-        var data = this.elAttr.data.processed;
-
-        var svg = this.$el.append('<svg></svg>');
-
-        console.dir(this.$el[0].children[0]);
-
-        var chart = nv.models.discreteBarChart()
-            .x(function(d) { return d.label; })
-            .y(function(d) { return d.value; })
-            .staggerLabels(true)
-            .tooltips(false)
-            .showValues(true)
-            .transitionDuration(350)
-        ;
-
-        var mappedData = this.mapData(data);
-
-        d3.select(this.$el[0].children[0])
-            .datum(mappedData)
-            .call(chart);
-
-        nv.utils.windowResize(chart.update);
-        return chart;
-
-    },
-
-    mapData: function(data) {
-        "use strict";
-        var mappedData = [{}];
-
-        mappedData[0].key = "";
-        mappedData[0].values = [];
-
-        var labelColumn = '';
-        var valueColumn = '';
-
-        // Decides data types / mapping via data description if available:
-        if (this.elAttr.data.description) {
-            var description = this.elAttr.data.description;
-
-            for (var o in description) {
-                if (labelColumn === '' && description[o].type === "string") {
-                    labelColumn = o;
-                }
-
-                if (valueColumn === '' && description[o].type === "number") {
-                    valueColumn = o;
-                }
-            }
-        }
-
-        if (labelColumn === '' || valueColumn === '') {
-            throw new Error('Could not map data to label and value! Please provide a correct data description / schema!');
-        }
-
-
-        // Do the actual mapping:
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i];
-
-            mappedData[0].values.push({
-                "label": row[labelColumn][0],
-                "value": parseInt(row[valueColumn][0], 10)
-            });
-        }
-
-        return mappedData;
-    },
-
-    update: function() {
-        "use strict";
-        this.execute(); // TODO: Write Update function
-    }
-};
-
-// Register Module and define dependencies:
-plastic.modules.moduleManager.register({
-    moduleType: 'display',
-    apiName: 'pie-chart',
-    className: 'PieChart',
-    dependencies: ["nvd3"]
-});
-
-/**
- * Pie Chart Display Module
- *
- * @constructor
- */
-plastic.modules.display.PieChart = function($el, elAttr) {
-    "use strict";
-
-    /**
-     * plastic.js DOM Element
-     */
-    this.$el = $el;
-
-    /**
-     * plastic.js ElementAttributes
-     */
-    this.elAttr = elAttr;
-
-    /**
-     * Display Options Validation Schema
-     * @type {{}}
-     */
-    this.displayOptionsSchema = {};
-
-    /**
-     * Display Options Validation Schema
-     * @type {{}}
-     */
-    this.processedDataSchema = {};
-
-
-};
-
-plastic.modules.display.PieChart.prototype = {
-
-    /**
-     * Validates ElementAttributes
-     *
-     * @returns {Object|boolean}
-     */
-    validate: function () {
-        "use strict";
-        return false; // No Errors
-    },
-
-    /**
-     * Renders the Bar Chart
-     *
-     * @returns {*}
-     */
-    execute: function () {
-        var data = this.elAttr.data.processed;
-
-        var svg = this.$el.append('<svg></svg>');
-
-/*
-        console.dir(this.$el[0].children[0]);
-*/
-
-        var chart = nv.models.pieChart()
-                .x(function(d) { return d.label; })
-                .y(function(d) { return d.value; })
-                .showLabels(true)
-            ;
-
-        var mappedData = this.mapData(data);
-
-
-        d3.select(this.$el[0].children[0])
-            .datum(mappedData)
-            .transition().duration(350)
-            .call(chart);
-
-        nv.utils.windowResize(chart.update);
-        return chart;
-
-    },
-
-    mapData: function(data) {
-        "use strict";
-        var mappedData = [];
-
-        var labelColumn = '';
-        var valueColumn = '';
-
-        // Decides data types / mapping via data description if available:
-        if (this.elAttr.data.description) {
-            var description = this.elAttr.data.description;
-
-            for (var o in description) {
-                if (labelColumn === '' && description[o].type === "string") {
-                    labelColumn = o;
-                }
-
-                if (valueColumn === '' && description[o].type === "number") {
-                    valueColumn = o;
-                }
-            }
-        }
-
-        if (labelColumn === '' || valueColumn === '') {
-            throw new Error('Could not map data to label and value! Please provide a correct data description / schema!');
-        }
-
-        // Do the actual mapping:
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i];
-
-            mappedData.push({
-                "label": row[labelColumn][0],
-                "value": parseInt(row[valueColumn][0])
-            });
-        }
-
-        return mappedData;
-    },
-
-    update: function() {
-        "use strict";
-        this.execute(); // TODO: Write Update function
-    }
-};
-
-// Register Module and define dependencies:
-plastic.modules.moduleManager.register({
-    moduleType: 'display',
-    apiName: 'raw-data',
-    className: 'RawData',
-    dependencies: []
-});
-
-/**
- * Displays the Raw Data (and Schema if provided) as formatted JSON
- *
- * @constructor
- */
-plastic.modules.display.RawData = function($el, elAttr) {
-    "use strict";
-
-    /**
-     * plastic.js DOM Element
-     */
-    this.$el = $el;
-
-    /**
-     * plastic.js ElementAttributes
-     */
-    this.elAttr = elAttr;
-
-};
-
-plastic.modules.display.RawData.prototype = {
-
-    /**
-     * Renders the Table
-     *
-     * @returns {*}
-     */
-    execute: function() {
-
-        console.info(this.$el);
-
-        var html = '<pre class="raw-data">' + JSON.stringify(this.elAttr.data.raw, false, 4) + '</code></pre>';
-
-        this.$el.html(html);
-
-
-    },
-
-    update: function() {
-        "use strict";
-        this.execute(); // TODO: Write Update function
     }
 
 };
@@ -3630,6 +3075,12 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
      */
     this.processedDataSchema = {};
 
+    /**
+     * Display Element that is rendered
+     * @type {{}}
+     */
+    this.displayEl = undefined;
+
 };
 
 plastic.modules.display.SimpleTable.prototype = {
@@ -3645,22 +3096,32 @@ plastic.modules.display.SimpleTable.prototype = {
     },
 
     /**
+     * Set / Update elAttr by Hand
+     * @param elAttr
+     */
+    setElAttr: function(elAttr) {
+        "use strict";
+        this.elAttr = elAttr;
+    },
+
+    /**
      * Renders the Table
      *
      * @returns {*}
      */
     execute: function() {
 
+        var $el = this.$el.find('.plastic-js-display')[0];
         var data = [];
 
-        // Use schema-processed HTML data if available:
         if (this.elAttr.data.processedHtml) {
             data = this.elAttr.data.processedHtml;
         } else {
             data = this.elAttr.data.processed;
         }
 
-        var vis = d3.select(this.$el[0]);
+
+        var vis = d3.select($el);
 
         var table = vis.append("table");
         var thead = table.append("thead");
@@ -3696,7 +3157,7 @@ plastic.modules.display.SimpleTable.prototype = {
                 return columns.map(function(column) {
                     return {
                         column: column,
-                        value: row[column].join(', ')
+                        value: row[column]
                     };
                 });
             })
@@ -3707,7 +3168,7 @@ plastic.modules.display.SimpleTable.prototype = {
             });
 
         // Twitter Bootstrap Classes
-        $('table').addClass('table table-condensed simple-table');
+        $('table').addClass('table table-condensed');
 
         this.displayEl = table;
 
@@ -3719,6 +3180,7 @@ plastic.modules.display.SimpleTable.prototype = {
     }
 
 };
+
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'query',
