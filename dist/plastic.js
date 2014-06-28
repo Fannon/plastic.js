@@ -2602,9 +2602,7 @@ plastic.modules.Module.prototype = {
 
                     if (this.module.displayOptionsSchema.properties[propName]) {
                         if (!this.pEl.attr.display.options.hasOwnProperty(propName)) {
-//                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
-                            console.info(propName);
-                            console.info(this.pEl.attr.display.options[propName]);
+                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
                         }
                     } else {
                         plastic.msg.warn('Option given that is not defined in the Option Schema');
@@ -2705,13 +2703,13 @@ plastic.modules.dependencyManager = {
     add: function(dependencyArray) {
         "use strict";
 
-        console.dir(dependencyArray);
-
         if (dependencyArray) {
             for (var i = 0; i < dependencyArray.length; i++) {
                 var depName = dependencyArray[i];
                 this.usedDeps[depName] = this.registry[depName];
             }
+        } else {
+            // TODO: Handle this case!
         }
 
     },

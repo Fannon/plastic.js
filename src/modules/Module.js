@@ -141,9 +141,7 @@ plastic.modules.Module.prototype = {
 
                     if (this.module.displayOptionsSchema.properties[propName]) {
                         if (!this.pEl.attr.display.options.hasOwnProperty(propName)) {
-//                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
-                            console.info(propName);
-                            console.info(this.pEl.attr.display.options[propName]);
+                            this.pEl.attr.display.options[propName] = this.module.displayOptionsSchema.properties[propName].default;
                         }
                     } else {
                         plastic.msg.warn('Option given that is not defined in the Option Schema');
