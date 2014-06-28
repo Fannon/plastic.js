@@ -339,7 +339,11 @@ plastic.Element.prototype = {
 
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
 
+        console.dir(displayModuleInfo);
+
+        console.dir(displayModuleInfo.dependencies);
         if (displayModuleInfo) {
+
             plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
         } else {
             plastic.msg.error('Display Module not found!', this.$el);

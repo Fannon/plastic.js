@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>plastic.js Line Chart Demo</title>
+
+    <link href="lib/bootstrap/bootstrap.css" type="text/css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="lib/jasmine/jasmine.css">
+
+    <link href="css/test.css" type="text/css" rel="stylesheet" />
+    <link href="../src/main.css" type="text/css" rel="stylesheet" />
+    <link href="../bower_components/nvd3/nv.d3.css" type="text/css" rel="stylesheet" />
+    <link href="../src/modules/display/SimpleTable.css" type="text/css" rel="stylesheet" />
+
+</head>
+<body>
+
+<!-- 3rd Party Dependencies -->
+<script src="../bower_components/jquery/dist/jquery.js"></script>
+<script src="../bower_components/d3/d3.js"></script>
+<script src="../bower_components/nvd3/nv.d3.js"></script>
+<script src="../bower_components/rgrove-lazyload/lazyload.js"></script>
+<script src="../bower_components/jjv/lib/jjv.js"></script>
+
+<!-- App JavaScript -->
+<script src="../src/main.js"></script>
+<script src="../src/options.js"></script>
+
+<!-- Core Functions -->
+<script src="../src/core/Element.js"></script>
+<script src="../src/core/ElementAttributes.js"></script>
+<script src="../src/core/msg.js"></script>
+
+<!-- Helper Modules -->
+<script src="../src/helper/Events.js"></script>
+<script src="../src/helper/schemaValidation.js"></script>
+<script src="../src/helper/duckTyping.js"></script>
+
+<!-- Module Management -->
+<script src="../src/modules/Module.js"></script>
+<script src="../src/modules/dependencyManager.js"></script>
+<script src="../src/modules/moduleManager.js"></script>
+
+<!-- Data Parser Modules -->
+<script src="../src/modules/data/SparqlJson.js"></script>
+<script src="../src/modules/data/AskJson.js"></script>
+<script src="../src/modules/data/Default.js"></script>
+
+<!-- Display Modules -->
+<script src="../src/modules/display/SimpleTable.js"></script>
+<script src="../src/modules/display/RawData.js"></script>
+<script src="../src/modules/display/DiscreteBarChart.js"></script>
+<script src="../src/modules/display/PieChart.js"></script>
+<script src="../src/modules/display/CumulativeLineChart.js"></script>
+
+
+
+<!-- Query Parser Modules -->
+<script src="../src/modules/query/Ask.js"></script>
+<script src="../src/modules/query/Sparql.js"></script>
+
+
+<!-- Jasmine Unit Testing -->
+<script type="text/javascript" src="lib/jasmine/jasmine.js"></script>
+<script type="text/javascript" src="lib/jasmine/jasmine-html.js"></script>
+<script type="text/javascript" src="lib/jasmine/boot.js"></script>
+
+<!-- include spec files here... -->
+<script type="text/javascript" src="spec/main.spec.js"></script>
+<script type="text/javascript" src="spec/table.spec.js"></script>
+
+
+<div class="container">
+
+    <h3 id="visualisation">Line Chart Display Module</h3>
+
+
+    <h4>Data via JSON File</h4>
+    <div class="plastic-js" style="height: 400px">
+
+        <script class="plastic-data" type="application/json" data-url="data/linechart.json" data-format="simple-default"></script>
+        <script class="plastic-display" data-display-module="line-chart" type="application/json"></script>
+
+    </div>
+
+    <div id="chart">
+        <svg></svg>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

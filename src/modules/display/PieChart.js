@@ -92,11 +92,11 @@ plastic.modules.display.PieChart.prototype = {
         var options = this.elAttr.display.options;
 
         var chart = nv.models.pieChart()
-                .x(function(d) { return d.label; })
-                .y(function(d) { return d.value; })
-                .showLabels(options.showLabels)
-                .tooltips(options.tooltips)
-            ;
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .showLabels(options.showLabels)
+            .tooltips(options.tooltips)
+        ;
 
         var mappedData = this.mapData(data);
 

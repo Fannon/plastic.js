@@ -1608,7 +1608,11 @@ plastic.Element.prototype = {
 
         var displayModuleInfo = plastic.modules.moduleManager.get('display', this.attr.display.module);
 
+        console.dir(displayModuleInfo);
+
+        console.dir(displayModuleInfo.dependencies);
         if (displayModuleInfo) {
+
             plastic.modules.dependencyManager.add(displayModuleInfo.dependencies);
         } else {
             plastic.msg.error('Display Module not found!', this.$el);
@@ -2254,6 +2258,46 @@ plastic.msg = {
 
 
 
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
+};
+
 plastic.helper.Events = function() {
     "use strict";
 
@@ -2392,46 +2436,6 @@ plastic.helper.Events.prototype = {
             }
         }
     }
-};
-
-plastic.helper.duckTyping = function(data) {
-    "use strict";
-
-    var dataDescription = {};
-
-    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    for (var attrName in data[0]) {
-
-        var attrValue = data[0][attrName][0];
-
-        if ($.isNumeric(attrValue)) {
-
-            dataDescription[attrName] = {
-                type: "number"
-            };
-
-        } else {
-
-            dataDescription[attrName] = {
-                type: "string"
-            };
-
-            if (attrValue.indexOf("http://") > -1) {
-                dataDescription[attrName].format = "url";
-            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
-                dataDescription[attrName].format = "email";
-            } else if (attrValue.indexOf("tel:") > -1) {
-                dataDescription[attrName].format = "phone";
-            }
-
-
-        }
-
-    }
-
-    return dataDescription;
-
 };
 
 
@@ -2692,6 +2696,7 @@ plastic.modules.dependencyManager = {
      */
     add: function(dependencyArray) {
         "use strict";
+        console.dir(dependencyArray.length);
         for (var i = 0; i < dependencyArray.length; i++) {
             var depName = dependencyArray[i];
             this.usedDeps[depName] = this.registry[depName];
@@ -3426,6 +3431,141 @@ plastic.modules.display.AdvancedTable.prototype = {
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'display',
+    apiName: 'line-chart',
+    className: 'LineChart',
+    dependencies: ["nvd3"]
+});
+
+/**
+ * Line Chart Display Module
+ *
+ * @constructor
+ */
+plastic.modules.display.LineChart = function($el, elAttr) {
+    "use strict";
+
+    /**
+     * plastic.js DOM Element
+     */
+    this.$el = $el;
+
+    /**
+     * plastic.js ElementAttributes
+     */
+    this.elAttr = elAttr;
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.displayOptionsSchema = {
+
+        "$schema": "http://json-schema.org/draft-04/schema#",
+
+        "type": "object",
+        "properties": {
+//            "showLabels": {
+//                "description": "Show the labels.",
+//                "type": "boolean",
+//                "default": true
+//            },
+//            "tooltips": {
+//                "description": "Show tooltips",
+//                "type": "boolean",
+//                "default": true
+//            },
+//            "transitionDuration": {
+//                "description": "Duration of the animation in milliseconds.",
+//                "type": "number",
+//                "minimum": 0,
+//                "default": 350
+//            }
+        },
+        "additionalProperties": false,
+        "required": []
+
+    };
+
+    /**
+     * Display Options Validation Schema
+     * @type {{}}
+     */
+    this.processedDataSchema = {};
+
+
+};
+
+plastic.modules.display.LineChart.prototype = {
+
+    /**
+     * Validates ElementAttributes
+     *
+     * @returns {Object|boolean}
+     */
+    validate: function () {
+        "use strict";
+        return false; // No Errors
+    },
+
+    /**
+     * Renders the Bar Chart
+     *
+     * @returns {*}
+     */
+    execute: function () {
+        var data = this.elAttr.data.processed;
+
+        var svg = this.$el.append('<svg></svg>');
+
+//        var options = this.elAttr.display.options;
+
+        console.dir('Data: ' + data);
+
+        var chart = nv.models.cumulativeLineChart()
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .color(d3.scale.category10().range())
+            .useInteractiveGuideline(true)
+        ;
+
+        var mappedData = this.mapData(data);
+
+        chart.xAxis
+            .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
+            .tickFormat(function(d) {
+                return d3.time.format('%x')(new Date(d))
+            });
+
+        chart.yAxis
+            .tickFormat(d3.format(',.1%'));
+
+        d3.select(this.$el[0].children[0])
+            .datum(mappedData)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+
+    },
+
+    mapData: function(data) {
+        "use strict";
+        var mappedData = [];
+
+
+
+        return mappedData;
+    },
+
+    update: function() {
+        "use strict";
+        this.execute(); // TODO: Write Update function
+    }
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'display',
     apiName: 'discrete-bar-chart',
     className: 'DiscreteBarChart',
     dependencies: ["nvd3"],
@@ -3681,11 +3821,11 @@ plastic.modules.display.PieChart.prototype = {
         var options = this.elAttr.display.options;
 
         var chart = nv.models.pieChart()
-                .x(function(d) { return d.label; })
-                .y(function(d) { return d.value; })
-                .showLabels(options.showLabels)
-                .tooltips(options.tooltips)
-            ;
+            .x(function(d) { return d.label; })
+            .y(function(d) { return d.value; })
+            .showLabels(options.showLabels)
+            .tooltips(options.tooltips)
+        ;
 
         var mappedData = this.mapData(data);
 
