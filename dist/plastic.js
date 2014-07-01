@@ -132,10 +132,9 @@ plastic.execute = function() {
     // Execute all created plastic Elements
     $.each(plastic.elements, function(i, $el ) {
 
-        if (!$el.options.debug) {
+        if ($el.options.debug) {
             $el.execute();
         } else {
-            $el.execute();
             try {
                 $el.execute();
             } catch(e) {
@@ -163,7 +162,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: false,
+    debug: true,
 
     /**
      *
@@ -179,7 +178,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    benchmark: false,
+    benchmark: true,
 
     /**
      * Width of Canvas, if not given
@@ -1574,7 +1573,7 @@ plastic.Element.prototype = {
     createInfoContainer: function($el) {
         "use strict";
         $el.append('<div class="plastic-js-info"></div>');
-        $el.css('margin-bottom', '40px');
+        $el.css('margin-bottom', '40px'); // TODO: Make this dynamic
     },
 
     /**
@@ -1691,7 +1690,7 @@ plastic.Element.prototype = {
         for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
             var moduleTime = this.benchmarkModulesLoaded[i];
             var moduleDiff = moduleTime - this.benchmarkStart;
-            msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
+            msg += ' | DEPENDENCY ' + (i + 1) + ': ' + moduleDiff + 'ms';
         }
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
@@ -2727,16 +2726,18 @@ plastic.modules.dependencyManager = {
      */
     registry: {
         "d3": {
-            "test": "d3",
-            "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"]
+            "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"],
+            "test": "d3"
         },
         "nvd3": {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
-            "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"]
+            "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"],
+            "test": "nv"
         },
         "dataTable": {
             "js": ["//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"],
-            "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"]
+            "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"],
+            "test": "$(document).DataTable"
         }
     },
 
@@ -2820,10 +2821,13 @@ plastic.modules.dependencyManager = {
 
             var urls = this.usedDeps[depName];
 
-            if (urls.test && !window[urls.test]) {
+            if (this.missingDependency(urls.test)) {
+
                 LazyLoad.css(urls.css, cssComplete, depName);
                 LazyLoad.js(urls.js, jsComplete, depName);
+
             } else {
+
                 jsComplete();
                 if (plastic.options.debug) {
                     plastic.msg.log('[GLOBAL] Dependency ' + depName + ' not loaded, it already exists ');
@@ -2831,6 +2835,60 @@ plastic.modules.dependencyManager = {
             }
 
         }
+    },
+
+    /**
+     * Checks if Dependency is already loaded. Supports three types of checks:
+     *
+     * * Global Browser Functions
+     * * jQuery Global Functions
+     * * jQuery Element Functions
+     *
+     * @param {string}      test
+     * @returns {boolean}
+     */
+    missingDependency: function(test) {
+        "use strict";
+
+        // If no test is given, always load dependency
+        if (!test) {
+            return true;
+        }
+
+        var testString = test;
+
+        // Check for jQuery Element Plugin
+        if (test.indexOf("$(document).") > -1) {
+
+            testString = test.replace('$(document).', '');
+
+            if($(document)[testString]) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        // Check for jQuery Plugin / Function
+        if (test.indexOf("$.") > -1) {
+            testString = test.replace('$.', '');
+            if($[testString]) {
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+
+        // Test for global object / function
+        if (window[test]) {
+            return false;
+        }
+
+        // If still no test-condition is met, declare dependency as missing
+        return true;
+
+
     }
 
 };
@@ -3390,7 +3448,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'advanced-table',
     className: 'AdvancedTable',
-    dependencies: []
+    dependencies: ['dataTable']
 });
 
 /**

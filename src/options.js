@@ -17,7 +17,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: false,
+    debug: true,
 
     /**
      *
@@ -33,7 +33,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    benchmark: false,
+    benchmark: true,
 
     /**
      * Width of Canvas, if not given

@@ -142,10 +142,9 @@ plastic.execute = function() {
     // Execute all created plastic Elements
     $.each(plastic.elements, function(i, $el ) {
 
-        if (!$el.options.debug) {
+        if ($el.options.debug) {
             $el.execute();
         } else {
-            $el.execute();
             try {
                 $el.execute();
             } catch(e) {

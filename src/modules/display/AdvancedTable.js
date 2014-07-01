@@ -3,7 +3,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'advanced-table',
     className: 'AdvancedTable',
-    dependencies: []
+    dependencies: ['dataTable']
 });
 
 /**

@@ -293,7 +293,7 @@ plastic.Element.prototype = {
     createInfoContainer: function($el) {
         "use strict";
         $el.append('<div class="plastic-js-info"></div>');
-        $el.css('margin-bottom', '40px');
+        $el.css('margin-bottom', '40px'); // TODO: Make this dynamic
     },
 
     /**
@@ -410,7 +410,7 @@ plastic.Element.prototype = {
         for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
             var moduleTime = this.benchmarkModulesLoaded[i];
             var moduleDiff = moduleTime - this.benchmarkStart;
-            msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
+            msg += ' | DEPENDENCY ' + (i + 1) + ': ' + moduleDiff + 'ms';
         }
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
