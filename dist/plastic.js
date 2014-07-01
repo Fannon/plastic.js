@@ -162,7 +162,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: true,
+    debug: false,
 
     /**
      *
@@ -1568,12 +1568,11 @@ plastic.Element.prototype = {
 
     /**
      * Helper Functin which creates a HTML Element for use as InfoBox
-     * @todo $el.find unnecessary?
      */
     createInfoContainer: function($el) {
         "use strict";
         $el.append('<div class="plastic-js-info"></div>');
-        $el.css('margin-bottom', '40px'); // TODO: Make this dynamic
+        $el.css('margin-bottom', '42px'); // TODO: Make this dynamic
     },
 
     /**

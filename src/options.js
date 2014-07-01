@@ -17,7 +17,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: true,
+    debug: false,
 
     /**
      *
