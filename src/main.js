@@ -126,7 +126,8 @@ plastic.execute = function() {
                 try {
                     plastic.elements.push(new plastic.Element(el));
                 } catch(e) {
-                    plastic.msg.error('plastic element crashed while init', 'error', el);
+                    e.message += ' plastic element crashed while init';
+                    plastic.msg.error(e, 'error', el);
                 }
             }
 
@@ -141,10 +142,12 @@ plastic.execute = function() {
         if (el.options.debug) {
             el.execute();
         } else {
+            el.execute();
             try {
-                el.execute();
+                plastic.elements.push(new plastic.Element(el));
             } catch(e) {
-                plastic.message.error('plastic.js Element Crash on init');
+                e.message += ' plastic element crashed while init';
+                plastic.msg.error(e, 'error', el);
             }
         }
 

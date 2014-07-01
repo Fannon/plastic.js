@@ -116,7 +116,8 @@ plastic.execute = function() {
                 try {
                     plastic.elements.push(new plastic.Element(el));
                 } catch(e) {
-                    plastic.msg.error('plastic element crashed while init', 'error', el);
+                    e.message += ' plastic element crashed while init';
+                    plastic.msg.error(e, 'error', el);
                 }
             }
 
@@ -131,10 +132,12 @@ plastic.execute = function() {
         if (el.options.debug) {
             el.execute();
         } else {
+            el.execute();
             try {
-                el.execute();
+                plastic.elements.push(new plastic.Element(el));
             } catch(e) {
-                plastic.message.error('plastic.js Element Crash on init');
+                e.message += ' plastic element crashed while init';
+                plastic.msg.error(e, 'error', el);
             }
         }
 
@@ -1942,6 +1945,9 @@ plastic.ElementAttributes.prototype = {
         /** Element CSS Style (Contains Width and Height) */
         this.style = {};
 
+        console.dir(this.pEl);
+        console.dir(this.$el);
+
         this.style.height = this.$el.height();
         this.style.width = this.$el.width();
     },
@@ -2119,15 +2125,7 @@ plastic.ElementAttributes.prototype = {
     validate: function() {
         "use strict";
 
-        var env = jjv();
-        env.addSchema('schema', this.attrObjSchema);
-        var errors = env.validate('schema', this.getAttrObj());
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error('Data Structure invalid!');
-        }
+        plastic.helper.schemaValidation(this.attrObjSchema, this.getAttrObj(), 'Element Attributes: Data Structure invalid!');
 
     }
 

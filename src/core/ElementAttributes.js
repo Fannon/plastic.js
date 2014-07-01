@@ -186,6 +186,9 @@ plastic.ElementAttributes.prototype = {
         /** Element CSS Style (Contains Width and Height) */
         this.style = {};
 
+        console.dir(this.pEl);
+        console.dir(this.$el);
+
         this.style.height = this.$el.height();
         this.style.width = this.$el.width();
     },
@@ -363,15 +366,7 @@ plastic.ElementAttributes.prototype = {
     validate: function() {
         "use strict";
 
-        var env = jjv();
-        env.addSchema('schema', this.attrObjSchema);
-        var errors = env.validate('schema', this.getAttrObj());
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error('Data Structure invalid!');
-        }
+        plastic.helper.schemaValidation(this.attrObjSchema, this.getAttrObj(), 'Element Attributes: Data Structure invalid!');
 
     }
 
