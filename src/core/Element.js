@@ -133,6 +133,8 @@ plastic.Element = function(el) {
     // Element Bootstrap                    //
     //////////////////////////////////////////
 
+    this.createMessageContainer(this.$el);
+
     // Merge general options from ElementsAttributes
     this.mergeOptions();
 
@@ -173,12 +175,12 @@ plastic.Element.prototype = {
         /** Asynchronous Mode */
         var self = this;
 
-        this.createMessageContainer(this.$el);
         this.createDisplayContainer(this.$el);
 
         if (plastic.options.showInfoBox) {
             this.createInfoContainer(this.$el);
         }
+
 
         //////////////////////////////////////////
         // CALLING QUERY MODULE                 //
@@ -376,6 +378,11 @@ plastic.Element.prototype = {
         this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
     },
 
+    /**
+     * Merges the current plastic element options with the general options.
+     * Local settings overwrite global settings
+     * Makes a deep copy
+     */
     mergeOptions: function() {
         "use strict";
         this.options = $.extend(true, {}, plastic.options, this.attr.options);

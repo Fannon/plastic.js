@@ -1408,6 +1408,8 @@ plastic.Element = function(el) {
     // Element Bootstrap                    //
     //////////////////////////////////////////
 
+    this.createMessageContainer(this.$el);
+
     // Merge general options from ElementsAttributes
     this.mergeOptions();
 
@@ -1448,12 +1450,12 @@ plastic.Element.prototype = {
         /** Asynchronous Mode */
         var self = this;
 
-        this.createMessageContainer(this.$el);
         this.createDisplayContainer(this.$el);
 
         if (plastic.options.showInfoBox) {
             this.createInfoContainer(this.$el);
         }
+
 
         //////////////////////////////////////////
         // CALLING QUERY MODULE                 //
@@ -1651,6 +1653,11 @@ plastic.Element.prototype = {
         this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
     },
 
+    /**
+     * Merges the current plastic element options with the general options.
+     * Local settings overwrite global settings
+     * Makes a deep copy
+     */
     mergeOptions: function() {
         "use strict";
         this.options = $.extend(true, {}, plastic.options, this.attr.options);
@@ -2127,6 +2134,7 @@ plastic.ElementAttributes.prototype = {
 };
 
 plastic.msg = {
+
     /**
      * Log Array
      *
@@ -2148,7 +2156,7 @@ plastic.msg = {
      */
     log: function(msg, el) {
         "use strict";
-        this.createLogEntry(msg, 'info', el);
+        this.createLogEntry(msg, 'info', el || false);
         console.log(msg);
     },
 
@@ -2174,7 +2182,7 @@ plastic.msg = {
      */
     warn: function(msg, el) {
         "use strict";
-        this.createLogEntry(msg, 'warning', el);
+        this.createLogEntry(msg, 'warning', el || false);
         console.warn(msg);
     },
 
@@ -2189,9 +2197,16 @@ plastic.msg = {
      */
     error: function (msg, el) {
 
+        var message = msg;
+
         console.error(msg);
         this.createLogEntry(msg, 'error', el);
-        this.createNotification(msg, 'error', el);
+
+        if (msg instanceof Error) {
+            message = msg.message;
+        }
+
+        this.createNotification(message, 'error', el);
 
     },
 
@@ -2229,13 +2244,19 @@ plastic.msg = {
      *
      * @param {string|Object}   msg     Message String or Object
      * @param {string}          type    Message Type
-     * @param {Object}          [el]    concerning plastic.js DOM element
+     * @param {Object}          [el]    concerning plastic.js DOM element or concerning plastic element
      */
     createNotification: function(msg, type, el) {
 
-        msg = this.prettyPrintJSON(msg);
+        if (el.$el) {
+            el = el.$el;
+        }
 
-        el.find('.plastic-js-messages').append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong>' + msg + '</div>');
+        if (el && el.find) {
+            var msgBox = el.find('.plastic-js-messages');
+            msgBox.append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
+        }
+
     },
 
     /**
@@ -2268,7 +2289,7 @@ plastic.msg = {
      */
     prettyPrintJSON: function (json) {
         if (typeof json !== 'string') {
-            json = JSON.stringify(json, undefined, 2);
+            json = JSON.stringify(json, false, 2);
         }
         json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
@@ -2475,27 +2496,29 @@ plastic.helper.duckTyping = function(data) {
 plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     "use strict";
 
-    var env = jjv();
-    env.addSchema('schema', schema);
-    var errors = env.validate('schema', data);
+    var valid = tv4.validate(data, schema);
 
-    // validation was successful
-    if (errors) {
+    if (valid) {
+        return false;
+    } else {
 
-        plastic.errors.push(errors);
-        var error;
+        if (errorMessage && tv4.error.message) {
+            errorMessage += ' ' + tv4.error.message;
 
-        if (errorMessage) {
-            error = new Error(errorMessage);
-            error.schemaValidation = errors;
-            throw error;
-        } else {
-            error = new Error('Object validation failed! Fore more informations look into the development console.');
-            error.schemaValidation = errors;
-            throw error;
+            if (tv4.error.dataPath) {
+                errorMessage += ' @' + tv4.error.dataPath;
+            }
         }
 
+        var error = new Error('Validation Error');
+        error.name = 'Validation Error';
+        error.message = errorMessage || tv4.error.message;
+        error.schemaValidation = tv4.error;
+        error.stack = (new Error()).stack;
+
+        throw error;
     }
+
 
 };
 
@@ -2622,7 +2645,13 @@ plastic.modules.Module.prototype = {
 
             if (this.module.displayOptionsSchema) {
 
-                plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+                try {
+                    plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+                } catch (e) {
+                    plastic.msg.error(e, this.pEl);
+                    return false;
+                }
+
 
                 // If an (optional) option is not given, inherit the default from the option schema
                 for (var propName in this.module.displayOptionsSchema.properties) {
@@ -2640,7 +2669,8 @@ plastic.modules.Module.prototype = {
             }
 
         } catch (e) {
-            console.error(e);
+//            console.error(e);
+            plastic.msg.error(e, this.pEl);
             // TODO: Stop Display Processing
             // TODO: Message to the User
         }
