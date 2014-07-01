@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-06-28
+/*! plastic - v0.0.4 - 2014-07-01
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 /* jshint -W079 */ /* Ignores Redefinition of plastic */
@@ -157,7 +157,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: true,
+    debug: false,
 
     /**
      *
@@ -191,7 +191,13 @@ plastic.options = {
      * Default AJAX Timeout (in ms)
      * @type {number}
      */
-    timeout: 3000
+    timeout: 3000,
+
+    /**
+     * If true, an additional info box is shown below the plastic element
+     * This displays additional infos like execution time
+     */
+    showInfoBox: true
 };
 
 /**
@@ -1445,6 +1451,9 @@ plastic.Element.prototype = {
         this.createMessageContainer(this.$el);
         this.createDisplayContainer(this.$el);
 
+        if (plastic.options.showInfoBox) {
+            this.createInfoContainer(this.$el);
+        }
 
         //////////////////////////////////////////
         // CALLING QUERY MODULE                 //
@@ -1524,9 +1533,7 @@ plastic.Element.prototype = {
 
         this.$el.append('<div class="plastic-js-messages"></div>');
         var msgEl = this.$el.find('.plastic-js-messages');
-        msgEl
-            .width(this.$el.innerWidth())
-        ;
+        msgEl.width(this.$el.innerWidth());
     },
 
     /**
@@ -1545,7 +1552,15 @@ plastic.Element.prototype = {
             displayEl.height('auto');
         }
 
+    },
 
+    /**
+     * Helper Functin which creates a HTML Element for use as InfoBox
+     * @todo $el.find unnecessary?
+     */
+    createInfoContainer: function() {
+        "use strict";
+        this.$el.append('<div class="plastic-js-info"></div>');
     },
 
     /**
@@ -1571,7 +1586,7 @@ plastic.Element.prototype = {
      */
     cancelProgress: function() {
         "use strict";
-        plastic.msg('plastic.js processing aborted.', 'error', this.$el);
+        plastic.msg.error('plastic.js processing aborted.', this.$el);
         // Clear all Element Events
         this.events = new plastic.helper.Events();
     },
@@ -1599,6 +1614,10 @@ plastic.Element.prototype = {
 
         if (this.options.benchmark) {
             this.displayBenchmark();
+        }
+
+        if (this.options.showInfoBox) {
+            this.displayInfoBox();
         }
     },
 
@@ -1658,7 +1677,15 @@ plastic.Element.prototype = {
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
         plastic.msg.log(msg);
+    },
 
+    /**
+     * Fills the Infobox with informations about the current plastic element, for example loading time.
+     */
+    displayInfoBox: function() {
+        "use strict";
+        var infoBox = this.$el.find('.plastic-js-info');
+        infoBox.html('Time total: ' + (this.benchmarkCompleted - this.benchmarkStart) + 'ms');
     },
 
     /**
@@ -1937,12 +1964,12 @@ plastic.ElementAttributes.prototype = {
 
                 } catch(e) {
                     console.dir(e);
-                    plastic.msg('Invalid JSON in the Options Object!');
+                    plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
                     throw new Error(e);
                 }
 
             } else {
-                plastic.msg('Empty Obptions Element!', 'error', this.$el);
+                plastic.msg.error('Empty Obptions Element!', this.$el);
                 throw new Error('Empty Obptions Element!');
             }
 
@@ -1973,7 +2000,7 @@ plastic.ElementAttributes.prototype = {
                     this.display.options = options;
                 } catch(e) {
                     console.dir(e);
-                    plastic.msg('Invalid JSON in the Options Object!');
+                    plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
                     throw new Error(e);
                 }
 
@@ -1982,7 +2009,7 @@ plastic.ElementAttributes.prototype = {
             }
 
         } else {
-            plastic.msg('No Display Module set!', 'error', this.$el);
+            plastic.msg.error('No Display Module set!', this.$el);
             throw new Error('No Display Module set!');
         }
 
@@ -2012,7 +2039,7 @@ plastic.ElementAttributes.prototype = {
                 this.query = query;
 
             } else {
-                plastic.msg('Empty Query Element!', 'error', this.$el);
+                plastic.msg.error('Empty Query Element!', this.$el);
                 throw new Error('Empty Query Element!');
             }
 
@@ -2034,7 +2061,7 @@ plastic.ElementAttributes.prototype = {
             if (schemaString && schemaString !== '') {
                 this.data.description =  $.parseJSON(schemaString);
             } else {
-                plastic.msg('Data Description Element provided, but empty!', 'error', this.$el);
+                plastic.msg.error('Data Description Element provided, but empty!', this.$el);
             }
 
         }
@@ -2067,7 +2094,7 @@ plastic.ElementAttributes.prototype = {
 
                     data.raw = $.parseJSON(dataString);
                 } else {
-                    plastic.msg('Empty Data Element!', 'error', this.$el);
+                    plastic.msg.error('Empty Data Element!', this.$el);
                 }
             }
 

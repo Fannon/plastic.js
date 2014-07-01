@@ -176,6 +176,9 @@ plastic.Element.prototype = {
         this.createMessageContainer(this.$el);
         this.createDisplayContainer(this.$el);
 
+        if (plastic.options.showInfoBox) {
+            this.createInfoContainer(this.$el);
+        }
 
         //////////////////////////////////////////
         // CALLING QUERY MODULE                 //
@@ -255,9 +258,7 @@ plastic.Element.prototype = {
 
         this.$el.append('<div class="plastic-js-messages"></div>');
         var msgEl = this.$el.find('.plastic-js-messages');
-        msgEl
-            .width(this.$el.innerWidth())
-        ;
+        msgEl.width(this.$el.innerWidth());
     },
 
     /**
@@ -276,7 +277,15 @@ plastic.Element.prototype = {
             displayEl.height('auto');
         }
 
+    },
 
+    /**
+     * Helper Functin which creates a HTML Element for use as InfoBox
+     * @todo $el.find unnecessary?
+     */
+    createInfoContainer: function() {
+        "use strict";
+        this.$el.append('<div class="plastic-js-info"></div>');
     },
 
     /**
@@ -302,7 +311,7 @@ plastic.Element.prototype = {
      */
     cancelProgress: function() {
         "use strict";
-        plastic.msg('plastic.js processing aborted.', 'error', this.$el);
+        plastic.msg.error('plastic.js processing aborted.', this.$el);
         // Clear all Element Events
         this.events = new plastic.helper.Events();
     },
@@ -330,6 +339,10 @@ plastic.Element.prototype = {
 
         if (this.options.benchmark) {
             this.displayBenchmark();
+        }
+
+        if (this.options.showInfoBox) {
+            this.displayInfoBox();
         }
     },
 
@@ -389,7 +402,15 @@ plastic.Element.prototype = {
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
         plastic.msg.log(msg);
+    },
 
+    /**
+     * Fills the Infobox with informations about the current plastic element, for example loading time.
+     */
+    displayInfoBox: function() {
+        "use strict";
+        var infoBox = this.$el.find('.plastic-js-info');
+        infoBox.html('Time total: ' + (this.benchmarkCompleted - this.benchmarkStart) + 'ms');
     },
 
     /**

@@ -1,7 +1,7 @@
-/*! plastic - v0.0.4 - 2014-06-28
+/*! plastic - v0.0.4 - 2014-07-01
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
-.plastic-js, plastic {
+.plastic-js {
     position: relative;
 }
 
@@ -28,4 +28,12 @@
     background: #F6CECE;
     color: #B31818;
     border: 1px solid #B31818;
+}
+
+.plastic-js-info {
+    font-size: 0.8em;
+    margin-top: 4px;
+    padding: 2px 4px;
+    border-top: 1px dotted #CCC;
+    color: #777;
 }
