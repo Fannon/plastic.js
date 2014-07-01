@@ -35,4 +35,5 @@
     padding: 2px 4px;
     border-top: 1px dotted #CCC;
     color: #777;
+    display: block;
 }

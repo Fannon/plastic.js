@@ -101,23 +101,24 @@ plastic.execute = function() {
     var $plasticElements = $('plastic, .plastic-js');
 
 
-    // Create new plastic.Elements
+    // Create new plastic Elements
     $plasticElements.each(function() {
 
-        var el = $(this);
+        var $el = $(this);
 
         // If Debug Mode is activated: Do not use Exception handling (let it crash)
         if (plastic.options.debug) {
-            plastic.elements.push(new plastic.Element(el));
+            plastic.elements.push(new plastic.Element($el));
         } else {
-            if (plastic.options.debug) {
-                plastic.elements.push(new plastic.Element(el));
+
+            if (!plastic.options.debug) {
+                plastic.elements.push(new plastic.Element($el));
             } else {
                 try {
-                    plastic.elements.push(new plastic.Element(el));
+                    plastic.elements.push(new plastic.Element($el));
                 } catch(e) {
-                    e.message += ' plastic element crashed while init';
-                    plastic.msg.error(e, 'error', el);
+                    e.message += ' | plastic element crashed while init (creation)';
+                    plastic.msg.error(e, 'error', $el);
                 }
             }
 
@@ -128,16 +129,18 @@ plastic.execute = function() {
     // Fetch all registered Dependencies
     plastic.modules.dependencyManager.fetch();
 
-    $.each(plastic.elements, function(i, el ) {
-        if (el.options.debug) {
-            el.execute();
+    // Execute all created plastic Elements
+    $.each(plastic.elements, function(i, $el ) {
+
+        if (!$el.options.debug) {
+            $el.execute();
         } else {
-            el.execute();
+            $el.execute();
             try {
-                plastic.elements.push(new plastic.Element(el));
+                $el.execute();
             } catch(e) {
-                e.message += ' plastic element crashed while init';
-                plastic.msg.error(e, 'error', el);
+                e.message += ' | plastic element crashed while init (execution)';
+                plastic.msg.error(e, 'error', $el);
             }
         }
 
@@ -1288,8 +1291,16 @@ LazyLoad = (function (doc) {
     window.jjv = Environment;
 })();
 
-plastic.Element = function(el) {
+plastic.Element = function($el) {
 
+    // Create a Message container
+    this.createMessageContainer($el);
+
+    /**
+     * Current plastic Element (pEl)
+     *
+     * @type {plastic.Element}
+     */
     var self = this;
 
     //////////////////////////////////////////
@@ -1297,11 +1308,11 @@ plastic.Element = function(el) {
     //////////////////////////////////////////
 
     /**
-     * jQuery DOM Element
+     * This plastic elements jQuery DOM Element
      *
      * @type {{}}
      */
-    this.$el = el;
+    this.$el = $el;
 
     /**
      * HTML ID if available, otherwise auto generated ID
@@ -1310,10 +1321,11 @@ plastic.Element = function(el) {
     this.id = undefined;
 
     // Get / Calculate ID
-    if (el && el[0] && el[0].id) {
-        this.id = el[0].id;
+    if ($el && $el[0] && $el[0].id) {
+        this.id = $el[0].id;
     } else {
         this.id = 'plastic-el-' + plastic.elements.length + 1;
+        $el[0].id = this.id;
     }
 
     /**
@@ -1410,8 +1422,6 @@ plastic.Element = function(el) {
     //////////////////////////////////////////
     // Element Bootstrap                    //
     //////////////////////////////////////////
-
-    this.createMessageContainer(this.$el);
 
     // Merge general options from ElementsAttributes
     this.mergeOptions();
@@ -1531,28 +1541,26 @@ plastic.Element.prototype = {
      * Helper Functin which creates a HTML Element for use as a Message Container
      * @todo $el.find unnecessary?
      */
-    createMessageContainer: function() {
+    createMessageContainer: function($el) {
         "use strict";
 
-        this.$el.css('position', 'relative');
-
-        this.$el.append('<div class="plastic-js-messages"></div>');
-        var msgEl = this.$el.find('.plastic-js-messages');
-        msgEl.width(this.$el.innerWidth());
+        $el.append('<div class="plastic-js-messages"></div>');
+        var msgEl = $el.find('.plastic-js-messages');
+        msgEl.width($el.innerWidth());
     },
 
     /**
      * Helper Functin which creates a HTML Element for use as a Display Container
      * @todo $el.find unnecessary?
      */
-    createDisplayContainer: function() {
+    createDisplayContainer: function($el) {
         "use strict";
 
-        this.$el.append('<div class="plastic-js-display"></div>');
-        var displayEl = this.$el.find('.plastic-js-display');
+        $el.append('<div class="plastic-js-display"></div>');
+        var displayEl = $el.find('.plastic-js-display');
 
-        if (this.$el.height() > 0) {
-            displayEl.height(this.$el.height());
+        if ($el.height() > 0) {
+            displayEl.height($el.height());
         } else {
             displayEl.height('auto');
         }
@@ -1563,9 +1571,10 @@ plastic.Element.prototype = {
      * Helper Functin which creates a HTML Element for use as InfoBox
      * @todo $el.find unnecessary?
      */
-    createInfoContainer: function() {
+    createInfoContainer: function($el) {
         "use strict";
-        this.$el.append('<div class="plastic-js-info"></div>');
+        $el.append('<div class="plastic-js-info"></div>');
+        $el.css('margin-bottom', '40px');
     },
 
     /**
@@ -1772,10 +1781,15 @@ plastic.Element.prototype = {
 plastic.ElementAttributes = function(pEl) {
 
 
+    /**
+     * plastic.js Element
+     *
+     * @type {{}}
+     */
     this.pEl = pEl;
 
     /**
-     * plastic.js DOM Element
+     * plastic.js jQuery DOM Element
      *
      * @type {{}}
      */
@@ -1944,9 +1958,6 @@ plastic.ElementAttributes.prototype = {
 
         /** Element CSS Style (Contains Width and Height) */
         this.style = {};
-
-        console.dir(this.pEl);
-        console.dir(this.$el);
 
         this.style.height = this.$el.height();
         this.style.width = this.$el.width();
@@ -2155,6 +2166,9 @@ plastic.msg = {
     log: function(msg, el) {
         "use strict";
         this.createLogEntry(msg, 'info', el || false);
+        if (el) {
+            console.log('[#' + el.id + '] ' + msg);
+        }
         console.log(msg);
     },
 
@@ -2491,6 +2505,18 @@ plastic.helper.duckTyping = function(data) {
 };
 
 
+/**
+ * Helper Function which acts as a facade wrapper around the Schema Validation Library
+ *
+ * The Validation Objects should follow the JSON-Schema Standard: (http://json-schema.org/)
+ * Currently it uses tv4 (https://github.com/geraintluff/tv4)
+ *
+ * @param {Object} schema   Schema object
+ * @param {Object} data     Data to validate against the schema object
+ * @param {String} [errorMessage]   Optional Error Message if Validation fails
+ *
+ * @returns {Object|boolean}
+ */
 plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     "use strict";
 

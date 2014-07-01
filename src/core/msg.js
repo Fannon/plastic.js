@@ -35,6 +35,9 @@ plastic.msg = {
     log: function(msg, el) {
         "use strict";
         this.createLogEntry(msg, 'info', el || false);
+        if (el) {
+            console.log('[#' + el.id + '] ' + msg);
+        }
         console.log(msg);
     },
 

@@ -13,10 +13,15 @@
 plastic.ElementAttributes = function(pEl) {
 
 
+    /**
+     * plastic.js Element
+     *
+     * @type {{}}
+     */
     this.pEl = pEl;
 
     /**
-     * plastic.js DOM Element
+     * plastic.js jQuery DOM Element
      *
      * @type {{}}
      */
@@ -185,9 +190,6 @@ plastic.ElementAttributes.prototype = {
 
         /** Element CSS Style (Contains Width and Height) */
         this.style = {};
-
-        console.dir(this.pEl);
-        console.dir(this.$el);
 
         this.style.height = this.$el.height();
         this.style.width = this.$el.width();

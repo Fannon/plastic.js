@@ -97,7 +97,7 @@
         </div>
 
         <h4>Data via SPARQL Query</h4>
-        <plastic id="table-sparql-query" style="height: 300px; width: 100%;">
+        <div id="table-sparql-query" class="plastic-js" style="height: 300px; width: 100%;">
 
             <script class="plastic-query" type="application/sparql-query" data-query-url="http://dbpedia.org/sparql">
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -131,16 +131,16 @@
                 }
             </script>
 
-        </plastic>
+        </div>
 
         <h4>Data via JSON File</h4>
-        <plastic id="table-json-file" style="height: 400px; width: 100%;">
+        <div id="table-json-file" class="plastic-js" style="height: 400px; width: 100%;">
 
             <script class="plastic-data" type="application/json" data-url="data/simple-default.json" data-format="simple-default"></script>
 
             <script class="plastic-display" data-display-module="simple-table" type="application/json"></script>
 
-        </plastic>
+        </div>
 
     </div>
 
