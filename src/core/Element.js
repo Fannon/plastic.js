@@ -423,7 +423,9 @@ plastic.Element.prototype = {
     displayInfoBox: function() {
         "use strict";
         var infoBox = this.$el.find('.plastic-js-info');
-        infoBox.html('Time total: ' + (this.benchmarkCompleted - this.benchmarkStart) + 'ms');
+        var html = 'Data : ' + (this.benchmarkDataLoaded - this.benchmarkStart) + 'ms | ';
+        html += 'Total: ' + (this.benchmarkCompleted - this.benchmarkStart) + 'ms';
+        infoBox.html(html);
     },
 
     /**

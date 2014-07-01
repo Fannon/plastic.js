@@ -93,6 +93,7 @@ plastic.modules.dependencyManager = {
      *
      * Dependencies to load have to be added first via .add(dependencies)
      * Triggers plastic events (loaded-)
+     *
      * Uses {@link https://github.com/rgrove/lazyload/}
      *
      * @todo Dependency Caching?
@@ -136,7 +137,7 @@ plastic.modules.dependencyManager = {
      * * jQuery Global Functions
      * * jQuery Element Functions
      *
-     * @param {string}      test
+     * @param   {string}      test
      * @returns {boolean}
      */
     missingDependency: function(test) {
