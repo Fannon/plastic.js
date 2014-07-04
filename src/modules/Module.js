@@ -134,7 +134,13 @@ plastic.modules.Module.prototype = {
 
             if (this.module.displayOptionsSchema) {
 
-                plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+                try {
+                    plastic.helper.schemaValidation(this.module.displayOptionsSchema, this.pEl.attr.display.options, 'Display Options invalid!');
+                } catch (e) {
+                    plastic.msg.error(e, this.pEl);
+                    return false;
+                }
+
 
                 // If an (optional) option is not given, inherit the default from the option schema
                 for (var propName in this.module.displayOptionsSchema.properties) {
@@ -152,7 +158,8 @@ plastic.modules.Module.prototype = {
             }
 
         } catch (e) {
-            console.error(e);
+//            console.error(e);
+            plastic.msg.error(e, this.pEl);
             // TODO: Stop Display Processing
             // TODO: Message to the User
         }

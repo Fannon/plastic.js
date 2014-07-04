@@ -18,16 +18,18 @@ plastic.modules.dependencyManager = {
      */
     registry: {
         "d3": {
-            "test": "d3",
-            "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"]
+            "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"],
+            "test": "d3"
         },
         "nvd3": {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
-            "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"]
+            "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"],
+            "test": "nv"
         },
         "dataTable": {
             "js": ["//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"],
-            "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"]
+            "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"],
+            "test": "$(document).DataTable"
         }
     },
 
@@ -75,13 +77,13 @@ plastic.modules.dependencyManager = {
     add: function(dependencyArray) {
         "use strict";
 
-        console.dir(dependencyArray);
-
         if (dependencyArray) {
             for (var i = 0; i < dependencyArray.length; i++) {
                 var depName = dependencyArray[i];
                 this.usedDeps[depName] = this.registry[depName];
             }
+        } else {
+            // TODO: Handle this case!
         }
 
     },
@@ -91,6 +93,7 @@ plastic.modules.dependencyManager = {
      *
      * Dependencies to load have to be added first via .add(dependencies)
      * Triggers plastic events (loaded-)
+     *
      * Uses {@link https://github.com/rgrove/lazyload/}
      *
      * @todo Dependency Caching?
@@ -111,10 +114,13 @@ plastic.modules.dependencyManager = {
 
             var urls = this.usedDeps[depName];
 
-            if (urls.test && !window[urls.test]) {
+            if (this.missingDependency(urls.test)) {
+
                 LazyLoad.css(urls.css, cssComplete, depName);
                 LazyLoad.js(urls.js, jsComplete, depName);
+
             } else {
+
                 jsComplete();
                 if (plastic.options.debug) {
                     plastic.msg.log('[GLOBAL] Dependency ' + depName + ' not loaded, it already exists ');
@@ -122,6 +128,60 @@ plastic.modules.dependencyManager = {
             }
 
         }
+    },
+
+    /**
+     * Checks if Dependency is already loaded. Supports three types of checks:
+     *
+     * * Global Browser Functions
+     * * jQuery Global Functions
+     * * jQuery Element Functions
+     *
+     * @param   {string}      test
+     * @returns {boolean}
+     */
+    missingDependency: function(test) {
+        "use strict";
+
+        // If no test is given, always load dependency
+        if (!test) {
+            return true;
+        }
+
+        var testString = test;
+
+        // Check for jQuery Element Plugin
+        if (test.indexOf("$(document).") > -1) {
+
+            testString = test.replace('$(document).', '');
+
+            if($(document)[testString]) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        // Check for jQuery Plugin / Function
+        if (test.indexOf("$.") > -1) {
+            testString = test.replace('$.', '');
+            if($[testString]) {
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+
+        // Test for global object / function
+        if (window[test]) {
+            return false;
+        }
+
+        // If still no test-condition is met, declare dependency as missing
+        return true;
+
+
     }
 
 };

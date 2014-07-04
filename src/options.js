@@ -17,7 +17,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    debug: true,
+    debug: false,
 
     /**
      *
@@ -33,7 +33,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    benchmark: false,
+    benchmark: true,
 
     /**
      * Width of Canvas, if not given
@@ -51,5 +51,11 @@ plastic.options = {
      * Default AJAX Timeout (in ms)
      * @type {number}
      */
-    timeout: 3000
+    timeout: 3000,
+
+    /**
+     * If true, an additional info box is shown below the plastic element
+     * This displays additional infos like execution time
+     */
+    showInfoBox: true
 };

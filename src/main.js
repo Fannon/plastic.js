@@ -111,22 +111,24 @@ plastic.execute = function() {
     var $plasticElements = $('plastic, .plastic-js');
 
 
-    // Create new plastic.Elements
+    // Create new plastic Elements
     $plasticElements.each(function() {
 
-        var el = $(this);
+        var $el = $(this);
 
         // If Debug Mode is activated: Do not use Exception handling (let it crash)
         if (plastic.options.debug) {
-            plastic.elements.push(new plastic.Element(el));
+            plastic.elements.push(new plastic.Element($el));
         } else {
-            if (plastic.options.debug) {
-                plastic.elements.push(new plastic.Element(el));
+
+            if (!plastic.options.debug) {
+                plastic.elements.push(new plastic.Element($el));
             } else {
                 try {
-                    plastic.elements.push(new plastic.Element(el));
+                    plastic.elements.push(new plastic.Element($el));
                 } catch(e) {
-                    plastic.msg.error('plastic element crashed while init', 'error', el);
+                    e.message += ' | plastic element crashed while init (creation)';
+                    plastic.msg.error(e, 'error', $el);
                 }
             }
 
@@ -137,14 +139,17 @@ plastic.execute = function() {
     // Fetch all registered Dependencies
     plastic.modules.dependencyManager.fetch();
 
-    $.each(plastic.elements, function(i, el ) {
-        if (el.options.debug) {
-            el.execute();
+    // Execute all created plastic Elements
+    $.each(plastic.elements, function(i, $el ) {
+
+        if ($el.options.debug) {
+            $el.execute();
         } else {
             try {
-                el.execute();
+                $el.execute();
             } catch(e) {
-                plastic.message.error('plastic.js Element Crash on init');
+                e.message += ' | plastic element crashed while init (execution)';
+                plastic.msg.error(e, 'error', $el);
             }
         }
 

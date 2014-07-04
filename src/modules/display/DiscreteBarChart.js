@@ -5,7 +5,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'discrete-bar-chart',
     className: 'DiscreteBarChart',
-    dependencies: ["nvd3"],
+    dependencies: ["d3", "nvd3"],
     requirements: ["data-description"]
 });
 

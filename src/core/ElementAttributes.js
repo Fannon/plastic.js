@@ -13,10 +13,15 @@
 plastic.ElementAttributes = function(pEl) {
 
 
+    /**
+     * plastic.js Element
+     *
+     * @type {{}}
+     */
     this.pEl = pEl;
 
     /**
-     * plastic.js DOM Element
+     * plastic.js jQuery DOM Element
      *
      * @type {{}}
      */
@@ -215,12 +220,12 @@ plastic.ElementAttributes.prototype = {
 
                 } catch(e) {
                     console.dir(e);
-                    plastic.msg('Invalid JSON in the Options Object!');
+                    plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
                     throw new Error(e);
                 }
 
             } else {
-                plastic.msg('Empty Obptions Element!', 'error', this.$el);
+                plastic.msg.error('Empty Obptions Element!', this.$el);
                 throw new Error('Empty Obptions Element!');
             }
 
@@ -251,7 +256,7 @@ plastic.ElementAttributes.prototype = {
                     this.display.options = options;
                 } catch(e) {
                     console.dir(e);
-                    plastic.msg('Invalid JSON in the Options Object!');
+                    plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
                     throw new Error(e);
                 }
 
@@ -260,7 +265,7 @@ plastic.ElementAttributes.prototype = {
             }
 
         } else {
-            plastic.msg('No Display Module set!', 'error', this.$el);
+            plastic.msg.error('No Display Module set!', this.$el);
             throw new Error('No Display Module set!');
         }
 
@@ -290,7 +295,7 @@ plastic.ElementAttributes.prototype = {
                 this.query = query;
 
             } else {
-                plastic.msg('Empty Query Element!', 'error', this.$el);
+                plastic.msg.error('Empty Query Element!', this.$el);
                 throw new Error('Empty Query Element!');
             }
 
@@ -312,7 +317,7 @@ plastic.ElementAttributes.prototype = {
             if (schemaString && schemaString !== '') {
                 this.data.description =  $.parseJSON(schemaString);
             } else {
-                plastic.msg('Data Description Element provided, but empty!', 'error', this.$el);
+                plastic.msg.error('Data Description Element provided, but empty!', this.$el);
             }
 
         }
@@ -345,7 +350,7 @@ plastic.ElementAttributes.prototype = {
 
                     data.raw = $.parseJSON(dataString);
                 } else {
-                    plastic.msg('Empty Data Element!', 'error', this.$el);
+                    plastic.msg.error('Empty Data Element!', this.$el);
                 }
             }
 
@@ -363,15 +368,7 @@ plastic.ElementAttributes.prototype = {
     validate: function() {
         "use strict";
 
-        var env = jjv();
-        env.addSchema('schema', this.attrObjSchema);
-        var errors = env.validate('schema', this.getAttrObj());
-
-        // validation was successful
-        if (errors) {
-            console.dir(errors);
-            throw new Error('Data Structure invalid!');
-        }
+        plastic.helper.schemaValidation(this.attrObjSchema, this.getAttrObj(), 'Element Attributes: Data Structure invalid!');
 
     }
 

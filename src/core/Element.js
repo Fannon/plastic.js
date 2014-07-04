@@ -6,12 +6,20 @@
  * @example
  * plastic.elements[i] = new plastic.Element(el);
  *
- * @param {Object} el jQuery DOM Element
+ * @param {Object} $el jQuery DOM Element
  *
  * @constructor
  */
-plastic.Element = function(el) {
+plastic.Element = function($el) {
 
+    // Create a Message container
+    this.createMessageContainer($el);
+
+    /**
+     * Current plastic Element (pEl)
+     *
+     * @type {plastic.Element}
+     */
     var self = this;
 
     //////////////////////////////////////////
@@ -19,11 +27,11 @@ plastic.Element = function(el) {
     //////////////////////////////////////////
 
     /**
-     * jQuery DOM Element
+     * This plastic elements jQuery DOM Element
      *
      * @type {{}}
      */
-    this.$el = el;
+    this.$el = $el;
 
     /**
      * HTML ID if available, otherwise auto generated ID
@@ -32,10 +40,11 @@ plastic.Element = function(el) {
     this.id = undefined;
 
     // Get / Calculate ID
-    if (el && el[0] && el[0].id) {
-        this.id = el[0].id;
+    if ($el && $el[0] && $el[0].id) {
+        this.id = $el[0].id;
     } else {
         this.id = 'plastic-el-' + plastic.elements.length + 1;
+        $el[0].id = this.id;
     }
 
     /**
@@ -173,8 +182,11 @@ plastic.Element.prototype = {
         /** Asynchronous Mode */
         var self = this;
 
-        this.createMessageContainer(this.$el);
         this.createDisplayContainer(this.$el);
+
+        if (plastic.options.showInfoBox) {
+            this.createInfoContainer(this.$el);
+        }
 
 
         //////////////////////////////////////////
@@ -248,35 +260,39 @@ plastic.Element.prototype = {
      * Helper Functin which creates a HTML Element for use as a Message Container
      * @todo $el.find unnecessary?
      */
-    createMessageContainer: function() {
+    createMessageContainer: function($el) {
         "use strict";
 
-        this.$el.css('position', 'relative');
-
-        this.$el.append('<div class="plastic-js-messages"></div>');
-        var msgEl = this.$el.find('.plastic-js-messages');
-        msgEl
-            .width(this.$el.innerWidth())
-        ;
+        $el.append('<div class="plastic-js-messages"></div>');
+        var msgEl = $el.find('.plastic-js-messages');
+        msgEl.width($el.innerWidth());
     },
 
     /**
      * Helper Functin which creates a HTML Element for use as a Display Container
      * @todo $el.find unnecessary?
      */
-    createDisplayContainer: function() {
+    createDisplayContainer: function($el) {
         "use strict";
 
-        this.$el.append('<div class="plastic-js-display"></div>');
-        var displayEl = this.$el.find('.plastic-js-display');
+        $el.append('<div class="plastic-js-display"></div>');
+        var displayEl = $el.find('.plastic-js-display');
 
-        if (this.$el.height() > 0) {
-            displayEl.height(this.$el.height());
+        if ($el.height() > 0) {
+            displayEl.height($el.height());
         } else {
             displayEl.height('auto');
         }
 
+    },
 
+    /**
+     * Helper Functin which creates a HTML Element for use as InfoBox
+     */
+    createInfoContainer: function($el) {
+        "use strict";
+        $el.append('<div class="plastic-js-info"></div>');
+        $el.css('margin-bottom', '42px'); // TODO: Make this dynamic
     },
 
     /**
@@ -302,7 +318,7 @@ plastic.Element.prototype = {
      */
     cancelProgress: function() {
         "use strict";
-        plastic.msg('plastic.js processing aborted.', 'error', this.$el);
+        plastic.msg.error('plastic.js processing aborted.', this.$el);
         // Clear all Element Events
         this.events = new plastic.helper.Events();
     },
@@ -330,6 +346,10 @@ plastic.Element.prototype = {
 
         if (this.options.benchmark) {
             this.displayBenchmark();
+        }
+
+        if (this.options.showInfoBox) {
+            this.displayInfoBox();
         }
     },
 
@@ -363,6 +383,11 @@ plastic.Element.prototype = {
         this.dependencies = (this.dependencies.concat(displayModuleInfo.dependencies));
     },
 
+    /**
+     * Merges the current plastic element options with the general options.
+     * Local settings overwrite global settings
+     * Makes a deep copy
+     */
     mergeOptions: function() {
         "use strict";
         this.options = $.extend(true, {}, plastic.options, this.attr.options);
@@ -384,12 +409,22 @@ plastic.Element.prototype = {
         for (var i = 0; i < this.benchmarkModulesLoaded.length; i++) {
             var moduleTime = this.benchmarkModulesLoaded[i];
             var moduleDiff = moduleTime - this.benchmarkStart;
-            msg += ' | MODULE-' + (i + 1) + ': ' + moduleDiff + 'ms';
+            msg += ' | DEPENDENCY ' + (i + 1) + ': ' + moduleDiff + 'ms';
         }
 
         msg += ' | TOTAL: ' + totalDiff + 'ms';
         plastic.msg.log(msg);
+    },
 
+    /**
+     * Fills the Infobox with informations about the current plastic element, for example loading time.
+     */
+    displayInfoBox: function() {
+        "use strict";
+        var infoBox = this.$el.find('.plastic-js-info');
+        var html = 'Data : ' + (this.benchmarkDataLoaded - this.benchmarkStart) + 'ms | ';
+        html += 'Total: ' + (this.benchmarkCompleted - this.benchmarkStart) + 'ms';
+        infoBox.html(html);
     },
 
     /**

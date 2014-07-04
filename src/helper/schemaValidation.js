@@ -1,8 +1,10 @@
+/* global tv4 */
+
 /**
  * Helper Function which acts as a facade wrapper around the Schema Validation Library
  *
  * The Validation Objects should follow the JSON-Schema Standard: (http://json-schema.org/)
- * Currently it uses jjv (https://github.com/acornejo/jjv)
+ * Currently it uses tv4 (https://github.com/geraintluff/tv4)
  *
  * @param {Object} schema   Schema object
  * @param {Object} data     Data to validate against the schema object
@@ -13,26 +15,28 @@
 plastic.helper.schemaValidation = function(schema, data, errorMessage) {
     "use strict";
 
-    var env = jjv();
-    env.addSchema('schema', schema);
-    var errors = env.validate('schema', data);
+    var valid = tv4.validate(data, schema);
 
-    // validation was successful
-    if (errors) {
+    if (valid) {
+        return false;
+    } else {
 
-        plastic.errors.push(errors);
-        var error;
+        if (errorMessage && tv4.error.message) {
+            errorMessage += ' ' + tv4.error.message;
 
-        if (errorMessage) {
-            error = new Error(errorMessage);
-            error.schemaValidation = errors;
-            throw error;
-        } else {
-            error = new Error('Object validation failed! Fore more informations look into the development console.');
-            error.schemaValidation = errors;
-            throw error;
+            if (tv4.error.dataPath) {
+                errorMessage += ' @' + tv4.error.dataPath;
+            }
         }
 
+        var error = new Error('Validation Error');
+        error.name = 'Validation Error';
+        error.message = errorMessage || tv4.error.message;
+        error.schemaValidation = tv4.error;
+        error.stack = (new Error()).stack;
+
+        throw error;
     }
+
 
 };

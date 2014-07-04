@@ -3,7 +3,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'advanced-table',
     className: 'AdvancedTable',
-    dependencies: []
+    dependencies: ['dataTable']
 });
 
 /**
@@ -44,8 +44,23 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
                 "type": "boolean",
                 "default": false
             },
+            "lengthMenu": {
+                "description": "Enable Pagination of Table Elements",
+                "type": "array",
+                "default": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+            },
             "searching": {
                 "description": "Enable Searching of Table Elements",
+                "type": "boolean",
+                "default": true
+            },
+            "ordering": {
+                "description": "Feature control ordering (sorting) abilities in DataTables.",
+                "type": "boolean",
+                "default": true
+            },
+            "orderMulti": {
+                "description": "Multiple column ordering ability control.",
                 "type": "boolean",
                 "default": true
             }

@@ -12,6 +12,7 @@
  * @namespace
  */
 plastic.msg = {
+
     /**
      * Log Array
      *
@@ -33,7 +34,10 @@ plastic.msg = {
      */
     log: function(msg, el) {
         "use strict";
-        this.createLogEntry(msg, 'info', el);
+        this.createLogEntry(msg, 'info', el || false);
+        if (el) {
+            console.log('[#' + el.id + '] ' + msg);
+        }
         console.log(msg);
     },
 
@@ -59,7 +63,7 @@ plastic.msg = {
      */
     warn: function(msg, el) {
         "use strict";
-        this.createLogEntry(msg, 'warning', el);
+        this.createLogEntry(msg, 'warning', el || false);
         console.warn(msg);
     },
 
@@ -74,9 +78,16 @@ plastic.msg = {
      */
     error: function (msg, el) {
 
+        var message = msg;
+
         console.error(msg);
         this.createLogEntry(msg, 'error', el);
-        this.createNotification(msg, 'error', el);
+
+        if (msg instanceof Error) {
+            message = msg.message;
+        }
+
+        this.createNotification(message, 'error', el);
 
     },
 
@@ -114,13 +125,19 @@ plastic.msg = {
      *
      * @param {string|Object}   msg     Message String or Object
      * @param {string}          type    Message Type
-     * @param {Object}          [el]    concerning plastic.js DOM element
+     * @param {Object}          [el]    concerning plastic.js DOM element or concerning plastic element
      */
     createNotification: function(msg, type, el) {
 
-        msg = this.prettyPrintJSON(msg);
+        if (el.$el) {
+            el = el.$el;
+        }
 
-        el.find('.plastic-js-messages').append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong>' + msg + '</div>');
+        if (el && el.find) {
+            var msgBox = el.find('.plastic-js-messages');
+            msgBox.append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
+        }
+
     },
 
     /**
@@ -153,7 +170,7 @@ plastic.msg = {
      */
     prettyPrintJSON: function (json) {
         if (typeof json !== 'string') {
-            json = JSON.stringify(json, undefined, 2);
+            json = JSON.stringify(json, false, 2);
         }
         json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
