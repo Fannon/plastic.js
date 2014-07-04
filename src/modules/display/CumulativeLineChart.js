@@ -91,7 +91,9 @@ plastic.modules.display.CumulativeLineChart.prototype = {
 
 //        var options = this.elAttr.display.options;
 
-        console.dir('Data: ' + data);
+        console.log('Data: ' + data.data[0]);
+
+        var mappedData = this.mapData(data);
 
         var chart = nv.models.cumulativeLineChart()
             .x(function(d) { return d.label; })
@@ -99,8 +101,6 @@ plastic.modules.display.CumulativeLineChart.prototype = {
             .color(d3.scale.category10().range())
             .useInteractiveGuideline(true)
         ;
-
-        var mappedData = this.mapData(data);
 
         chart.xAxis
             .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])

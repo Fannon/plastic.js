@@ -1,0 +1,26 @@
+{
+    "title": "plastic.js documentation",
+    "description": "Documentation of the plastic.js framework",
+
+    "plugins": ["richquotes"],
+
+    "pluginsConfig": {
+        "fontSettings": {
+            "theme": "white",
+            "family": "sans"
+        },
+        "disqus": {
+            "shortName": "plastic-js"
+        }
+    },
+
+    "links": {
+        "home": true,
+
+        "about": false,
+        "issues": false,
+        "contribute": false
+
+    },
+    "output": "../dist"
+}

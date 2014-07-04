@@ -2264,6 +2264,46 @@ plastic.msg = {
 
 
 
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
+};
+
 plastic.helper.Events = function() {
     "use strict";
 
@@ -2402,46 +2442,6 @@ plastic.helper.Events.prototype = {
             }
         }
     }
-};
-
-plastic.helper.duckTyping = function(data) {
-    "use strict";
-
-    var dataDescription = {};
-
-    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    for (var attrName in data[0]) {
-
-        var attrValue = data[0][attrName][0];
-
-        if ($.isNumeric(attrValue)) {
-
-            dataDescription[attrName] = {
-                type: "number"
-            };
-
-        } else {
-
-            dataDescription[attrName] = {
-                type: "string"
-            };
-
-            if (attrValue.indexOf("http://") > -1) {
-                dataDescription[attrName].format = "url";
-            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
-                dataDescription[attrName].format = "email";
-            } else if (attrValue.indexOf("tel:") > -1) {
-                dataDescription[attrName].format = "phone";
-            }
-
-
-        }
-
-    }
-
-    return dataDescription;
-
 };
 
 
@@ -3540,7 +3540,9 @@ plastic.modules.display.CumulativeLineChart.prototype = {
 
 //        var options = this.elAttr.display.options;
 
-        console.dir('Data: ' + data);
+        console.log('Data: ' + data.data[0]);
+
+        var mappedData = this.mapData(data);
 
         var chart = nv.models.cumulativeLineChart()
             .x(function(d) { return d.label; })
@@ -3548,8 +3550,6 @@ plastic.modules.display.CumulativeLineChart.prototype = {
             .color(d3.scale.category10().range())
             .useInteractiveGuideline(true)
         ;
-
-        var mappedData = this.mapData(data);
 
         chart.xAxis
             .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
