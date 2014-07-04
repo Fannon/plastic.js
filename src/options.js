@@ -20,11 +20,10 @@ plastic.options = {
     debug: false,
 
     /**
-     *
      * If true, plastic.js will keep a log object
-     *
      * It is stored in plastic.msg._logs and can be JSON Dumped via plastic.msg.dumpLog();
      *
+     * @type {boolean}
      */
     log: true,
 
@@ -33,7 +32,7 @@ plastic.options = {
      *
      * @type {boolean}
      */
-    benchmark: true,
+    benchmark: false,
 
     /**
      * Width of Canvas, if not given
@@ -51,11 +50,12 @@ plastic.options = {
      * Default AJAX Timeout (in ms)
      * @type {number}
      */
-    timeout: 3000,
+    timeout: 12000,
 
     /**
      * If true, an additional info box is shown below the plastic element
      * This displays additional infos like execution time
+     * @type {boolean}
      */
-    showInfoBox: true
+    showInfoBox: false
 };

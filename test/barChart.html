@@ -83,11 +83,12 @@
             PREFIX type: <http://dbpedia.org/class/yago/>
             PREFIX prop: <http://dbpedia.org/property/>
 
-            SELECT ?country_name ?population
+            SELECT ?country_name ?population ?populationCensus
             WHERE {
                 ?country a type:LandlockedCountries .
                 ?country rdfs:label ?country_name .
                 ?country prop:populationEstimate ?population .
+                ?country prop:populationCensus ?populationCensus .
 
                 FILTER (?population > 12000000 && langMatches(lang(?country_name), "en")) .
             }
@@ -102,10 +103,6 @@
             }
         </script>
 
-    </div>
-
-    <div id="chart">
-        <svg></svg>
     </div>
 
 

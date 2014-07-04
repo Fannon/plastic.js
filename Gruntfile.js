@@ -42,10 +42,10 @@ module.exports = function (grunt) {
             },
             js: {
                 src: [
+                    'bower_components/tv4/tv4.js',
+                    'bower_components/rgrove-lazyload/lazyload.js',
                     'src/main.js',
                     'src/options.js',
-                    'bower_components/rgrove-lazyload/lazyload.js',
-                    'bower_components/tv4/tv4.js',
                     'src/core/*.js',
                     'src/helper/*.js',
                     'src/modules/*.js',

@@ -213,9 +213,11 @@ plastic.ElementAttributes.prototype = {
             if (optionsString && optionsString !== '') {
 
                 try {
-                    options = $.parseJSON(optionsString);
 
-                    // SUCCESS
+                    // If JSON is escaped, unescape it
+                    optionsString = optionsString.replace(/&quot;/g, '"');
+
+                    options = $.parseJSON(optionsString);
                     this.options = options;
 
                 } catch(e) {
@@ -252,8 +254,13 @@ plastic.ElementAttributes.prototype = {
             if (optionsString && optionsString !== '') {
 
                 try {
+
+                    // If JSON is escaped, unescape it
+                    optionsString = optionsString.replace(/&quot;/g, '"');
+
                     options = $.parseJSON(optionsString);
                     this.display.options = options;
+
                 } catch(e) {
                     console.dir(e);
                     plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
@@ -315,6 +322,8 @@ plastic.ElementAttributes.prototype = {
             var schemaString = schemaElement[0].text;
 
             if (schemaString && schemaString !== '') {
+                // If JSON is escaped, unescape it
+                schemaString = schemaString.replace(/&quot;/g, '"');
                 this.data.description =  $.parseJSON(schemaString);
             } else {
                 plastic.msg.error('Data Description Element provided, but empty!', this.$el);
@@ -346,8 +355,8 @@ plastic.ElementAttributes.prototype = {
                 var dataString = dataElement[0].text;
 
                 if (dataString && dataString !== '') {
-
-
+                    // If JSON is escaped, unescape it
+                    dataString = dataString.replace(/&quot;/g, '"');
                     data.raw = $.parseJSON(dataString);
                 } else {
                     plastic.msg.error('Empty Data Element!', this.$el);
