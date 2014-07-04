@@ -45,7 +45,7 @@ module.exports = function (grunt) {
                     'src/main.js',
                     'src/options.js',
                     'bower_components/rgrove-lazyload/lazyload.js',
-                    'bower_components/jjv/lib/jjv.js',
+                    'bower_components/tv4/tv4.js',
                     'src/core/*.js',
                     'src/helper/*.js',
                     'src/modules/*.js',
