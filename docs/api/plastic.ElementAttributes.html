@@ -126,6 +126,8 @@
             
                 <li data-name="plastic.modules.dependencyManager.getDependency"><a href="plastic.modules.dependencyManager.html#getDependency">getDependency</a></li>
             
+                <li data-name="plastic.modules.dependencyManager.missingDependency"><a href="plastic.modules.dependencyManager.html#missingDependency">missingDependency</a></li>
+            
                 <li data-name="plastic.modules.dependencyManager.setDependency"><a href="plastic.modules.dependencyManager.html#setDependency">setDependency</a></li>
             
             </ul>
@@ -229,6 +231,8 @@
             
                 <li data-name="plastic.options.log"><a href="plastic.options.html#log">log</a></li>
             
+                <li data-name="plastic.options.showInfoBox"><a href="plastic.options.html#showInfoBox">showInfoBox</a></li>
+            
                 <li data-name="plastic.options.timeout"><a href="plastic.options.html#timeout">timeout</a></li>
             
                 <li data-name="plastic.options.width"><a href="plastic.options.html#width">width</a></li>
@@ -284,6 +288,8 @@
             
                 <li data-name="plastic.Element#queryModule"><a href="plastic.Element.html#queryModule">queryModule</a></li>
             
+                <li data-name="plastic.Element~self"><a href="plastic.Element.html#self">self</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -300,11 +306,17 @@
             
                 <li data-name="plastic.Element#createDisplayContainer"><a href="plastic.Element.html#createDisplayContainer">createDisplayContainer</a></li>
             
+                <li data-name="plastic.Element#createInfoContainer"><a href="plastic.Element.html#createInfoContainer">createInfoContainer</a></li>
+            
                 <li data-name="plastic.Element#createMessageContainer"><a href="plastic.Element.html#createMessageContainer">createMessageContainer</a></li>
             
                 <li data-name="plastic.Element#displayBenchmark"><a href="plastic.Element.html#displayBenchmark">displayBenchmark</a></li>
             
+                <li data-name="plastic.Element#displayInfoBox"><a href="plastic.Element.html#displayInfoBox">displayInfoBox</a></li>
+            
                 <li data-name="plastic.Element#execute"><a href="plastic.Element.html#execute">execute</a></li>
+            
+                <li data-name="plastic.Element#mergeOptions"><a href="plastic.Element.html#mergeOptions">mergeOptions</a></li>
             
                 <li data-name="plastic.Element#registerDependencies"><a href="plastic.Element.html#registerDependencies">registerDependencies</a></li>
             
@@ -338,6 +350,8 @@
                 <li data-name="plastic.ElementAttributes#display"><a href="plastic.ElementAttributes.html#display">display</a></li>
             
                 <li data-name="plastic.ElementAttributes#options"><a href="plastic.ElementAttributes.html#options">options</a></li>
+            
+                <li data-name="plastic.ElementAttributes#pEl"><a href="plastic.ElementAttributes.html#pEl">pEl</a></li>
             
                 <li data-name="plastic.ElementAttributes#query"><a href="plastic.ElementAttributes.html#query">query</a></li>
             
@@ -979,7 +993,7 @@
 <dd>
     
     <div class="description">
-        <p>plastic.js DOM Element</p>
+        <p>plastic.js jQuery DOM Element</p>
     </div>
     
     
@@ -1196,6 +1210,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="pEl">pEl<span class="type-signature type object">Object</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>plastic.js Element</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="query">query<span class="type-signature type object">Object</span> <span class="type-signature type boolean">boolean</span> </h4>
     </div>
     
@@ -1344,7 +1403,7 @@
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 138
+            core/ElementAttributes.js, line 143
         </div>
         
     </div>
@@ -1421,7 +1480,7 @@ Removes all main-attributes which are flagged with false</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 324
+            core/ElementAttributes.js, line 338
         </div>
         
     </div>
@@ -1492,7 +1551,7 @@ Removes all main-attributes which are flagged with false</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 303
+            core/ElementAttributes.js, line 315
         </div>
         
     </div>
@@ -1563,7 +1622,7 @@ Removes all main-attributes which are flagged with false</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 233
+            core/ElementAttributes.js, line 240
         </div>
         
     </div>
@@ -1634,7 +1693,7 @@ Removes all main-attributes which are flagged with false</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 196
+            core/ElementAttributes.js, line 201
         </div>
         
     </div>
@@ -1705,7 +1764,7 @@ Removes all main-attributes which are flagged with false</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 272
+            core/ElementAttributes.js, line 284
         </div>
         
     </div>
@@ -1776,7 +1835,7 @@ Removes all main-attributes which are flagged with false</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 183
+            core/ElementAttributes.js, line 188
         </div>
         
     </div>
@@ -1848,7 +1907,7 @@ They are calculated directly from the DOM Element style</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 163
+            core/ElementAttributes.js, line 168
         </div>
         
     </div>
@@ -1924,7 +1983,7 @@ They are calculated directly from the DOM Element style</p>
     
         
         <div class="tag-source">
-            core/ElementAttributes.js, line 363
+            core/ElementAttributes.js, line 377
         </div>
         
     </div>
@@ -2006,7 +2065,7 @@ They are calculated directly from the DOM Element style</p>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Jun 28 2014 15:32:10 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 04 2014 19:25:19 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>

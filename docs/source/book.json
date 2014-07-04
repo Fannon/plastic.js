@@ -2,8 +2,6 @@
     "title": "plastic.js documentation",
     "description": "Documentation of the plastic.js framework",
 
-    "output": "../dist",
-
     "plugins": [],
 
     "pluginsConfig": {

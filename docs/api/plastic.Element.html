@@ -126,6 +126,8 @@
             
                 <li data-name="plastic.modules.dependencyManager.getDependency"><a href="plastic.modules.dependencyManager.html#getDependency">getDependency</a></li>
             
+                <li data-name="plastic.modules.dependencyManager.missingDependency"><a href="plastic.modules.dependencyManager.html#missingDependency">missingDependency</a></li>
+            
                 <li data-name="plastic.modules.dependencyManager.setDependency"><a href="plastic.modules.dependencyManager.html#setDependency">setDependency</a></li>
             
             </ul>
@@ -229,6 +231,8 @@
             
                 <li data-name="plastic.options.log"><a href="plastic.options.html#log">log</a></li>
             
+                <li data-name="plastic.options.showInfoBox"><a href="plastic.options.html#showInfoBox">showInfoBox</a></li>
+            
                 <li data-name="plastic.options.timeout"><a href="plastic.options.html#timeout">timeout</a></li>
             
                 <li data-name="plastic.options.width"><a href="plastic.options.html#width">width</a></li>
@@ -284,6 +288,8 @@
             
                 <li data-name="plastic.Element#queryModule"><a href="plastic.Element.html#queryModule">queryModule</a></li>
             
+                <li data-name="plastic.Element~self"><a href="plastic.Element.html#self">self</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -300,11 +306,17 @@
             
                 <li data-name="plastic.Element#createDisplayContainer"><a href="plastic.Element.html#createDisplayContainer">createDisplayContainer</a></li>
             
+                <li data-name="plastic.Element#createInfoContainer"><a href="plastic.Element.html#createInfoContainer">createInfoContainer</a></li>
+            
                 <li data-name="plastic.Element#createMessageContainer"><a href="plastic.Element.html#createMessageContainer">createMessageContainer</a></li>
             
                 <li data-name="plastic.Element#displayBenchmark"><a href="plastic.Element.html#displayBenchmark">displayBenchmark</a></li>
             
+                <li data-name="plastic.Element#displayInfoBox"><a href="plastic.Element.html#displayInfoBox">displayInfoBox</a></li>
+            
                 <li data-name="plastic.Element#execute"><a href="plastic.Element.html#execute">execute</a></li>
+            
+                <li data-name="plastic.Element#mergeOptions"><a href="plastic.Element.html#mergeOptions">mergeOptions</a></li>
             
                 <li data-name="plastic.Element#registerDependencies"><a href="plastic.Element.html#registerDependencies">registerDependencies</a></li>
             
@@ -338,6 +350,8 @@
                 <li data-name="plastic.ElementAttributes#display"><a href="plastic.ElementAttributes.html#display">display</a></li>
             
                 <li data-name="plastic.ElementAttributes#options"><a href="plastic.ElementAttributes.html#options">options</a></li>
+            
+                <li data-name="plastic.ElementAttributes#pEl"><a href="plastic.ElementAttributes.html#pEl">pEl</a></li>
             
                 <li data-name="plastic.ElementAttributes#query"><a href="plastic.ElementAttributes.html#query">query</a></li>
             
@@ -870,7 +884,7 @@
     <div class="nameContainer">
         <h4 class="name" id="Element">
             
-            new plastic.Element<span class="signature">(el)</span>
+            new plastic.Element<span class="signature">($el)</span>
         </h4>
     
         
@@ -918,7 +932,7 @@
 	
         <tr>
             
-                <td class="name"><code>el</code></td>
+                <td class="name"><code>$el</code></td>
             
             
             <td class="type">
@@ -1017,7 +1031,7 @@
 <dd>
     
     <div class="description">
-        <p>jQuery DOM Element</p>
+        <p>This plastic elements jQuery DOM Element</p>
     </div>
     
     
@@ -1682,6 +1696,51 @@ Those are</p>
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="self"><span class="type-signature ">inner</span>self<span class="type-signature type plastic.element"><a href="plastic.Element.html">plastic.Element</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Current plastic Element (pEl)</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
     
     
@@ -1699,7 +1758,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 398
+            core/Element.js, line 433
         </div>
         
     </div>
@@ -1770,7 +1829,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 303
+            core/Element.js, line 319
         </div>
         
     </div>
@@ -1841,7 +1900,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 313
+            core/Element.js, line 329
         </div>
         
     </div>
@@ -1912,7 +1971,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 267
+            core/Element.js, line 275
         </div>
         
     </div>
@@ -1983,6 +2042,77 @@ Those are</p>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="createInfoContainer">
+            
+            createInfoContainer<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            core/Element.js, line 292
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Helper Functin which creates a HTML Element for use as InfoBox</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="createMessageContainer">
             
             createMessageContainer<span class="signature">()</span>
@@ -1990,7 +2120,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 251
+            core/Element.js, line 263
         </div>
         
     </div>
@@ -2068,7 +2198,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 374
+            core/Element.js, line 399
         </div>
         
     </div>
@@ -2132,6 +2262,77 @@ Those are</p>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="displayInfoBox">
+            
+            displayInfoBox<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            core/Element.js, line 422
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Fills the Infobox with informations about the current plastic element, for example loading time.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="execute">
             
             execute<span class="signature">()</span>
@@ -2139,7 +2340,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 171
+            core/Element.js, line 180
         </div>
         
     </div>
@@ -2203,6 +2404,79 @@ Those are</p>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="mergeOptions">
+            
+            mergeOptions<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            core/Element.js, line 391
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Merges the current plastic element options with the general options.
+Local settings overwrite global settings
+Makes a deep copy</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="registerDependencies">
             
             registerDependencies<span class="signature">()</span>
@@ -2210,7 +2484,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 342
+            core/Element.js, line 362
         </div>
         
     </div>
@@ -2289,7 +2563,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 242
+            core/Element.js, line 254
         </div>
         
     </div>
@@ -2360,7 +2634,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 285
+            core/Element.js, line 301
         </div>
         
     </div>
@@ -2431,7 +2705,7 @@ Those are</p>
     
         
         <div class="tag-source">
-            core/Element.js, line 148
+            core/Element.js, line 157
         </div>
         
     </div>
@@ -2508,7 +2782,7 @@ Those are</p>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Jun 28 2014 15:32:10 GMT+0200 (MESZ)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 04 2014 19:25:19 GMT+0200 (MESZ)
         </footer>
     </div>
 </div>
