@@ -284,6 +284,11 @@ module.exports = function (grunt) {
     grunt.registerTask('docs', [
         'content:copy', 'copy:docs',
         'content:gitbook', 'shell:gitbook',
+        'content:done'
+    ]);
+
+    grunt.registerTask('apidocs', [
+        'content:copy', 'copy:docs',
         'content:jsdoc', 'jsdoc',
         'content:done'
     ]);
