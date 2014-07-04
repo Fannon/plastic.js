@@ -5,7 +5,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'line-chart',
     className: 'CumulativeLineChart',
-    dependencies: []
+    dependencies: ["d3", "nvd3"]
 });
 
 /**

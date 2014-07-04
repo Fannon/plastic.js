@@ -5,7 +5,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'pie-chart',
     className: 'PieChart',
-    dependencies: ["nvd3"]
+    dependencies: ["d3", "nvd3"]
 });
 
 /**

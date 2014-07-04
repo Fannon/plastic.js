@@ -4290,7 +4290,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'line-chart',
     className: 'CumulativeLineChart',
-    dependencies: []
+    dependencies: ["d3", "nvd3"]
 });
 
 /**
@@ -4425,7 +4425,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'discrete-bar-chart',
     className: 'DiscreteBarChart',
-    dependencies: ["nvd3"],
+    dependencies: ["d3", "nvd3"],
     requirements: ["data-description"]
 });
 
@@ -4591,7 +4591,7 @@ plastic.modules.moduleManager.register({
     moduleType: 'display',
     apiName: 'pie-chart',
     className: 'PieChart',
-    dependencies: ["nvd3"]
+    dependencies: ["d3", "nvd3"]
 });
 
 /**

@@ -6,9 +6,6 @@
   },
   "devDependencies": {
     "jquery": "~2.1.0",
-    "d3": "~3.4.5",
-    "nvd3": "~1.1.15",
-    "jjv": "~1.0.0",
     "tv4": "*",
     "rgrove-lazyload": "*",
     "jaguarjs-jsdoc": "Fannon/jaguarjs-jsdoc"
