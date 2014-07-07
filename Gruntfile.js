@@ -211,8 +211,7 @@ module.exports = function (grunt) {
         shell: {
             sphinx: {
                 command: [
-                    'cd docs',
-                    'sphinx-build -b html source dist'
+                    'sphinx-build -a -b html docs/source docs/dist'
                 ].join('&&')
             }
         },
