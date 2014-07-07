@@ -3,11 +3,11 @@ Introduction
 
 .. contents::
    :local:
-   :depth: 1
+   :depth: 2
 
-   what
-   use
-   advanced
-   wrapper
+   introduction/what
+   introduction/use
+   introduction/advanced
+   introduction/wrapper
 
 

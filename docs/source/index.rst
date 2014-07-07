@@ -5,9 +5,10 @@ Overview:
 ^^^^^^^^^
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
+   :glob:
 
-   introduction/introduction
+   introduction/*
    queryModules/queryIntroduction
    dataModules/dataIntroduction
    displayModules/displayIntroduction
