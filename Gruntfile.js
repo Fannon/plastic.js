@@ -137,23 +137,23 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: ['bower_components/jquery/dist/jquery.min.js'],
-                        dest: 'docs/source/assets/js/jquery.min.js'
+                        dest: 'docs/source/_static/js/jquery.min.js'
                     },
                     {
                         src: ['dist/plastic.min.js'],
-                        dest: 'docs/source/assets/js/plastic.min.js'
+                        dest: 'docs/source/_static/js/plastic.min.js'
                     },
                     {
                         src: ['dist/plastic.js'],
-                        dest: 'docs/source/assets/js/plastic.js'
+                        dest: 'docs/source/_static/js/plastic.js'
                     },
                     {
                         src: ['dist/plastic.min.css'],
-                        dest: 'docs/source/assets/css/plastic.min.css'
+                        dest: 'docs/source/_static/css/plastic.min.css'
                     },
                     {
                         src: ['dist/plastic.css'],
-                        dest: 'docs/source/assets/css/plastic.css'
+                        dest: 'docs/source/_static/css/plastic.css'
                     }
                 ]
             }
@@ -209,14 +209,10 @@ module.exports = function (grunt) {
         },
 
         shell: {
-            gitbook: {
+            sphinx: {
                 command: [
-                    'gitbook build ./docs/source --output=./docs/dist'
-                ].join('&&')
-            },
-            gitbook_watch: {
-                command: [
-                    'gitbook serve ./docs/source'
+                    'cd docs',
+                    'sphinx-build -b html source dist'
                 ].join('&&')
             }
         },
@@ -257,8 +253,8 @@ module.exports = function (grunt) {
             jsdoc: {
                 text: "\n###################################################\n### GENERATING API DOCUMENTATION\n###################################################"
             },
-            gitbook: {
-                text: "\n###################################################\n### GENERATING GITBOOK DOCUMENTATION\n###################################################"
+            sphinx: {
+                text: "\n###################################################\n### GENERATING SPHINX DOCUMENTATION\n###################################################"
             },
             done: {
                 text: "\n###################################################\n### GRUNT COMPLETED \n###################################################"
@@ -271,10 +267,6 @@ module.exports = function (grunt) {
         'watch'
     ]);
 
-    grunt.registerTask('watchDocs', [
-        'shell:gitbook_watch'
-    ]);
-
     grunt.registerTask('test', [
         'content:connect', 'connect',
         'content:concat', 'concat',
@@ -283,7 +275,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docs', [
         'content:copy', 'copy:docs',
-        'content:gitbook', 'shell:gitbook',
+        'content:sphinx', 'shell:sphinx',
         'content:done'
     ]);
 
