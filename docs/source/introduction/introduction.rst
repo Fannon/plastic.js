@@ -1,14 +1,13 @@
 Introduction
 ============
 
-What is plastic.js?
-^^^^^^^^^^^^^^^^^^^
+.. contents::
+   :local:
+   :depth: 1
 
-Use plastic.js
-^^^^^^^^^^^^^^
+   what
+   use
+   advanced
+   wrapper
 
-Advanced Usage
-^^^^^^^^^^^^^^
 
-plastic.js Wrapper / Modules
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
