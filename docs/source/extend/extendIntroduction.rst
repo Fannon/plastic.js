@@ -1,10 +1,10 @@
-Exttend plastic.js
+Extend plastic.js
 ==================
 
 Introduction
 ^^^^^^^^^^^^
 
-plasti.js Architecture
+plastic.js Architecture
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Query Module
