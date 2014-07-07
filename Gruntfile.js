@@ -136,10 +136,6 @@ module.exports = function (grunt) {
             docs: {
                 files: [
                     {
-                        src: ['bower_components/jquery/dist/jquery.min.js'],
-                        dest: 'docs/source/_static/js/jquery.min.js'
-                    },
-                    {
                         src: ['dist/plastic.min.js'],
                         dest: 'docs/source/_static/js/plastic.min.js'
                     },
