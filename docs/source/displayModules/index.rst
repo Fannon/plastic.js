@@ -1,13 +1,14 @@
 Display Modules
 ===============
 
-.. contents::
-:local:
-   :depth: 1
+.. toctree::
+   :maxdepth: 2
 
-       introduction
-       use
-       advanced
-       wrapper
+   simpleTable
+   advancedTable
+   barChart
+   pieChart
+   lineChart
+
 
 
