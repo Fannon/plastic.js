@@ -3419,6 +3419,10 @@ plastic.modules.dependencyManager = {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"],
             "test": "d3"
         },
+        "c3": {
+            "js": ["http://cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.min.js"],
+            "test": "c3"
+        },
         "nvd3": {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
             "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"],
@@ -4168,9 +4172,12 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Advanced Table",
+
         "type": "object",
         "properties": {
             "tableClasses": {
+                "title": "Table Classes",
                 "description": "Table CSS Classes",
                 "type": "string",
                 "default": ""
@@ -4379,48 +4386,103 @@ plastic.modules.display.CumulativeLineChart.prototype = {
      * @returns {*}
      */
     execute: function () {
+
+        var options = this.elAttr.display.options;
+
         var data = this.elAttr.data.processed;
+        var mappedData = this.mapData(data);
 
         var svg = this.$el.append('<svg></svg>');
 
-//        var options = this.elAttr.display.options;
+        var chart = nv.models.lineChart()
+                .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
+                .useInteractiveGuideline(true)  //We want nice looking tooltips and a guideline!
+                .transitionDuration(350)  //how fast do you want the lines to transition?
+                .showLegend(true)       //Show the legend, allowing users to turn on/off line series.
+                .showYAxis(true)        //Show the y-axis
+                .showXAxis(true)        //Show the x-axis
+            ;
 
-        console.log('Data: ' + data.data[0]);
+//        chart.xAxis     //Chart x-axis settings
+//            .axisLabel('Time (ms)')
+//            .tickFormat(d3.format(',r'));
+//
+//        chart.yAxis     //Chart y-axis settings
+//            .axisLabel('Voltage (v)')
+//            .tickFormat(d3.format('.02f'));
 
-        var mappedData = this.mapData(data);
 
-        var chart = nv.models.cumulativeLineChart()
-            .x(function(d) { return d.label; })
-            .y(function(d) { return d.value; })
-            .color(d3.scale.category10().range())
-            .useInteractiveGuideline(true)
-        ;
+        d3.select(this.$el[0].children[0])    //Select the <svg> element you want to render the chart in.
+            .datum(mappedData)         //Populate the <svg> element with chart data...
+            .call(chart);          //Finally, render the chart!
 
-        chart.xAxis
-            .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
-            .tickFormat(function(d) {
-                return d3.time.format('%x')(new Date(d));
-            });
-
-        chart.yAxis
-            .tickFormat(d3.format(',.1%'));
-
-        d3.select(this.$el[0].children[0])
-            .datum(mappedData)
-            .call(chart);
-
-        nv.utils.windowResize(chart.update);
-        return chart;
+        //Update the chart when window resizes.
+        nv.utils.windowResize(function() {
+            chart.update();
+        });
 
     },
 
     mapData: function(data) {
         "use strict";
+
         var mappedData = [];
+        var dataDescription = this.elAttr.data.description;
 
+        var xAxis = this.findX(dataDescription);
 
+        for (var columnName in dataDescription ) {
+
+            var column = dataDescription[columnName];
+
+            console.log(column);
+
+            if (columnName !== xAxis && column.type === "number") {
+
+                var seriesData = {};
+                seriesData.key = columnName;
+                seriesData.values = [];
+
+                // TODO: If xAxis can be used as Timestamp or Scala, use it as X entry
+
+                for (var i = 0; i < data.length; i++) {
+                    var row = data[i];
+                    var dataEntry = {
+                        "x": i,
+                        "y": parseInt(row[columnName][0], 10)
+                    };
+                    seriesData.values.push(dataEntry);
+                }
+
+                mappedData.push(seriesData);
+            }
+        }
+
+        console.log(mappedData);
 
         return mappedData;
+    },
+
+    /**
+     * Analyzes the Data Description which column should be used as X-Axis.
+     * Fallback to first Column (which should be the x-axis anyway)
+     *
+     * @param dataDescription
+     * @returns {*}
+     */
+    findX: function (dataDescription) {
+        "use strict";
+        for (var columnName in dataDescription) {
+            var column = dataDescription[columnName];
+            if (column.type === 'string' || (column.format && column.format === 'date'))  {
+                return columnName;
+            }
+        }
+
+        for (columnName in dataDescription) {
+            return columnName;
+        }
+
     },
 
     update: function() {

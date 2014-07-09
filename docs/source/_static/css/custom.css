@@ -1,3 +1,48 @@
+h2, h3, h4, h5 {
+    margin: 16px 0 4px 0;
+}
+
+h2 {
+    border-bottom: 1px dotted #CCC;
+}
+
+hr {
+    margin: 8px 0;
+}
+
+.property-description {
+    background: #EEE;
+    padding: 4px 8px;
+    border-radius: 3px;
+    margin: 8px 0;
+}
+
+.property-description h4 {
+    margin: 2px 0 8px 0;
+}
+
+.table {
+    border-radius: 3px;
+}
+
+.table tr {
+    border: 1px solid #EEE;
+    background: #FFF;
+}
+.table td {
+    border: 1px solid #EEE;
+    padding: 2px 8px;
+}
+
+pre.highlight {
+    /*border: 1px solid #CCC;*/
+    background: #FFF;
+    padding: 4px 8px;
+    margin: 8px 0;
+    border-radius: 3px;
+    color: #777;
+}
+
 .plastic-js {
     font-size: 0.8em;
 }
