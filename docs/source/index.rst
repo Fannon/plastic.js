@@ -7,18 +7,16 @@ Overview:
 .. toctree::
    :maxdepth: 2
 
-   introduction/introduction
-   queryModules/queryIntroduction
-   dataModules/dataIntroduction
-   displayModules/displayIntroduction
-   extend/extendIntroduction
-   link/link
+   introduction/index
+   queryModules
+   dataModules
+   displayModules/index
+   extend
+   link/index
 
 
 Indices and tables
-^^^^^^^^^^^^^^^^^^
+==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
-

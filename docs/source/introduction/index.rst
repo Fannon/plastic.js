@@ -1,9 +1,8 @@
 Introduction
 ============
 
-.. contents::
-   :local:
-   :depth: 1
+.. toctree::
+   :maxdepth: 2
 
    what
    use

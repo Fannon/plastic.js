@@ -1,3 +1,5 @@
+/* global jQuery */
+
 
 /**
  * small helper function to urldecode strings
