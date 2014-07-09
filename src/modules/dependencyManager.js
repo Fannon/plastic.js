@@ -21,6 +21,10 @@ plastic.modules.dependencyManager = {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"],
             "test": "d3"
         },
+        "c3": {
+            "js": ["http://cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.min.js"],
+            "test": "c3"
+        },
         "nvd3": {
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
             "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"],
