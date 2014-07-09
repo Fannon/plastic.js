@@ -8,10 +8,10 @@ Overview:
    :maxdepth: 2
 
    introduction/index
-   queryModules
-   dataModules
+   queryModules/index
+   dataModules/index
    displayModules/index
-   extend
+   extend/index
    link/index
 
 

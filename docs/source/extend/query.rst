@@ -1,5 +1,2 @@
 Query Modules
 =============
-
-Introduction
-^^^^^^^^^^^^
