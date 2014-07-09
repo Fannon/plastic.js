@@ -1,0 +1,28 @@
+<div id="table-sparql-query" class="plastic-js" style="height: 300px; width: 100%;">
+
+    <script class="plastic-query" type="application/sparql-query" data-query-url="http://dbpedia.org/sparql">
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX type: <http://dbpedia.org/class/yago/>
+        PREFIX prop: <http://dbpedia.org/property/>
+
+        SELECT ?country_name ?population ?hdi
+        WHERE {
+            ?country a type:LandlockedCountries .
+            ?country rdfs:label ?country_name .
+            ?country prop:populationEstimate ?population .
+            ?country prop:hdi ?hdi .
+
+            FILTER (?population > 12000000 && langMatches(lang(?country_name), "en")) .
+        }
+        ORDER BY DESC(?population)
+    </script>
+
+    <script class="plastic-display" data-display-module="pie-chart" type="application/json">
+        {
+            "showLabels": false,
+            "tooltips": true
+        }
+    </script>
+
+</div>

@@ -35,24 +35,30 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Discrete Bar Chart",
+
         "type": "object",
         "properties": {
             "staggerLabels": {
+                "title": "Label Staggering",
                 "description": "Too many bars and not enough room? Try staggering labels.",
                 "type": "boolean",
                 "default": false
             },
             "tooltips": {
+                "title": "Tooltips",
                 "description": "Show tooltips",
                 "type": "boolean",
                 "default": true
             },
             "showValues": {
+                "title": "Display Values",
                 "description": "Show the bar value right on top of each bar.",
                 "type": "boolean",
                 "default": true
             },
             "transitionDuration": {
+                "title": "Transition Duration",
                 "description": "Duration of the animation in milliseconds.",
                 "type": "number",
                 "minimum": 0,
