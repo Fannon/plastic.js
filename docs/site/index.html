@@ -9,6 +9,8 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/github.css" rel="stylesheet">
+    <link href="css/plastic.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -34,30 +36,64 @@
         <a href="https://github.com/Fannon/plastic.js" target="_blank" class="btn btn-default"><i class="fa fa-github"></i> GitHub</a>
     </div>
 
-    <h2>What is plastic.js?</h2>
-    <p>plastic.js is a JavaScript framework that tries to mainstream all tasks that usually come with data representation / visualization.</p>
+    <h2>What is it about?</h2>
+    <p>
+        plastic.js is a JavaScript framework that simplifies the common tasks of data retrieval, processind and representation.
+        It is not ment to replace existing visualization / data processing libraries but to integrate them into one bigger, coherent framework.
+    </p>
+    <p>To lean more, please read into the <a href="/docs">documentation</a>!</p>
 
     <h2>Simple Example</h2>
-    <p>plastic.js is a JavaScript framework that tries to mainstream all tasks that usually come with data representation / visualization.</p>
+    <p>plastic.js is simple to use! No programming knowledge is requred, just write a HTML Embed Code to provide options and the data:</p>
+    <h4>Embed Code</h4>
+    <pre><code class="html">&lt;div id=&quot;table-ask-query&quot; class=&quot;plastic-js&quot; style=&quot;height: 280px; width: 100%;&quot;&gt;
+
+        &lt;script class=&quot;plastic-data&quot; type=&quot;application/json&quot; data-url=&quot;data/countries.json&quot; data-format=&quot;sparql-json&quot;&gt;&lt;/script&gt;
+
+        &lt;script class=&quot;plastic-display&quot; data-display-module=&quot;discrete-bar-chart&quot; type=&quot;application/json&quot;&gt;
+            {
+                &quot;staggerLabels&quot;: false,
+                &quot;tooltips&quot;: true
+            }
+        &lt;/script&gt;
+
+    &lt;/div&gt;</code></pre>
+
+    <h4>Result</h4>
+    <div id="table-ask-query" class="plastic-js" style="height: 240px; width: 100%;">
+
+        <script class="plastic-data" type="application/json" data-url="data/countries.json" data-format="sparql-json"></script>
+
+        <script class="plastic-display" data-display-module="discrete-bar-chart" type="application/json">
+            {
+                "staggerLabels": false,
+                "tooltips": true
+            }
+        </script>
+
+    </div>
 
     <h2>Gallery</h2>
     <div class="gallery">
+
         <div class="gallery-item">
             <a href="/docs/simpleTable.html"><img src="img/simpleTable.png" alt="Simple Table Display"></a>
             <div class="description">Simple Table</div>
         </div>
+
         <div class="gallery-item">
-            <img src="img/advancedTable.png" alt="Advanced Table Display">
+            <a href="/docs/simpleTable.html"><img src="img/advancedTable.png" alt="Advanced Table Display"></a>
             <div class="description">Advanced Table</div>
         </div>
 
         <div class="gallery-item">
-            <img src="..." alt="Simple Table Display">
-            <div class="description">Simple Table</div>
+            <a href="/docs/simpleTable.html"><img src="img/barChart.png" alt="Advanced Table Display"></a>
+            <div class="description">Bar Chart</div>
         </div>
+
         <div class="gallery-item">
-            <img src="..." alt="Simple Table Display">
-            <div class="description">Simple Table</div>
+            <a href="/docs/simpleTable.html"><img src="img/pieChart.png" alt="Advanced Table Display"></a>
+            <div class="description">Pie Chart</div>
         </div>
 
     </div>
@@ -71,6 +107,8 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
+<script src="js/highlight.pack.js"></script>
+<script src="js/plastic.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>

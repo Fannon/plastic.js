@@ -2,6 +2,18 @@ body {
     background: #FFF;
 }
 
+a, a:visited {
+    color: #367FC6;
+}
+
+a:hover {
+    color: #670097;
+}
+
+a.btn {
+    color: #000;
+}
+
 a:hover {
     text-decoration: none;
 }
@@ -57,11 +69,12 @@ header h4 {
     position: relative;
     width: 220px;
     height: 140px;
-    border: 1px solid #CCC;
-    margin: 4px;
+    border: 1px solid #DDD;
+    margin: 0 4px 8px 4px;
     border-radius: 3px;
     display: inline-block;
     padding: 2px;
+    overflow: hidden;
 }
 
 .gallery-item img {
@@ -76,10 +89,19 @@ header h4 {
     left: 0;
     padding: 2px 4px;
     text-align: center;
-    font-size: 0.85em;
-    color: #999;
+    font-size: 0.8em;
+    color: #FFF;
     width: 100%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.7);
+}
+
+pre {
+    padding: 0;
+    border: none;
+}
+
+.hljs {
+    padding: 8px 12px;
 }
 
 footer {
