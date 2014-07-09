@@ -1,6 +1,10 @@
 Welcome to the plastic.js documentation!
 ========================================
 
+.. image:: _static/img/logo.svg
+   :align: center
+
+
 Overview:
 ^^^^^^^^^
 
