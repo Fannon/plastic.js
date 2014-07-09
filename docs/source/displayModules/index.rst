@@ -2,7 +2,7 @@ Display Modules
 ===============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    simpleTable
    advancedTable
