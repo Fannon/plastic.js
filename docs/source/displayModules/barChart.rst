@@ -22,52 +22,8 @@ Simple Live Example
 Possible Options
 ^^^^^^^^^^^^^^^^
 
-Stagger Labels
-""""""""""""""
-| **Description:** Too many bars and not enough room? Try staggering labels.
-| **Type:** boolean
-| **Default:** false
-
-::
-
-   "staggerLabels": false
-
-Tooltips
-""""""""
-::
-
-   "tooltips": false
-| Show tooltips.
-|
-| **Type:** boolean
-| **Default:** true
-|
-|
-
-Show Values
-"""""""""""
-::
-
-   "showValues": true
-| Show the bar value right on top of each bar.
-|
-| **Type:** boolean
-| **Default:** true
-|
-|
-
-Transition Duration
-"""""""""""""""""""
-::
-
-   "transitionDuration": 350
-| Duration of the animation in milliseconds.
-|
-| **Type:** number
-| **Minimum:** 0
-| **Default:** 350
-|
-|
+.. raw:: html
+   :file: ../_includes/schemas/DiscreteBarChart.html
 
 More Advanced Examples
 ^^^^^^^^^^^^^^^^^^^^^^

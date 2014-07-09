@@ -33,7 +33,6 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
         "$schema": "http://json-schema.org/draft-04/schema#",
 
         "title": "Advanced Table",
-        "description": "Displays data as an advanced table that supports sorting, searching and paging.",
 
         "type": "object",
         "properties": {

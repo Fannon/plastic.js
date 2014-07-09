@@ -31,8 +31,9 @@ var generateDocumentation = function(schema, title) {
     var moduleName = schema.title || title;
     var description = schema.description || '';
 
-    var html = '<h3>' + moduleName + '</h3>\n';
-    html += '<p class="description">' + description + '</p>\n\n';
+    var html = '';
+//    var html = '<h3>' + moduleName + '</h3>\n';
+//    html += '<p class="description">' + description + '</p>\n\n';
 
 
     for (var propertyName in schema.properties) {
@@ -42,34 +43,39 @@ var generateDocumentation = function(schema, title) {
 
         var propertyTitle = property.title || propertyName;
 
+        html += '<div class="property-description">';
+
         html += '<h4>' + propertyTitle + '</h4>\n';
 
+        html += '<table class="table">\n';
+
+        html += '   <tr class="keyword"><td><strong>Keyword</strong></td><td>' + propertyName + '</td></tr>\n';
+
         if (property.description) {
-            html += '<p class="description"><strong>Description: </strong>' + property.description + '</p>\n';
+            html += '   <tr class="description"><td><strong>Description</strong></td><td>' + property.description + '</td></tr>\n';
         }
 
-        html += '<ul>\n';
-
-        html += '   <li class="keyword"><strong>Keyword: </strong>' + propertyName + '</li>\n';
-
         if (property.type) {
-            html += '   <li class="type"><strong>Type: </strong>' + property.type + '</li>\n';
+            html += '   <tr class="type"><td><strong>Type</strong></td><td>' + property.type + '</td></tr>\n';
         }
 
         if (property.default) {
-            html += '   <li class="default"><strong>Default: </strong>' + property.default + '</li>\n';
+            html += '   <tr class="defaul"><td><strong>Default</strong></td><td>' + property.default + '</td></tr>\n';
         }
 
         if (property.minimum) {
-            html += '   <li class="type"><strong>Minimum: </strong>' + property.minimum + '</li>\n';
+            html += '   <tr class="minimum"><td><strong>Minimum</strong></td><td>' + property.minimum + '</td></tr>\n';
         }
 
         if (property.maximum) {
-            html += '   <li class="type"><strong>Maximum: </strong>' + property.maximum + '</li>\n';
+            html += '   <tr class="maximum"><td><strong>Maximum</strong></td><td>' + property.maximum + '</td></tr>\n';
         }
 
-        html += '</ul>\n\n';
+        html += '</table>\n\n';
 
+        html += '<pre class="highlight">"' + propertyName + '": "' + property.default + '"</pre>';
+
+        html += '</div>';
     }
 
     fs.writeFileSync('../docs/source/_includes/schemas/' + moduleName + '.html', html, {flag: 'w'});

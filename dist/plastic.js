@@ -4168,9 +4168,12 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Advanced Table",
+
         "type": "object",
         "properties": {
             "tableClasses": {
+                "title": "Table Classes",
                 "description": "Table CSS Classes",
                 "type": "string",
                 "default": ""
