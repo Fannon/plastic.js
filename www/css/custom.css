@@ -163,14 +163,17 @@ footer {
     border: 1px solid #BBB;
     background: #EEE;
 }
-#plasticjs-header .description a.hover {
+#plasticjs-header .description a:hover {
     text-decoration: none;
+    background: #EEE;
 }
 #plasticjs-header img {
     margin: 4px 8px;
     width: 120px;
     height: 35px;
 }
+
+/* Move Content down */
 .container-fluid {
     padding-top: 42px;
 }

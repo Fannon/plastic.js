@@ -40,6 +40,14 @@ hr {
     font-size: 0.9em;
 }
 
+.wy-side-nav-search {
+    background: #F2F2F2;
+}
+.wy-side-nav-search input[type=text] {
+    border-radius: 0 !important;
+    border-color: #C2C2C2;
+}
+
 .wy-breadcrumbs {
     font-size: 0.85em;
     color: #555;
@@ -104,12 +112,6 @@ pre.highlight {
 }
 
 
-
-#rtd-search-form input {
-    border-radius: 0 !important;
-}
-
-/* Plasticjs Header */
 /* Plasticjs Header */
 #plasticjs-header * {
     margin: 0;
