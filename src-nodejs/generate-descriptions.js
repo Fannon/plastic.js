@@ -12,11 +12,13 @@ var processModules = [
 // Fake plastic.js object
 var plastic = {
     modules: {
-        display: {},
+        display: {
+            registry: {}
+        },
         moduleManager: {
-            register: function() {
+            register: function(moduleInfo) {
                 "use strict";
-                return false;
+                plastic.modules[moduleInfo.moduleType].registry[moduleInfo.className] = moduleInfo;
             }
         }
     }
@@ -27,21 +29,31 @@ var plastic = {
  *
  * @param schema
  */
-var generateDocumentation = function(schema, title) {
+var generateDocumentation = function(schema, moduleInfos, title) {
     "use strict";
-//    console.dir(schema);
 
-//    var moduleName = schema.title || title;
-    var description = schema.description || '';
+    var moduleName = schema.title || title;
 
     var html = '';
-//    var html = '<h3>' + moduleName + '</h3>\n';
-//    html += '<p class="description">' + description + '</p>\n\n';
+    var defaultOptions = {};
 
+    html += '<p>This example snippet contains all available options with their default values:</p>\n';
+    html += '<pre class="highlight">';
+    html += '&lt;script class="plastic-display" data-display-module="' + moduleInfos.apiName + '" type="application/json"&gt; \n';
 
     for (var propertyName in schema.properties) {
-
         var property = schema.properties[propertyName];
+        defaultOptions[propertyName] = property.default || undefined;
+    }
+    html += JSON.stringify(defaultOptions, false, 4);
+    html += '\n&lt;/script&gt\n';
+    html += '</pre>\n\n';
+
+    html += '<h4>Properties in detail:</h4>\n';
+
+    for ( propertyName in schema.properties) {
+
+        property = schema.properties[propertyName];
 
         var propertyTitle = property.title || propertyName;
 
@@ -90,13 +102,24 @@ var generateDocumentation = function(schema, title) {
 
 // Iterate all modules, and get the Display Options Schema out of it
 for (var i = 0; i < processModules.length; i++) {
+
     var moduleName = processModules[i];
+    console.log('> Generating docs from schema: ' + moduleName);
 
-    var file = fs.readFileSync('../src/modules/display/' + moduleName + '.js');
-    eval(file.toString());
-    var instance = new plastic.modules.display[moduleName]();
+    try {
 
-    generateDocumentation(instance.displayOptionsSchema, moduleName);
+        var file = fs.readFileSync('../src/modules/display/' + moduleName + '.js');
+        eval(file.toString());
+
+        var instance = new plastic.modules.display[moduleName]();
+        var moduleInfos = plastic.modules.display.registry[moduleName];
+
+        generateDocumentation(instance.displayOptionsSchema, moduleInfos, moduleName);
+
+    } catch (e) {
+        console.warn('> [ERROR] Could not process: ' + moduleName);
+    }
+
 }
 
 

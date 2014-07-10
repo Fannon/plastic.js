@@ -3,27 +3,27 @@ Advanced Table
 
 Short Description
 ^^^^^^^^^^^^^^^^^
+Generates more advanced tables that support sorting, searching and pagination.
+Several options are available to costomize those features and the appearance.
 
 Dependencies
 ^^^^^^^^^^^^
+This modules uses the DataTables Library (http://www.datatables.net/) internally.
 
-Simple Example Code
-^^^^^^^^^^^^^^^^^^^
+Example Code
+^^^^^^^^^^^^
 
 .. literalinclude:: ../_includes/advancedTable_1.html
    :language: html
 
-Simple Live Example
-^^^^^^^^^^^^^^^^^^^
+Live Example
+^^^^^^^^^^^^
 
 .. raw:: html
    :file: ../_includes/advancedTable_1.html
 
-Possible Options
-^^^^^^^^^^^^^^^^
+Available Options
+^^^^^^^^^^^^^^^^^
 
 .. raw:: html
    :file: ../_includes/schemas/AdvancedTable.html
-
-More Advanced Examples
-^^^^^^^^^^^^^^^^^^^^^^

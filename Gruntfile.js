@@ -183,8 +183,8 @@ module.exports = function (grunt) {
                 tasks: ['concat']
             },
             docs: {
-                files: 'www/docs/**/*.*',
-                tasks: ['shell:sphinx']
+                files: ['src-docs/**/*.*', 'src-nodejs/*.js'],
+                tasks: ['docs']
             },
             livereload: {
                 files: ['src/**/*.js', 'test/**/*.*', 'www/**/*.*'],

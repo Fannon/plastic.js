@@ -13,6 +13,10 @@ h2 {
     border-bottom: 1px dotted #CCC;
 }
 
+p {
+    margin-bottom: 12px;
+}
+
 hr {
     margin: 8px 0;
     border-top: 1px dashed #e1e4e5;
