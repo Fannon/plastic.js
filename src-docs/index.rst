@@ -1,11 +1,9 @@
 Welcome to the plastic.js documentation!
 ========================================
 
-Overview:
-^^^^^^^^^
-
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
    introduction/index
    queryModules/index
@@ -15,8 +13,10 @@ Overview:
    link/index
 
 
-Indices and tables
-==================
+About plastic.js:
+^^^^^^^^^^^^^^^^
+plastic.js is a JavaScript framework that simplifies the common tasks of data retrieval, processind and representation.
+It is not ment to replace existing visualization / data processing libraries but to integrate them into one bigger, coherent framework.
 
-* :ref:`genindex`
-* :ref:`search`
+About this Documentation:
+^^^^^^^^^^^^^^^^^^^^^^^^^
