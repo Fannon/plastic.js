@@ -63,7 +63,7 @@ var generateDocumentation = function(schema, title) {
         }
 
         if (property.default) {
-            html += '   <tr class="defaul"><td><strong>Default</strong></td><td>' + property.default + '</td></tr>\n';
+            html += '   <tr class="defaul"><td><strong>Default</strong></td><td>' + JSON.stringify(property.default) + '</td></tr>\n';
         }
 
         if (property.minimum) {
@@ -76,7 +76,10 @@ var generateDocumentation = function(schema, title) {
 
         html += '</table>\n\n';
 
-        html += '<pre class="highlight">"' + propertyName + '": "' + property.default + '"</pre>';
+        var example = {};
+        example[propertyName] = property.default;
+
+        html += '<pre class="highlight">' + JSON.stringify(example, false, 4) + '</pre>';
 
         html += '</div>';
     }

@@ -50,7 +50,7 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
             },
             "lengthMenu": {
                 "title": "Menu Length",
-                "description": "Set the Length of the Table Menu",
+                "description": "Sets the available number of entries in the dropdown menu. Takes an 2dim array.",
                 "type": "array",
                 "default": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
             },

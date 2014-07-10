@@ -25,17 +25,18 @@ hr {
     border-radius: 3px;
 }
 
-.table tr {
+tr {
     border: 1px solid #EEE;
     background: #FFF;
 }
-.table td {
+td {
     border: 1px solid #EEE;
     padding: 2px 8px;
 }
 
 pre.highlight {
     /*border: 1px solid #CCC;*/
+    font-size: 0.85em;
     background: #FFF;
     padding: 4px 8px;
     margin: 8px 0;
