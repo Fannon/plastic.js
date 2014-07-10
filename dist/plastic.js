@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-07-09
+/*! plastic - v0.0.4 - 2014-07-10
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 (function (global, factory) {
@@ -3013,46 +3013,6 @@ plastic.msg = {
 
 
 
-plastic.helper.duckTyping = function(data) {
-    "use strict";
-
-    var dataDescription = {};
-
-    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    for (var attrName in data[0]) {
-
-        var attrValue = data[0][attrName][0];
-
-        if ($.isNumeric(attrValue)) {
-
-            dataDescription[attrName] = {
-                type: "number"
-            };
-
-        } else {
-
-            dataDescription[attrName] = {
-                type: "string"
-            };
-
-            if (attrValue.indexOf("http://") > -1) {
-                dataDescription[attrName].format = "url";
-            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
-                dataDescription[attrName].format = "email";
-            } else if (attrValue.indexOf("tel:") > -1) {
-                dataDescription[attrName].format = "phone";
-            }
-
-
-        }
-
-    }
-
-    return dataDescription;
-
-};
-
 plastic.helper.Events = function() {
     "use strict";
 
@@ -3191,6 +3151,46 @@ plastic.helper.Events.prototype = {
             }
         }
     }
+};
+
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
 };
 
 
@@ -4183,26 +4183,31 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
                 "default": ""
             },
             "paging": {
+                "title": "Paging",
                 "description": "Enable Pagination of Table Elements",
                 "type": "boolean",
                 "default": false
             },
             "lengthMenu": {
-                "description": "Enable Pagination of Table Elements",
+                "title": "Menu Length",
+                "description": "Sets the available number of entries in the dropdown menu. Takes an 2dim array.",
                 "type": "array",
                 "default": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
             },
             "searching": {
+                "title": "Searching",
                 "description": "Enable Searching of Table Elements",
                 "type": "boolean",
                 "default": true
             },
             "ordering": {
+                "title": "Ordering",
                 "description": "Feature control ordering (sorting) abilities in DataTables.",
                 "type": "boolean",
                 "default": true
             },
             "orderMulti": {
+                "title": "Multiple Ordering",
                 "description": "Multiple column ordering ability control.",
                 "type": "boolean",
                 "default": true
@@ -4335,24 +4340,35 @@ plastic.modules.display.CumulativeLineChart = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Cumulative Line Chart",
+
         "type": "object",
         "properties": {
-//            "showLabels": {
-//                "description": "Show the labels.",
-//                "type": "boolean",
-//                "default": true
-//            },
-//            "tooltips": {
-//                "description": "Show tooltips",
-//                "type": "boolean",
-//                "default": true
-//            },
-//            "transitionDuration": {
-//                "description": "Duration of the animation in milliseconds.",
-//                "type": "number",
-//                "minimum": 0,
-//                "default": 350
-//            }
+            "useInteractiveGuideline": {
+                "title": "Interactive Guideline",
+                "description": "Show the interactive Guideline.",
+                "type": "boolean",
+                "default": true
+            },
+            "transitionDuration": {
+                "title": "Transition Duration",
+                "description": "Duration of the animation in milliseconds.",
+                "type": "number",
+                "minimum": 0,
+                "default": 350
+            },
+            "showLegend": {
+                "title": "Display Legend",
+                "description": "Show the legend, allowing users to turn on/off line series.",
+                "type": "boolean",
+                "default": true
+            },
+            "marginLeft": {
+                "title": "Left Margin",
+                "description": "Adjust chart margins to give the x-axis some breathing room.",
+                "type": "boolean",
+                "default": true
+            }
         },
         "additionalProperties": false,
         "required": []
@@ -4395,10 +4411,10 @@ plastic.modules.display.CumulativeLineChart.prototype = {
         var svg = this.$el.append('<svg></svg>');
 
         var chart = nv.models.lineChart()
-                .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
-                .useInteractiveGuideline(true)  //We want nice looking tooltips and a guideline!
-                .transitionDuration(350)  //how fast do you want the lines to transition?
-                .showLegend(true)       //Show the legend, allowing users to turn on/off line series.
+                .margin({left: options.margin})  //Adjust chart margins to give the x-axis some breathing room.
+                .useInteractiveGuideline(options.useInteractiveGuideline)  //We want nice looking tooltips and a guideline!
+                .transitionDuration(options.transitionDuration)  //how fast do you want the lines to transition?
+                .showLegend(options.showLegend)       //Show the legend, allowing users to turn on/off line series.
                 .showYAxis(true)        //Show the y-axis
                 .showXAxis(true)        //Show the x-axis
             ;
@@ -4531,21 +4547,25 @@ plastic.modules.display.DiscreteBarChart = function($el, elAttr) {
         "type": "object",
         "properties": {
             "staggerLabels": {
+                "title": "Label Staggering",
                 "description": "Too many bars and not enough room? Try staggering labels.",
                 "type": "boolean",
                 "default": false
             },
             "tooltips": {
+                "title": "Tooltips",
                 "description": "Show tooltips",
                 "type": "boolean",
                 "default": true
             },
             "showValues": {
+                "title": "Display Values",
                 "description": "Show the bar value right on top of each bar.",
                 "type": "boolean",
                 "default": true
             },
             "transitionDuration": {
+                "title": "Transition Duration",
                 "description": "Duration of the animation in milliseconds.",
                 "type": "number",
                 "minimum": 0,
@@ -4693,19 +4713,24 @@ plastic.modules.display.PieChart = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Pie Chart",
+
         "type": "object",
         "properties": {
             "showLabels": {
+                "title": "Display Labels",
                 "description": "Show the labels.",
                 "type": "boolean",
                 "default": true
             },
             "tooltips": {
+                "title": "Tooltips",
                 "description": "Show tooltips",
                 "type": "boolean",
                 "default": true
             },
             "transitionDuration": {
+                "title": "Transition Duration",
                 "description": "Duration of the animation in milliseconds.",
                 "type": "number",
                 "minimum": 0,
@@ -4902,9 +4927,12 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Simple Table",
+
         "type": "object",
         "properties": {
             "tableClasses": {
+                "title": "Table Classes",
                 "description": "Table CSS Classes",
                 "type": "string",
                 "default": ""

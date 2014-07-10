@@ -1,13 +1,40 @@
+h1 {
+    margin: 16px 0 8px 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 h2, h3, h4, h5 {
     margin: 16px 0 4px 0;
 }
 
 h2 {
+    margin: 16px 0 8px 0;
     border-bottom: 1px dotted #CCC;
 }
 
 hr {
     margin: 8px 0;
+    border-top: 1px dashed #e1e4e5;
+}
+.wy-breadcrumbs {
+    color: #777;
+    font-size: 0.85em;
+}
+
+.wy-breadcrumbs a {
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    padding: 2px 4px !important;
+    color: #555;
+}
+
+.wy-nav-content {
+    padding: 1em 2.4em;
+}
+
+.contentinfo {
+    font-size: 0.85em;
 }
 
 .property-description {
@@ -42,6 +69,10 @@ pre.highlight {
     margin: 8px 0;
     border-radius: 3px;
     color: #777;
+}
+
+.highlight-html {
+    border-radius: 3px;
 }
 
 .plastic-js {
