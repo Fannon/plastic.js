@@ -187,7 +187,7 @@ module.exports = function (grunt) {
                 tasks: ['shell:sphinx']
             },
             livereload: {
-                files: ['src/**/*.js', 'test/**/*.*', 'docs/dist/**/*.*'],
+                files: ['src/**/*.js', 'test/**/*.*', 'www/**/*.*'],
                 options: {
                     livereload: true
                 }
@@ -225,10 +225,16 @@ module.exports = function (grunt) {
             schemaDocs: {
                 command: [
                     'cd src-nodejs',
-                    'node generate-descriptions.js'
+                    'node generate-descriptions.js',
+                    'cd ..'
                 ].join('&&')
             },
             sphinx: {
+                command: [
+                    'sphinx-build -b html src-docs www/docs'
+                ].join('&&')
+            },
+            sphinxForce: {
                 command: [
                     'sphinx-build -a -b html src-docs www/docs'
                 ].join('&&')
@@ -296,7 +302,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docs', [
         'content:copy', 'copy:docs',
-        'content:sphinx', 'shell:sphinx',
+        'shell:schemaDocs',
+        'content:sphinx', 'shell:sphinxForce',
         'content:done'
     ]);
 

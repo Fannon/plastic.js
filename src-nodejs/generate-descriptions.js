@@ -40,9 +40,8 @@ var generateDocumentation = function(schema, title) {
 
 
     for (var propertyName in schema.properties) {
+
         var property = schema.properties[propertyName];
-        console.log('');
-        console.log(property);
 
         var propertyTitle = property.title || propertyName;
 
@@ -84,7 +83,7 @@ var generateDocumentation = function(schema, title) {
         html += '</div>';
     }
 
-    fs.writeFileSync('../docs/source/_includes/schemas/' + title + '.html', html, {flag: 'w'});
+    fs.writeFileSync('../src-docs/_includes/schemas/' + title + '.html', html, {flag: 'w'});
 
 };
 

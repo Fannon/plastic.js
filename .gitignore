@@ -3,4 +3,4 @@
 /bower_components/
 /www/docs/
 /www/devdocs/
-/www/devdocs/plasticjs.zip
+*.zip
