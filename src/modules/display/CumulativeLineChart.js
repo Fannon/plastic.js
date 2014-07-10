@@ -34,24 +34,35 @@ plastic.modules.display.CumulativeLineChart = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Cumulative Line Chart",
+
         "type": "object",
         "properties": {
-//            "showLabels": {
-//                "description": "Show the labels.",
-//                "type": "boolean",
-//                "default": true
-//            },
-//            "tooltips": {
-//                "description": "Show tooltips",
-//                "type": "boolean",
-//                "default": true
-//            },
-//            "transitionDuration": {
-//                "description": "Duration of the animation in milliseconds.",
-//                "type": "number",
-//                "minimum": 0,
-//                "default": 350
-//            }
+            "useInteractiveGuideline": {
+                "title": "Interactive Guideline",
+                "description": "Show the interactive Guideline.",
+                "type": "boolean",
+                "default": true
+            },
+            "transitionDuration": {
+                "title": "Transition Duration",
+                "description": "Duration of the animation in milliseconds.",
+                "type": "number",
+                "minimum": 0,
+                "default": 350
+            },
+            "showLegend": {
+                "title": "Display Legend",
+                "description": "Show the legend, allowing users to turn on/off line series.",
+                "type": "boolean",
+                "default": true
+            },
+            "marginLeft": {
+                "title": "Left Margin",
+                "description": "Adjust chart margins to give the x-axis some breathing room.",
+                "type": "boolean",
+                "default": true
+            }
         },
         "additionalProperties": false,
         "required": []
@@ -94,10 +105,10 @@ plastic.modules.display.CumulativeLineChart.prototype = {
         var svg = this.$el.append('<svg></svg>');
 
         var chart = nv.models.lineChart()
-                .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
-                .useInteractiveGuideline(true)  //We want nice looking tooltips and a guideline!
-                .transitionDuration(350)  //how fast do you want the lines to transition?
-                .showLegend(true)       //Show the legend, allowing users to turn on/off line series.
+                .margin({left: options.margin})  //Adjust chart margins to give the x-axis some breathing room.
+                .useInteractiveGuideline(options.useInteractiveGuideline)  //We want nice looking tooltips and a guideline!
+                .transitionDuration(options.transitionDuration)  //how fast do you want the lines to transition?
+                .showLegend(options.showLegend)       //Show the legend, allowing users to turn on/off line series.
                 .showYAxis(true)        //Show the y-axis
                 .showXAxis(true)        //Show the x-axis
             ;

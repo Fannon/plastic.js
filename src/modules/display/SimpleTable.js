@@ -32,9 +32,12 @@ plastic.modules.display.SimpleTable = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Simple Table",
+
         "type": "object",
         "properties": {
             "tableClasses": {
+                "title": "Table Classes",
                 "description": "Table CSS Classes",
                 "type": "string",
                 "default": ""

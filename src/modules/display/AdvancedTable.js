@@ -43,26 +43,31 @@ plastic.modules.display.AdvancedTable = function($el, elAttr) {
                 "default": ""
             },
             "paging": {
+                "title": "Paging",
                 "description": "Enable Pagination of Table Elements",
                 "type": "boolean",
                 "default": false
             },
             "lengthMenu": {
-                "description": "Enable Pagination of Table Elements",
+                "title": "Menu Length",
+                "description": "Set the Length of the Table Menu",
                 "type": "array",
                 "default": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
             },
             "searching": {
+                "title": "Searching",
                 "description": "Enable Searching of Table Elements",
                 "type": "boolean",
                 "default": true
             },
             "ordering": {
+                "title": "Ordering",
                 "description": "Feature control ordering (sorting) abilities in DataTables.",
                 "type": "boolean",
                 "default": true
             },
             "orderMulti": {
+                "title": "Multiple Ordering",
                 "description": "Multiple column ordering ability control.",
                 "type": "boolean",
                 "default": true

@@ -2,8 +2,11 @@ var fs = require('fs');
 
 // Modules to process
 var processModules = [
+    "SimpleTable",
     "AdvancedTable",
-    "DiscreteBarChart"
+    "DiscreteBarChart",
+    "PieChart",
+    "CumulativeLineChart"
 ];
 
 // Fake plastic.js object
@@ -28,7 +31,7 @@ var generateDocumentation = function(schema, title) {
     "use strict";
 //    console.dir(schema);
 
-    var moduleName = schema.title || title;
+//    var moduleName = schema.title || title;
     var description = schema.description || '';
 
     var html = '';
@@ -78,7 +81,7 @@ var generateDocumentation = function(schema, title) {
         html += '</div>';
     }
 
-    fs.writeFileSync('../docs/source/_includes/schemas/' + moduleName + '.html', html, {flag: 'w'});
+    fs.writeFileSync('../docs/source/_includes/schemas/' + title + '.html', html, {flag: 'w'});
 
 };
 

@@ -34,19 +34,24 @@ plastic.modules.display.PieChart = function($el, elAttr) {
 
         "$schema": "http://json-schema.org/draft-04/schema#",
 
+        "title": "Pie Chart",
+
         "type": "object",
         "properties": {
             "showLabels": {
+                "title": "Display Labels",
                 "description": "Show the labels.",
                 "type": "boolean",
                 "default": true
             },
             "tooltips": {
+                "title": "Tooltips",
                 "description": "Show tooltips",
                 "type": "boolean",
                 "default": true
             },
             "transitionDuration": {
+                "title": "Transition Duration",
                 "description": "Duration of the animation in milliseconds.",
                 "type": "number",
                 "minimum": 0,
