@@ -17,16 +17,25 @@ hr {
     margin: 8px 0;
     border-top: 1px dashed #e1e4e5;
 }
+
+
 .wy-breadcrumbs {
-    color: #777;
-    font-size: 0.85em;
+    color: #555;
+    font-size: 1.4em;
+    font-weight: 700;
+    font-family: "Roboto Slab","ff-tisa-web-pro","Georgia",Arial,sans-serif;
 }
 
 .wy-breadcrumbs a {
     border: 1px solid #CCC;
     border-radius: 3px;
-    padding: 2px 4px !important;
-    color: #555;
+    padding: 2px 8px !important;
+    color: #777;
+    background: #FFF;
+}
+
+.rst-content h1 {
+    display: none;
 }
 
 .wy-nav-content {
