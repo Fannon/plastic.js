@@ -1,5 +1,5 @@
 .idea
 /node_modules/
 /bower_components/
-/docs/api/
-/docs/dist/
+/www/docs/
+/www/devdocs/

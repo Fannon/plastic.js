@@ -26,11 +26,11 @@ module.exports = function (grunt) {
             dist: [
                 'dist/*'
             ],
-            apidoc: [
-                'docs/api/*'
+            devdocs: [
+                'www/devdocs/*'
             ],
             doc: [
-                'docs/dist/*'
+                'www/docs/*'
             ]
         },
 
@@ -133,23 +133,31 @@ module.exports = function (grunt) {
 
         /** Copies Files */
         copy: {
+            site: {
+                files: [
+                    {
+                        src: ['dist/plasticjs.zip'],
+                        dest: 'www/plastic.js.zip'
+                    }
+                ]
+            },
             docs: {
                 files: [
                     {
                         src: ['dist/plastic.min.js'],
-                        dest: 'docs/source/_static/js/plastic.min.js'
+                        dest: 'www/docs/_static/js/plastic.min.js'
                     },
                     {
                         src: ['dist/plastic.js'],
-                        dest: 'docs/source/_static/js/plastic.js'
+                        dest: 'www/docs/_static/js/plastic.js'
                     },
                     {
                         src: ['dist/plastic.min.css'],
-                        dest: 'docs/source/_static/css/plastic.min.css'
+                        dest: 'www/docs/_static/css/plastic.min.css'
                     },
                     {
                         src: ['dist/plastic.css'],
-                        dest: 'docs/source/_static/css/plastic.css'
+                        dest: 'www/docs/_static/css/plastic.css'
                     }
                 ]
             }
@@ -178,7 +186,7 @@ module.exports = function (grunt) {
                 tasks: ['concat']
             },
             docs: {
-                files: 'docs/source/**/*.*',
+                files: 'www/docs/**/*.*',
                 tasks: ['shell:sphinx']
             },
             livereload: {
@@ -199,7 +207,7 @@ module.exports = function (grunt) {
             api : {
                 src : ['src/**/**.js', 'README.md'],
                 options : {
-                    destination : 'docs/api',
+                    destination : 'www/devdocs',
                     template : "bower_components/jaguarjs-jsdoc",
                     configure : "jsdoc.conf.json"
                 }
@@ -217,9 +225,15 @@ module.exports = function (grunt) {
         },
 
         shell: {
+            schemaDocs: {
+                command: [
+                    'cd src-nodejs',
+                    'node generate-descriptions.js'
+                ].join('&&')
+            },
             sphinx: {
                 command: [
-                    'sphinx-build -a -b html docs/source docs/dist'
+                    'sphinx-build -a -b html src-docs www/docs'
                 ].join('&&')
             }
         },
@@ -263,6 +277,9 @@ module.exports = function (grunt) {
             sphinx: {
                 text: "\n###################################################\n### GENERATING SPHINX DOCUMENTATION\n###################################################"
             },
+            zip: {
+                text: "\n###################################################\n### ZIPPING PROJECT \n###################################################"
+            },
             done: {
                 text: "\n###################################################\n### GRUNT COMPLETED \n###################################################"
             }
@@ -286,7 +303,7 @@ module.exports = function (grunt) {
         'content:done'
     ]);
 
-    grunt.registerTask('apidocs', [
+    grunt.registerTask('devdocs', [
         'content:copy', 'copy:docs',
         'content:jsdoc', 'jsdoc',
         'content:done'
@@ -300,6 +317,7 @@ module.exports = function (grunt) {
         'content:cssmin', 'cssmin',
         'content:sizediff', 'sizediff',
         'content:copy', 'copy',
+        'content:zip', 'compress',
         'content:done'
     ]);
 };
