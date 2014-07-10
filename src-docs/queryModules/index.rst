@@ -2,6 +2,13 @@ Query Modules
 =============
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 1
+    :hidden:
 
-   ask
+    sparql
+    ask
+
+Description
+^^^^^^^^^^^
+Query modules fetch data from (remote) databases or APIs.
+The returned data must be compatible to one of the available data modules.

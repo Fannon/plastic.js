@@ -1,0 +1,7 @@
+Simple Default
+==============
+
+Description
+^^^^^^^^^^^
+This is a simplified version of the default data format that is used internally.
+

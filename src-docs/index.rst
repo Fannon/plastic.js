@@ -16,7 +16,7 @@ Welcome to the plastic.js documentation!
 About plastic.js:
 ^^^^^^^^^^^^^^^^^
 
-plastic.js is a JavaScript framework that simplifies the common tasks of data retrieval, processind and representation.
+plastic.js is a JavaScript framework that simplifies the common tasks of data retrieval, processing and representation.
 It is not ment to replace existing visualization / data processing libraries but to integrate them into one bigger, coherent framework.
 
 About this Documentation:
