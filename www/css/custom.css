@@ -130,3 +130,47 @@ footer {
     padding: 3px;
     border-top: 1px dotted #CCC;
 }
+
+
+/* Plasticjs Header */
+#plasticjs-header * {
+    margin: 0;
+    padding: 0;
+}
+#plasticjs-header {
+    position: fixed;
+    z-index: 999;
+    height: 42px;
+    background: #FFF;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    width: 100%;
+    overflow: hidden;
+}
+#plasticjs-header .description {
+    display: inline;
+    color: #999;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+#plasticjs-header .description a {
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    padding: 3px 6px !important;
+    color: #777;
+    background: #FFF;
+}
+#plasticjs-header .description a.active {
+    border: 1px solid #BBB;
+    background: #EEE;
+}
+#plasticjs-header .description a.hover {
+    text-decoration: none;
+}
+#plasticjs-header img {
+    margin: 4px 8px;
+    width: 120px;
+    height: 35px;
+}
+.container-fluid {
+    padding-top: 42px;
+}

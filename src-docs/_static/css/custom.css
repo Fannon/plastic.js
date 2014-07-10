@@ -1,16 +1,30 @@
+h1, h2, h3, h4, h5 {
+    margin: 16px 0 4px 0;
+    font-family: 'Titillium Web', "Arial", sans-serif;
+    font-weight: 300;
+}
+
 h1 {
     margin: 16px 0 8px 0;
     text-align: center;
     text-transform: uppercase;
-}
-
-h2, h3, h4, h5 {
-    margin: 16px 0 4px 0;
+    font-weight: 600;
+    font-size: 2.2rem;
+    line-height: 2.6rem;
 }
 
 h2 {
     margin: 16px 0 8px 0;
     border-bottom: 1px dotted #CCC;
+    font-size: 1.8rem;
+}
+
+h3 {
+    font-size: 1.6rem;
+}
+
+h4 {
+    font-size: 1.4rem;
 }
 
 p {
@@ -22,6 +36,9 @@ hr {
     border-top: 1px dashed #e1e4e5;
 }
 
+.wy-nav-side {
+    font-size: 0.9em;
+}
 
 .wy-breadcrumbs {
     font-size: 0.85em;
@@ -85,11 +102,19 @@ pre.highlight {
 .plastic-js {
     font-size: 0.8em;
 }
+
+
+
 #rtd-search-form input {
     border-radius: 0 !important;
 }
 
 /* Plasticjs Header */
+/* Plasticjs Header */
+#plasticjs-header * {
+    margin: 0;
+    padding: 0;
+}
 #plasticjs-header {
     position: fixed;
     z-index: 999;
@@ -99,20 +124,28 @@ pre.highlight {
     width: 100%;
     overflow: hidden;
 }
-
-#plasticjs-header h1 {
-    display: inline;
-}
-
-
 #plasticjs-header .description {
     display: inline;
     color: #999;
-    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
 }
-
+#plasticjs-header .description a {
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    padding: 3px 6px !important;
+    color: #777;
+    background: #FFF;
+}
+#plasticjs-header .description a.active {
+    border: 1px solid #BBB;
+    background: #EEE;
+}
+#plasticjs-header .description a.hover {
+    text-decoration: none;
+}
 #plasticjs-header img {
-    margin-left: 8px;
+    margin: 4px 8px;
     width: 120px;
     height: 35px;
 }
