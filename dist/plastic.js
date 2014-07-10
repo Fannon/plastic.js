@@ -1,4 +1,4 @@
-/*! plastic - v0.0.4 - 2014-07-10
+/*! plastic - v0.1.0 - 2014-07-10
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 (function (global, factory) {
@@ -1779,7 +1779,7 @@ var plastic = {
      * Version Number
      * @type String
      */
-    version: '0.0.5',
+    version: '0.1.0',
 
     /**
      * Array which holds all the plastic.js Elements

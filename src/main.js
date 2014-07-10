@@ -24,7 +24,7 @@ var plastic = {
      * Version Number
      * @type String
      */
-    version: '0.0.5',
+    version: '0.1.0',
 
     /**
      * Array which holds all the plastic.js Elements

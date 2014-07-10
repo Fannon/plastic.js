@@ -135,10 +135,7 @@ module.exports = function (grunt) {
         copy: {
             site: {
                 files: [
-                    {
-                        src: ['dist/plasticjs.zip'],
-                        dest: 'www/plastic.js.zip'
-                    }
+
                 ]
             },
             docs: {
@@ -166,7 +163,7 @@ module.exports = function (grunt) {
         compress: {
             dist: {
                 options: {
-                    archive: 'dist/plasticjs.zip',
+                    archive: 'www/plasticjs.zip',
                     pretty: true
                 },
                 files: [
@@ -304,7 +301,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('devdocs', [
-        'content:copy', 'copy:docs',
+        'content:copy', 'copy:docs', 'copy:site',
         'content:jsdoc', 'jsdoc',
         'content:done'
     ]);
@@ -318,6 +315,8 @@ module.exports = function (grunt) {
         'content:sizediff', 'sizediff',
         'content:copy', 'copy',
         'content:zip', 'compress',
+        'docs',
+        'devdocs',
         'content:done'
     ]);
 };
