@@ -155,6 +155,18 @@ module.exports = function (grunt) {
             }
         },
 
+        compress: {
+            dist: {
+                options: {
+                    archive: 'dist/plasticjs.zip',
+                    pretty: true
+                },
+                files: [
+                    {src: ['dist/*'], filter: 'isFile'}
+                ]
+            }
+        },
+
         /** Watches for Filesystem Changes and triggers specific tasks */
         watch: {
             gruntfile: {

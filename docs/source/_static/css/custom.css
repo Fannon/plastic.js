@@ -49,3 +49,35 @@ pre.highlight {
 #rtd-search-form input {
     border-radius: 0 !important;
 }
+
+/* Plasticjs Header */
+#plasticjs-header {
+    position: fixed;
+    z-index: 999;
+    height: 42px;
+    background: #FFF;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    width: 100%;
+    overflow: hidden;
+}
+
+#plasticjs-header h1 {
+    display: inline;
+}
+
+
+#plasticjs-header .description {
+    display: inline;
+    color: #999;
+    font-size: 1rem;
+}
+
+#plasticjs-header img {
+    margin-left: 8px;
+    width: 120px;
+    height: 35px;
+}
+
+.wy-grid-for-nav, nav.stickynav {
+    top: 42px;
+}

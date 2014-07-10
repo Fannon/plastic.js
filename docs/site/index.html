@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <!-- META TAGS -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>plastic.js</title>
 
-    <!-- Bootstrap -->
+    <!-- META DESCRIPTION -->
+    <title>plastic.js</title>
+    <meta name="description" content="plastic.js is a JavaScript Framework to streamline the process of data retrieval, processing and representation/visualization" />
+    <meta name="robots" content="index" />
+    <meta name="Author" content="Simon Heimler" />
+    <meta name="Keywords" content="plastic, plasticjs, JavaScript, data, visualization, visualisation, data, data representation, sparql, ask, semantic web, representation" />
+
+   <meta property="og:title" content="plastic.js - a data representation framework for JavaScript" />
+   <meta property="og:url" content="http://www.plasticjs.org/" />
+   <meta property="og:site_name" content="plastic.js"/>
+   <meta property="og:description" content="plastic.js is a JavaScript Framework to streamline the process of data retrieval, processing and representation/visualization" />
+   <meta property="og:image" content="http://www.plasticjs.org/img/plasticjs-square.png" />
+
+    <!-- STYLE -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/github.css" rel="stylesheet">
     <link href="css/plastic.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,13 +37,17 @@
 </head>
 <body>
 
-
 <div class="container-fluid">
+
+
+    <!-- HEADER -->
     <header>
-        <h1 align="center"><img id="logo" src="img/logo.svg"></h1>
+        <h1 align="center"><img id="logo" src="img/plasticjs.png"></h1>
         <h4 align="center">A JavaScript Data Representation Framework</h4>
     </header>
 
+
+    <!-- TOP MENU -->
     <div align="center" class="top-menu">
         <a href="/plasticjs.zip" class="btn btn-default"><i class="fa fa-download"></i> Download</a>
         <a href="/docs" class="btn btn-default"><i class="fa fa-book"></i> Documentation</a>
@@ -36,6 +55,8 @@
         <a href="https://github.com/Fannon/plastic.js" target="_blank" class="btn btn-default"><i class="fa fa-github"></i> GitHub</a>
     </div>
 
+
+    <!-- ABOUT PLASTIC.JS -->
     <h2>What is it about?</h2>
     <p>
         plastic.js is a JavaScript framework that simplifies the common tasks of data retrieval, processind and representation.
@@ -43,57 +64,66 @@
     </p>
     <p>To learn more, please read into the <a href="/docs">documentation</a>!</p>
 
-    <h2>Simple Example</h2>
-    <p>plastic.js is simple to use! No programming knowledge is requred, just write a HTML Embed Code to provide options and the data:</p>
-    <h4>Embed Code</h4>
-    <pre><code class="html">&lt;div id=&quot;table-ask-query&quot; class=&quot;plastic-js&quot; style=&quot;height: 280px; width: 100%;&quot;&gt;
 
-        &lt;script class=&quot;plastic-data&quot; type=&quot;application/json&quot; data-url=&quot;data/countries.json&quot; data-format=&quot;sparql-json&quot;&gt;&lt;/script&gt;
+    <!-- FEATURES -->
+    <h2>Features</h2>
 
-        &lt;script class=&quot;plastic-display&quot; data-display-module=&quot;discrete-bar-chart&quot; type=&quot;application/json&quot;&gt;
-            {
-                &quot;staggerLabels&quot;: false,
-                &quot;tooltips&quot;: true
-            }
-        &lt;/script&gt;
+    <h4>General</h4>
+    <ul class="fa-ul">
+        <li><i class="fa-li fa fa-angle-double-right"></i>Open Source at <a href="https://github.com/Fannon/plastic.js">GitHub</a></li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Modular architecture that is easy to extend</li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Asynchronous architecture that loads and displays the data independent from the rest of your site</li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Platform independend, works in all modern Browsers!</li>
+    </ul>
 
-    &lt;/div&gt;</code></pre>
+    <h4>Data Retrieval</h4>
+    <ul class="fa-ul">
+        <li><i class="fa-li fa fa-angle-double-right"></i>Quering data from remote APIs and databases! SPARQL and SemanticMediaWikis are supported.</li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Load data from files in various formats</li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Directly embed your data into the plastic tag</li>
+    </ul>
 
-    <h4>Result</h4>
-    <div id="table-ask-query" class="plastic-js" style="height: 240px; width: 100%;">
+    <h4>Data Processing</h4>
+    <ul class="fa-ul">
+        <li><i class="fa-li fa fa-angle-double-right"></i>Support for various data formats </li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Provides a simple and an advanced default data format</li>
+    </ul>
 
-        <script class="plastic-data" type="application/json" data-url="data/countries.json" data-format="sparql-json"></script>
+    <h4>Data Display</h4>
+    <ul class="fa-ul">
+        <li><i class="fa-li fa fa-angle-double-right"></i>Several Display modules that rely on already existing and mature libraries</li>
+        <li><i class="fa-li fa fa-angle-double-right"></i>Lazy loads additional dependencies for you automatically</li>
+    </ul>
 
-        <script class="plastic-display" data-display-module="discrete-bar-chart" type="application/json">
-            {
-                "staggerLabels": false,
-                "tooltips": true
-            }
-        </script>
 
-    </div>
-
+    <!-- GALLERY -->
     <h2>Gallery</h2>
+    <p>Check out some of the (live) examples with documentation below:</p>
     <div class="gallery">
 
         <div class="gallery-item">
-            <a href="/docs/simpleTable.html"><img src="img/simpleTable.png" alt="Simple Table Display"></a>
+            <a href="/docs/displayModules/simpleTable.html"><img src="img/simpleTable.png" alt="Simple Table Display"></a>
             <div class="description">Simple Table</div>
         </div>
 
         <div class="gallery-item">
-            <a href="/docs/simpleTable.html"><img src="img/advancedTable.png" alt="Advanced Table Display"></a>
+            <a href="/docs/displayModules/advancedTable.html"><img src="img/advancedTable.png" alt="Advanced Table Display"></a>
             <div class="description">Advanced Table</div>
         </div>
 
         <div class="gallery-item">
-            <a href="/docs/simpleTable.html"><img src="img/barChart.png" alt="Advanced Table Display"></a>
+            <a href="/docs/displayModules/barChart.html"><img src="img/barChart.png" alt="Advanced Table Display"></a>
             <div class="description">Bar Chart</div>
         </div>
 
         <div class="gallery-item">
-            <a href="/docs/simpleTable.html"><img src="img/pieChart.png" alt="Advanced Table Display"></a>
+            <a href="/docs/displayModules/pieChart.html"><img src="img/pieChart.png" alt="Advanced Table Display"></a>
             <div class="description">Pie Chart</div>
+        </div>
+
+        <div class="gallery-item">
+            <a href="/docs/displayModules/lineChart.html"><img src="img/lineChart.png" alt="Line Chart"></a>
+            <div class="description">Line Chart</div>
         </div>
 
     </div>
