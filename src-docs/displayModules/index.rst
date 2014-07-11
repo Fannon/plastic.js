@@ -12,6 +12,6 @@ Display Modules
     lineChart
 
 Description
-^^^^^^^^^^^
+'''''''''''
 Display modules are turning the data into something visible.
 There can be very different kinds of results, ranging from simple tables to complex and interactive visualizations.

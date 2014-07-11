@@ -4,7 +4,7 @@ Advanced Table
 Short Description
 ^^^^^^^^^^^^^^^^^
 Generates more advanced tables that support sorting, searching and pagination.
-Several options are available to costomize those features and the appearance.
+Several options are available to customize those features and the appearance.
 
 Dependencies
 ^^^^^^^^^^^^
