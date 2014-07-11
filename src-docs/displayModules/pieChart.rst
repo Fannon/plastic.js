@@ -12,14 +12,14 @@ Example Code
    :language: html
 
 
-Example Data
-------------
-
-
 Live Example
 ------------
 .. raw:: html
    :file: ../_includes/display/PieChart_example.html
+
+
+Example Data
+------------
 
 
 Dependencies

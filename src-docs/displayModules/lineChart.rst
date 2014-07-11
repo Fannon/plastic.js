@@ -4,17 +4,20 @@ Line Chart
 Short Description
 -----------------
 
-
-Simple Example Code
--------------------
+Example Code
+------------
 .. literalinclude:: ../_includes/display/CumulativeLineChart_example.html
     :language: html
 
 
-Simple Live Example
--------------------
+Live Example
+------------
 .. raw:: html
     :file: ../_includes/display/CumulativeLineChart_example.html
+
+
+Example Data
+------------
 
 
 Dependencies
