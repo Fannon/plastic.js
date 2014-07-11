@@ -6,9 +6,9 @@ Extend plastic.js
     :hidden:
 
     architecture
-    query
-    data
     display
+    data
+    query
 
 
 Contributing to plastic.js

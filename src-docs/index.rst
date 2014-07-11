@@ -6,9 +6,9 @@ Welcome to the plastic.js documentation!
     :hidden:
 
     introduction/index
-    queryModules/index
-    dataModules/index
     displayModules/index
+    dataModules/index
+    queryModules/index
     extend/index
 
 About plastic.js:
