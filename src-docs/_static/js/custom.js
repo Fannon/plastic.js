@@ -1,5 +1,13 @@
 /* global jQuery */
 
+$(document).ready(function() {
+    $('.wy-menu a.internal').each(function( index ) {
+        var href = $(this).attr('href');
+        if (href.indexOf("#") >= 0) {
+            $(this).hide();
+        }
+    });
+});
 
 /**
  * small helper function to urldecode strings

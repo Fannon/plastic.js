@@ -9,6 +9,6 @@ Query Modules
     ask
 
 Description
-^^^^^^^^^^^
+-----------
 Query modules fetch data from (remote) databases or APIs.
 The returned data must be compatible to one of the available data modules.

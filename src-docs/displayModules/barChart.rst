@@ -27,6 +27,8 @@ Simple Live Example
 Possible Options
 ^^^^^^^^^^^^^^^^
 
+.. include:: ../_includes/display/DiscreteBarChart_snippet.rst
+
 .. raw:: html
-   :file: ../_includes/schemas/DiscreteBarChart.html
+    :file: ../_includes/display/DiscreteBarChart_options.html
 
