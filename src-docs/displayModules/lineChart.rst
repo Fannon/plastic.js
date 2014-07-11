@@ -3,6 +3,8 @@ Line Chart
 
 Short Description
 -----------------
+The Line Chart displays one or multiple data series as a line in a grid.
+An interactive guideline helps to read the exact value.
 
 Example Code
 ------------

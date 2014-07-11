@@ -3,7 +3,7 @@ Pie Chart
 
 Short Description
 -----------------
-This module features a simple Pie Chart diagram. It uses some animations and provides some options.
+This module features a simple pie chart diagram. It uses some animations and provides some customization options.
 
 
 Example Code

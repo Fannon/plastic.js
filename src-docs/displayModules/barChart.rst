@@ -4,6 +4,9 @@ Bar Chart
 Short Description
 -----------------
 
+The Bar Chart Display Module uses vertical bars to show comparisons among categories.
+Several options are available to customize the appearance of the chart.
+
 
 Example Code
 ------------
