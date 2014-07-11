@@ -21,6 +21,7 @@ Live Example
 Example Data
 ------------
 
+Link to the JSON file - `click here. <http://www.plasticjs.org/docs/_static/data/countries.json>`_
 
 Dependencies
 ------------
