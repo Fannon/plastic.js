@@ -2244,6 +2244,8 @@ plastic.Element.prototype = {
             displayEl.height('auto');
         }
 
+        displayEl.html('<div class="spinner"></div>');
+
     },
 
     /**
@@ -3281,6 +3283,7 @@ plastic.modules.Module = function(pEl, type, name) {
     // Specific case handling for each module-type
     if (type === 'display') {
         var $el = $(pEl.$el.find('.plastic-js-display')[0]);
+        $el.html('');
         this.module = new Module($el, pEl.attr);
         this.execute();
 

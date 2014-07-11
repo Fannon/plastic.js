@@ -37,3 +37,39 @@
     color: #777;
     display: block;
 }
+
+
+/* Loading Box */
+.spinner {
+    height:32px;
+    width:32px;
+    margin: 4px auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    -webkit-animation: rotation 2s infinite linear;
+    -moz-animation: rotation 2s infinite linear;
+    -o-animation: rotation 2s infinite linear;
+    animation: rotation 2s infinite linear;
+    border-top: 4px solid #B400C5;
+    border-right: 4px solid #2758B5;
+    border-bottom: 4px solid #42A0A1;
+    border-left: 4px solid #A0D349;
+    border-radius:100%;
+}
+@-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(359deg);}
+}
+@-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(359deg);}
+}
+@-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(359deg);}
+}
+@keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+}

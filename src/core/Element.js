@@ -284,6 +284,8 @@ plastic.Element.prototype = {
             displayEl.height('auto');
         }
 
+        displayEl.html('<div class="spinner"></div>');
+
     },
 
     /**
