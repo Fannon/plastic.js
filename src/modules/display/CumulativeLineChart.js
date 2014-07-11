@@ -145,8 +145,6 @@ plastic.modules.display.CumulativeLineChart.prototype = {
 
             var column = dataDescription[columnName];
 
-            console.log(column);
-
             if (columnName !== xAxis && column.type === "number") {
 
                 var seriesData = {};
@@ -157,9 +155,10 @@ plastic.modules.display.CumulativeLineChart.prototype = {
 
                 for (var i = 0; i < data.length; i++) {
                     var row = data[i];
+//                    console.dir(row[columnName][0]);
                     var dataEntry = {
                         "x": i,
-                        "y": parseInt(row[columnName][0], 10)
+                        "y": row[columnName][0]
                     };
                     seriesData.values.push(dataEntry);
                 }
@@ -167,8 +166,6 @@ plastic.modules.display.CumulativeLineChart.prototype = {
                 mappedData.push(seriesData);
             }
         }
-
-        console.log(mappedData);
 
         return mappedData;
     },

@@ -173,8 +173,15 @@ plastic.modules.data.SparqlJson.prototype = {
             var row = this.dataObj.raw.results.bindings[i];
 
             for (var o in row) {
-                this.dataObj.processed[i][o] = [];
-                this.dataObj.processed[i][o].push(row[o].value);
+
+                var value = row[o].value;
+
+                // If value is a number type, parse it as float (takes care of integers, too)
+                if (this.dataDescription[o].type === 'number') {
+                    value = parseFloat(value);
+                }
+
+                this.dataObj.processed[i][o] = [value];
             }
         }
 
