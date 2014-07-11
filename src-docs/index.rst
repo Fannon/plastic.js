@@ -5,7 +5,7 @@ Welcome to the plastic.js documentation!
     :maxdepth: 3
     :hidden:
 
-    introduction/index
+    usage/index
     displayModules/index
     dataModules/index
     queryModules/index
