@@ -27,6 +27,11 @@ var plastic = {
     }
 };
 
+// Load Dependenies from dependencyManager
+var dependencyManager = fs.readFileSync('../src/modules/dependencyManager.js');
+eval(dependencyManager.toString());
+var dependencyRegistry = plastic.modules.dependencyManager.registry;
+
 
 //////////////////////////////////////////
 // DISPLAY MODULES                      //
@@ -39,6 +44,11 @@ var plastic = {
  */
 var generateDisplayDocumentation = function(schema, moduleInfos, title) {
     "use strict";
+
+
+    //////////////////////////////////////////
+    // Snippet Code                         //
+    //////////////////////////////////////////
 
     var rst = '';
     var defaultOptions = {};
@@ -56,6 +66,11 @@ var generateDisplayDocumentation = function(schema, moduleInfos, title) {
     rst += '    </script>\n\n';
 
     fs.writeFileSync('../src-docs/_includes/display/' + title + '_snippet.rst', rst, {flag: 'w'});
+
+
+    //////////////////////////////////////////
+    // Properties Details                   //
+    //////////////////////////////////////////
 
     var html = '';
 
@@ -103,7 +118,34 @@ var generateDisplayDocumentation = function(schema, moduleInfos, title) {
 
     fs.writeFileSync('../src-docs/_includes/display/' + title + '_options.html', html, {flag: 'w'});
 
+
+    //////////////////////////////////////////
+    // Dependencies Details                 //
+    //////////////////////////////////////////
+
+    rst = '';
+
+    for (var i = 0; i < moduleInfos.dependencies.length; i++) {
+        var depName = moduleInfos.dependencies[i];
+        var dep = dependencyRegistry[depName];
+        rst += '**' + dep.title + '**\n\n';
+        rst += '* **Website**: ' + dep.website + '\n';
+        rst += '* **Version**: ' + dep.website + '\n';
+        console.log(dep);
+
+        rst += '\n';
+    }
+
+    if (rst === '') {
+        rst += 'No dependencies.';
+    }
+
+    fs.writeFileSync('../src-docs/_includes/display/' + title + '_deps.rst', rst, {flag: 'w'});
+
+
+
 };
+
 
 // Iterate all modules, and get the Display Options Schema out of it
 for (var i = 0; i < displayModules.length; i++) {

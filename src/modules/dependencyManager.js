@@ -18,19 +18,31 @@ plastic.modules.dependencyManager = {
      */
     registry: {
         "d3": {
+            "title": 'D3.js',
+            "website": 'http://d3js.org/',
+            "version": '3.4.6',
             "js": ["//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js"],
             "test": "d3"
         },
         "c3": {
+            "title": 'C3.js',
+            "website": 'http://c3js.org/',
+            "version": '0.1.29',
             "js": ["http://cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.min.js"],
             "test": "c3"
         },
         "nvd3": {
+            "title": 'NVD3',
+            "website": 'http://nvd3.org/',
+            "version": '1.1.15-beta',
             "js": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js"],
             "css": ["//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css"],
             "test": "nv"
         },
         "dataTable": {
+            "title": 'DataTables',
+            "website": 'http://www.datatables.net/',
+            "version": '1.10.0',
             "js": ["//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"],
             "css": ["//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"],
             "test": "$(document).DataTable"
