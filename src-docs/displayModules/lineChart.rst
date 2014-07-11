@@ -10,14 +10,14 @@ Dependencies
 Simple Example Code
 ^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: ../_includes/cumulativeLineChart.html
+.. literalinclude:: ../_includes/display/CumulativeLineChart_example.html
     :language: html
 
 Simple Live Example
 ^^^^^^^^^^^^^^^^^^^
 
 .. raw:: html
-    :file: ../_includes/cumulativeLineChart.html
+    :file: ../_includes/display/CumulativeLineChart_example.html
 
 
 Available Options

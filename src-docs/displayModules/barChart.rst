@@ -15,14 +15,14 @@ for d3.js without taking away the power that d3.js provides.
 Simple Example Code
 ^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: ../_includes/barChart.html
+.. literalinclude:: ../_includes/display/DiscreteBarChart_example.html
    :language: html
 
 Simple Live Example
 ^^^^^^^^^^^^^^^^^^^
 
 .. raw:: html
-   :file: ../_includes/barChart.html
+   :file: ../_includes/display/DiscreteBarChart_example.html
 
 Possible Options
 ^^^^^^^^^^^^^^^^

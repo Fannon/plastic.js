@@ -12,14 +12,14 @@ The Pie Chart utilizes the NVD3 library (http://nvd3.org/) for its appearance an
 Simple Example Code
 ^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: ../_includes/pieChart.html
+.. literalinclude:: ../_includes/display/PieChart_example.html
    :language: html
 
 Simple Live Example
 ^^^^^^^^^^^^^^^^^^^
 
 .. raw:: html
-   :file: ../_includes/pieChart.html
+   :file: ../_includes/display/PieChart_example.html
 
 
 Available Options

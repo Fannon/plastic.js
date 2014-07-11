@@ -12,12 +12,12 @@ Dependencies
 .. include:: ../_includes/display/SimpleTable_deps.rst
 
 This modules uses the DataTables Library (http://www.datatables.net/) internally.
-=======
+
 
 Simple Example Code
 ^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: ../_includes/simpleTable.html
+.. literalinclude:: ../_includes/display/SimpleTable_example.html
    :language: html
 
 
@@ -25,7 +25,7 @@ Simple Live Example
 ^^^^^^^^^^^^^^^^^^^
 
 .. raw:: html
-   :file: ../_includes/simpleTable.html
+   :file: ../_includes/display/SimpleTable_example.html
 
 Available Options
 ^^^^^^^^^^^^^^^^^
