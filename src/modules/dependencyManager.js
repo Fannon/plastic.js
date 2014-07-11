@@ -28,7 +28,7 @@ plastic.modules.dependencyManager = {
             "title": 'C3.js',
             "website": 'http://c3js.org/',
             "version": '0.1.29',
-            "js": ["http://cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.min.js"],
+            "js": ["//cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.min.js"],
             "test": "c3"
         },
         "nvd3": {

@@ -126,12 +126,22 @@ var generateDisplayDocumentation = function(schema, moduleInfos, title) {
     rst = '';
 
     for (var i = 0; i < moduleInfos.dependencies.length; i++) {
+
         var depName = moduleInfos.dependencies[i];
         var dep = dependencyRegistry[depName];
-        rst += '**' + dep.title + '**\n\n';
+
+        rst += dep.title + '\n';
+        rst += '------------\n';
         rst += '* **Website**: ' + dep.website + '\n';
-        rst += '* **Version**: ' + dep.website + '\n';
-        console.log(dep);
+        rst += '* **Version**: ' + dep.version + '\n';
+
+        if (dep.js) {
+            rst += '* **JavaScript**: http:' + dep.js.join(', http:') + '\n';
+        }
+
+        if (dep.css) {
+            rst += '* **CSS**: http:' + dep.css.join(', http:') + '\n';
+        }
 
         rst += '\n';
     }
