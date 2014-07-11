@@ -2244,7 +2244,7 @@ plastic.Element.prototype = {
             displayEl.height('auto');
         }
 
-        displayEl.html('<div class="spinner"></div>');
+        displayEl.html('<div class="loading"></div><div class="spinner"></div></div>');
 
     },
 
@@ -4142,8 +4142,15 @@ plastic.modules.data.SparqlJson.prototype = {
             var row = this.dataObj.raw.results.bindings[i];
 
             for (var o in row) {
-                this.dataObj.processed[i][o] = [];
-                this.dataObj.processed[i][o].push(row[o].value);
+
+                var value = row[o].value;
+
+                // If value is a number type, parse it as float (takes care of integers, too)
+                if (this.dataDescription[o].type === 'number') {
+                    value = parseFloat(value);
+                }
+
+                this.dataObj.processed[i][o] = [value];
             }
         }
 
@@ -4466,8 +4473,6 @@ plastic.modules.display.CumulativeLineChart.prototype = {
 
             var column = dataDescription[columnName];
 
-            console.log(column);
-
             if (columnName !== xAxis && column.type === "number") {
 
                 var seriesData = {};
@@ -4478,9 +4483,10 @@ plastic.modules.display.CumulativeLineChart.prototype = {
 
                 for (var i = 0; i < data.length; i++) {
                     var row = data[i];
+//                    console.dir(row[columnName][0]);
                     var dataEntry = {
                         "x": i,
-                        "y": parseInt(row[columnName][0], 10)
+                        "y": row[columnName][0]
                     };
                     seriesData.values.push(dataEntry);
                 }
@@ -4488,8 +4494,6 @@ plastic.modules.display.CumulativeLineChart.prototype = {
                 mappedData.push(seriesData);
             }
         }
-
-        console.log(mappedData);
 
         return mappedData;
     },

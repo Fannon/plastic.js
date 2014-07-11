@@ -62,8 +62,11 @@ header h1 {
     margin-bottom: 4px;
 }
 
-header h3 {
+header h2 {
     margin-top: 0;
+    border: none;
+    text-transform: none;
+    font-size: 2.6rem;
 }
 
 .top-menu {
@@ -121,6 +124,15 @@ pre {
 .hljs {
     padding: 8px 12px;
 }
+
+div.info {
+    margin: 16px 32px;
+    background: #367FC6;
+    color: #EEF7FF;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+
 
 footer {
     font-size: 0.85em;
