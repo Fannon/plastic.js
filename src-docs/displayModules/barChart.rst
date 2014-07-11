@@ -3,32 +3,33 @@ Bar Chart
 
 Short Description
 ^^^^^^^^^^^^^^^^^
-The Bar Chart Display Module uses vertical bars to show comparisons among categories.
-Several options are available to customize the appearance of the chart.
 
-Dependencies
+
+Example Code
 ^^^^^^^^^^^^
-The module uses the NVD3 library (http://nvd3.org/).
-NVD3 is an attempt to build re-usable charts and chart components
-for d3.js without taking away the power that d3.js provides.
-
-Simple Example Code
-^^^^^^^^^^^^^^^^^^^
-
 .. literalinclude:: ../_includes/display/DiscreteBarChart_example.html
    :language: html
 
-Simple Live Example
-^^^^^^^^^^^^^^^^^^^
+Example Data
+^^^^^^^^^^^^
 
+Live Example
+^^^^^^^^^^^^
 .. raw:: html
    :file: ../_includes/display/DiscreteBarChart_example.html
 
+
+Dependencies
+------------
+.. include:: ../_includes/display/DiscreteBarChart_deps.rst
+
+
 Possible Options
 ^^^^^^^^^^^^^^^^
-
 .. include:: ../_includes/display/DiscreteBarChart_snippet.rst
 
 .. raw:: html
     :file: ../_includes/display/DiscreteBarChart_options.html
 
+More Advanced Examples
+^^^^^^^^^^^^^^^^^^^^^^

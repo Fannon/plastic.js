@@ -131,7 +131,7 @@ var generateDisplayDocumentation = function(schema, moduleInfos, title) {
         var dep = dependencyRegistry[depName];
 
         rst += dep.title + '\n';
-        rst += '------------\n';
+        rst += '............\n';
         rst += '* **Website**: ' + dep.website + '\n';
         rst += '* **Version**: ' + dep.version + '\n';
 

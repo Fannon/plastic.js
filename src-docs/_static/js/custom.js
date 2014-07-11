@@ -1,12 +1,24 @@
 /* global jQuery */
 
 $(document).ready(function() {
-    $('.wy-menu a.internal').each(function( index ) {
+
+    // Remove all anchor tags links from sidebar
+    $('.wy-menu a.internal').each(function() {
         var href = $(this).attr('href');
         if (href.indexOf("#") >= 0) {
             $(this).hide();
         }
     });
+
+    // Scroll (fluidly) to anchor tag. Adds margin to sticky navbar.
+    $("a[href^='#']").on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: $(this.hash).offset().top - 50
+        }, 300, function(){
+        });
+    });
+
 });
 
 /**
