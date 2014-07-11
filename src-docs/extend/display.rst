@@ -150,10 +150,26 @@ JavaScript
     }
 
 
-
 HTML
 ----
 
+Adding a plastic-js div in your html file.
+
+.. code-block:: html
+
+    <div id="test-sparql-query" class="plastic-js" style="height: 300px; width: 100%;">
+
+        <script class="plastic-data" type="application/json" data-url="../data/test.json" data-format="sparql-json"></script>
+
+        <script class="plastic-display" data-display-module="test-chart" type="application/json">
+            {
+                "testProperty": 333
+            }
+        </script>
+
+    </div>
+
+|
 
 
 
