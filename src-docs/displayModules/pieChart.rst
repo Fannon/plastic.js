@@ -19,11 +19,11 @@ Simple Live Example
 .. raw:: html
    :file: ../_includes/pieChart.html
 
-Possible Options
-^^^^^^^^^^^^^^^^
+
+Available Options
+^^^^^^^^^^^^^^^^^
+
+.. include:: ../_includes/display/PieChart_snippet.rst
 
 .. raw:: html
-   :file: ../_includes/schemas/PieChart.html
-
-More Advanced Examples
-^^^^^^^^^^^^^^^^^^^^^^
+    :file: ../_includes/display/PieChart_options.html

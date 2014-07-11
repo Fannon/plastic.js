@@ -11,19 +11,19 @@ Simple Example Code
 ^^^^^^^^^^^^^^^^^^^
 
 .. literalinclude:: ../_includes/cumulativeLineChart.html
-   :language: html
+    :language: html
 
 Simple Live Example
 ^^^^^^^^^^^^^^^^^^^
 
 .. raw:: html
-   :file: ../_includes/cumulativeLineChart.html
+    :file: ../_includes/cumulativeLineChart.html
 
-Possible Options
-^^^^^^^^^^^^^^^^
+
+Available Options
+^^^^^^^^^^^^^^^^^
+
+.. include:: ../_includes/display/CumulativeLineChart_snippet.rst
 
 .. raw:: html
-   :file: ../_includes/schemas/CumulativeLineChart.html
-
-More Advanced Examples
-^^^^^^^^^^^^^^^^^^^^^^
+    :file: ../_includes/display/CumulativeLineChart_options.html

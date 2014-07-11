@@ -25,5 +25,7 @@ Live Example
 Available Options
 ^^^^^^^^^^^^^^^^^
 
+.. include:: ../_includes/display/AdvancedTable_snippet.rst
+
 .. raw:: html
-   :file: ../_includes/schemas/AdvancedTable.html
+    :file: ../_includes/display/AdvancedTable_options.html

@@ -7,11 +7,13 @@ Short Description
 Dependencies
 ^^^^^^^^^^^^
 
+
 Simple Example Code
 ^^^^^^^^^^^^^^^^^^^
 
 .. literalinclude:: ../_includes/simpleTable.html
    :language: html
+
 
 Simple Live Example
 ^^^^^^^^^^^^^^^^^^^
@@ -19,11 +21,11 @@ Simple Live Example
 .. raw:: html
    :file: ../_includes/simpleTable.html
 
-Possible Options
-^^^^^^^^^^^^^^^^
+
+Available Options
+^^^^^^^^^^^^^^^^^
+
+.. include:: ../_includes/display/SimpleTable_snippet.rst
 
 .. raw:: html
-   :file: ../_includes/schemas/SimpleTable.html
-
-More Advanced Examples
-^^^^^^^^^^^^^^^^^^^^^^
+    :file: ../_includes/display/SimpleTable_options.html
