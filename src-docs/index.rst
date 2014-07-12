@@ -9,6 +9,7 @@ Welcome to the plastic.js documentation!
     displayModules/index
     dataModules/index
     queryModules/index
+    architecture/index
     extend/index
 
 About plastic.js:

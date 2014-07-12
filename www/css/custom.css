@@ -4,10 +4,12 @@ body {
 
 a, a:visited {
     color: #367FC6;
+    text-decoration: none;
 }
 
 a:hover {
     color: #670097;
+    text-decoration: none;
 }
 
 a.btn {

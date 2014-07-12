@@ -27,6 +27,25 @@ h4 {
     font-size: 1.4rem;
 }
 
+a, a:visited {
+    color: #367FC6;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #670097;
+    text-decoration: none;
+}
+
+.wy-nav-side a, .wy-nav-side a:visited {
+    color: #A0D349;
+    text-decoration: none;
+}
+
+.wy-nav-side a:hover {
+    color: #A0D349;
+    text-decoration: none;
+}
 p {
     margin-bottom: 12px;
 }

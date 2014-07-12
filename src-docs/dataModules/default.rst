@@ -1,5 +1,5 @@
-Simple default format
-=====================
+Default format
+==============
 
 Description
 ^^^^^^^^^^^
