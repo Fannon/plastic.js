@@ -36,14 +36,17 @@ a:hover {
     color: #670097;
     text-decoration: none;
 }
+.wy-nav-side {
+    background: #222;
+}
 
 .wy-nav-side a, .wy-nav-side a:visited {
-    color: #A0D349;
+    color: #CCC;
     text-decoration: none;
 }
 
 .wy-nav-side a:hover {
-    color: #A0D349;
+    color: #CCC;
     text-decoration: none;
 }
 p {
