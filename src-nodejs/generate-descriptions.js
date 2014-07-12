@@ -125,6 +125,9 @@ var generateDisplayDocumentation = function(schema, moduleInfos, title) {
 
     rst = '';
 
+    rst += '.. note:: plastic.js manages the dependencies automatically. There is no need to include them manually, ';
+    rst += 'but you can do so if you want.\n\n';
+
     for (var i = 0; i < moduleInfos.dependencies.length; i++) {
 
         var depName = moduleInfos.dependencies[i];
