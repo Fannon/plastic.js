@@ -1,4 +1,4 @@
-/*! plastic - v0.1.0 - 2014-07-11
+/*! plastic - v0.1.0 - 2014-07-15
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 (function (global, factory) {
