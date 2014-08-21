@@ -5,6 +5,7 @@ module.exports = function (grunt) {
 
     // Load all grunt tasks
     require('load-grunt-tasks')(grunt);
+
     // Show elapsed time at the end
     require('time-grunt')(grunt);
 
@@ -194,12 +195,6 @@ module.exports = function (grunt) {
             }
         },
 
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js'
-            }
-        },
-
         jsdoc : {
             api : {
                 src : ['src/**/**.js', 'README.md'],
@@ -243,10 +238,12 @@ module.exports = function (grunt) {
 
         /** Puts some more Infos to the console */
         content: {
+
             options: {
                 newLineAfter: false,
                 gruntLogHeader: false
             },
+
             test: {
                 text: "\n###################################################\n### RUNNING UNIT TESTS\n###################################################"
             },

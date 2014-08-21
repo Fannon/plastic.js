@@ -1,4 +1,4 @@
-/*! plastic - v0.1.0 - 2014-07-23
+/*! plastic - v0.1.0 - 2014-08-21
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 (function (global, factory) {
@@ -2164,42 +2164,74 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
+            var dataType = 'json';
+
             if (this.options.debug) {
                 plastic.msg.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
 
             // TODO: Catch Timeout Error
 
-            /** jQuery AJAX Request Object */
-            try {
-                $.ajax({
-                    url: this.attr.data.url,
-                    dataType: 'json',
-                    timeout: this.options.timeout,
-                    success: function(data) {
-                        "use strict";
+            // If data is in text format, load it via $.get
+            if (this.attr.data.module === ('csv' || 'tsv')) {
 
-                        if (data !== null && typeof data === 'object') {
-                            self.attr.data.raw = data;
-                        } else {
-                            self.attr.data.raw = $.parseJSON(data);
-                        }
+                try {
+                    $.get(this.attr.data.url, function(data){
+
+                        self.attr.data.raw = new String(data);
 
                         self.benchmarkDataLoaded = (new Date()).getTime();
                         self.attr.raw = data;
                         self.updateProgress();
 
                         self.events.pub('data-sucess');
-                    },
-                    error: function() {
-                        plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
-                        self.cancelProgress();
-                    }
-                });
-            } catch(e) {
-                plastic.msg.error(e, self.$el);
-                throw new Error('Data Request failed');
+
+                    });
+
+
+                } catch(e) {
+                    plastic.msg.error(e, self.$el);
+                    throw new Error('Data Request failed');
+                }
+
+
+
+            // Assume file is in JSON format and load it via $.ajax
+            } else {
+
+                /** jQuery AJAX Request Object */
+                try {
+                    $.ajax({
+                        url: this.attr.data.url,
+                        dataType: 'json',
+                        timeout: this.options.timeout,
+                        success: function(data) {
+                            "use strict";
+
+                            if (data !== null && typeof data === 'object') {
+                                self.attr.data.raw = data;
+                            } else {
+                                self.attr.data.raw = $.parseJSON(data);
+                            }
+
+                            self.benchmarkDataLoaded = (new Date()).getTime();
+                            self.attr.raw = data;
+                            self.updateProgress();
+
+                            self.events.pub('data-sucess');
+                        },
+                        error: function() {
+                            plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
+                            self.cancelProgress();
+                        }
+                    });
+                } catch(e) {
+                    plastic.msg.error(e, self.$el);
+                    throw new Error('Data Request failed');
+                }
             }
+
+
 
         } else {
             // Data is already there, continue:
@@ -3015,6 +3047,46 @@ plastic.msg = {
 
 
 
+plastic.helper.duckTyping = function(data) {
+    "use strict";
+
+    var dataDescription = {};
+
+    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    for (var attrName in data[0]) {
+
+        var attrValue = data[0][attrName][0];
+
+        if ($.isNumeric(attrValue)) {
+
+            dataDescription[attrName] = {
+                type: "number"
+            };
+
+        } else {
+
+            dataDescription[attrName] = {
+                type: "string"
+            };
+
+            if (attrValue.indexOf("http://") > -1) {
+                dataDescription[attrName].format = "url";
+            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
+                dataDescription[attrName].format = "email";
+            } else if (attrValue.indexOf("tel:") > -1) {
+                dataDescription[attrName].format = "phone";
+            }
+
+
+        }
+
+    }
+
+    return dataDescription;
+
+};
+
 plastic.helper.Events = function() {
     "use strict";
 
@@ -3153,46 +3225,6 @@ plastic.helper.Events.prototype = {
             }
         }
     }
-};
-
-plastic.helper.duckTyping = function(data) {
-    "use strict";
-
-    var dataDescription = {};
-
-    var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    for (var attrName in data[0]) {
-
-        var attrValue = data[0][attrName][0];
-
-        if ($.isNumeric(attrValue)) {
-
-            dataDescription[attrName] = {
-                type: "number"
-            };
-
-        } else {
-
-            dataDescription[attrName] = {
-                type: "string"
-            };
-
-            if (attrValue.indexOf("http://") > -1) {
-                dataDescription[attrName].format = "url";
-            } else if (emailRegexp.test(attrValue) || attrValue.indexOf("mailto:") > -1) {
-                dataDescription[attrName].format = "email";
-            } else if (attrValue.indexOf("tel:") > -1) {
-                dataDescription[attrName].format = "phone";
-            }
-
-
-        }
-
-    }
-
-    return dataDescription;
-
 };
 
 
@@ -3820,6 +3852,126 @@ plastic.modules.data.AskJson.prototype = {
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'data',
+    apiName: 'csv',
+    className: 'CSV',
+    dependencies: []
+});
+
+plastic.modules.moduleManager.register({
+    moduleType: 'data',
+    apiName: 'tsv',
+    className: 'CSV',
+    dependencies: []
+});
+
+/**
+ * Parses tabular data from an ASK Semantic MediaWiki API
+ *
+ * @constructor
+ */
+plastic.modules.data.CSV = function(dataObj) {
+
+    /**
+     * Incoming Raw Data
+     * @type {{}}
+     */
+    this.dataObj = dataObj;
+
+    /**
+     * Raw Data Schema for validation
+     *
+     * No schema since CSV is no JSON format
+     *
+     * @type {{}}
+     */
+    this.rawDataSchema = {};
+
+};
+
+plastic.modules.data.CSV.prototype = {
+
+    /**
+     * Custom Validation
+     *
+     * @returns {boolean}
+     */
+    validate: function() {
+        "use strict";
+        return false;
+    },
+
+    /**
+     * Since the data is already in the correct format, it has just to be returned
+     *
+     * @returns {Object}
+     */
+    execute: function() {
+
+        console.info(this.dataObj.raw);
+        var separator = ';';
+
+        if (this.dataObj.module === 'tsv') {
+            separator = '\t';
+        }
+
+        this.dataObj.processed = this.parseCSV(this.dataObj.raw, separator, false);
+
+        return this.dataObj;
+    },
+
+    /**
+     * Parses CSV String to Array
+     *
+     * http://www.greywyvern.com/?post=258
+     *
+     * @param csv
+     * @param seperator
+     * @param linebreak
+     * @returns {Array|*}
+     */
+    parseCSV: function(csv, seperator, linebreak) {
+
+        var processedData = [];
+        var headers = [];
+
+        var csvLines = csv.split(linebreak || '\r\n');
+
+        for (var i = 0; i < csvLines.length; i++) {
+
+            var line = csvLines[i];
+
+            if (i === 0) {
+                headers = line.split(seperator || ';');
+                console.log(headers);
+            } else {
+                if (line.length > 0) {
+                    processedData[i] = {};
+                    console.info(line);
+
+                    var csvCells = line.split(seperator || ';');
+
+                    for (var j = 0; j < csvCells.length; j++) {
+
+                        var cell = csvCells[j];
+                        processedData[i][headers[j]] = cell;
+                    }
+
+                }
+            }
+
+
+        }
+
+        console.dir(processedData);
+
+
+        return processedData;
+    }
+};
+
+// Register Module and define dependencies:
+plastic.modules.moduleManager.register({
+    moduleType: 'data',
     apiName: 'default',
     className: 'Default',
     dependencies: []
@@ -4034,7 +4186,7 @@ plastic.modules.data.SparqlJson = function(dataObj) {
     };
 
     /**
-     * Maps ASK-Result-Format Schema to JSON-Schema
+     * Maps SPARQL Schema to JSON-Schema
      *
      * @type {{}}
      */
@@ -4052,7 +4204,7 @@ plastic.modules.data.SparqlJson = function(dataObj) {
     };
 
     /**
-     * Maps ASK-Result-Format Schema to JSON-Schema
+     * Maps SPARQL Schema to JSON-Schema
      *
      * @type {{}}
      */

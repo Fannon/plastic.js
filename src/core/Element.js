@@ -204,42 +204,74 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
+            var dataType = 'json';
+
             if (this.options.debug) {
                 plastic.msg.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
 
             // TODO: Catch Timeout Error
 
-            /** jQuery AJAX Request Object */
-            try {
-                $.ajax({
-                    url: this.attr.data.url,
-                    dataType: 'json',
-                    timeout: this.options.timeout,
-                    success: function(data) {
-                        "use strict";
+            // If data is in text format, load it via $.get
+            if (this.attr.data.module === ('csv' || 'tsv')) {
 
-                        if (data !== null && typeof data === 'object') {
-                            self.attr.data.raw = data;
-                        } else {
-                            self.attr.data.raw = $.parseJSON(data);
-                        }
+                try {
+                    $.get(this.attr.data.url, function(data){
+
+                        self.attr.data.raw = new String(data);
 
                         self.benchmarkDataLoaded = (new Date()).getTime();
                         self.attr.raw = data;
                         self.updateProgress();
 
                         self.events.pub('data-sucess');
-                    },
-                    error: function() {
-                        plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
-                        self.cancelProgress();
-                    }
-                });
-            } catch(e) {
-                plastic.msg.error(e, self.$el);
-                throw new Error('Data Request failed');
+
+                    });
+
+
+                } catch(e) {
+                    plastic.msg.error(e, self.$el);
+                    throw new Error('Data Request failed');
+                }
+
+
+
+            // Assume file is in JSON format and load it via $.ajax
+            } else {
+
+                /** jQuery AJAX Request Object */
+                try {
+                    $.ajax({
+                        url: this.attr.data.url,
+                        dataType: 'json',
+                        timeout: this.options.timeout,
+                        success: function(data) {
+                            "use strict";
+
+                            if (data !== null && typeof data === 'object') {
+                                self.attr.data.raw = data;
+                            } else {
+                                self.attr.data.raw = $.parseJSON(data);
+                            }
+
+                            self.benchmarkDataLoaded = (new Date()).getTime();
+                            self.attr.raw = data;
+                            self.updateProgress();
+
+                            self.events.pub('data-sucess');
+                        },
+                        error: function() {
+                            plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
+                            self.cancelProgress();
+                        }
+                    });
+                } catch(e) {
+                    plastic.msg.error(e, self.$el);
+                    throw new Error('Data Request failed');
+                }
             }
+
+
 
         } else {
             // Data is already there, continue:

@@ -65,7 +65,7 @@ plastic.modules.data.SparqlJson = function(dataObj) {
     };
 
     /**
-     * Maps ASK-Result-Format Schema to JSON-Schema
+     * Maps SPARQL Schema to JSON-Schema
      *
      * @type {{}}
      */
@@ -83,7 +83,7 @@ plastic.modules.data.SparqlJson = function(dataObj) {
     };
 
     /**
-     * Maps ASK-Result-Format Schema to JSON-Schema
+     * Maps SPARQL Schema to JSON-Schema
      *
      * @type {{}}
      */

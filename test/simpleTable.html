@@ -43,6 +43,7 @@
     <script src="../src/modules/data/AskJson.js"></script>
     <script src="../src/modules/data/Default.js"></script>
     <script src="../src/modules/data/SimpleDefault.js"></script>
+    <script src="../src/modules/data/CSV.js"></script>
 
     <!-- Display Modules -->
     <script src="../src/modules/display/SimpleTable.js"></script>
@@ -66,6 +67,19 @@
     <div class="container">
 
         <h1><a href="index.html">Test</a> > SimpleTable Display Module</h1>
+
+        <h4>Data via CSV File</h4>
+        <div id="table-csv-file" class="plastic-js" style="height: 200px; width: 100%;">
+
+            <script class="plastic-data" type="text/comma-separated-values" data-url="data/SocialMedia.csv" data-format="csv"></script>
+
+            <script class="plastic-display" data-display-module="simple-table" type="application/json">
+                {
+                    "tableClasses": "table table-condensed"
+                }
+            </script>
+
+        </div>
 
         <h4>Data via ASK Query</h4>
         <div id="table-ask-query" class="plastic-js" style="height: 300px; width: 100%;">
@@ -131,6 +145,7 @@
             </script>
 
         </div>
+
 
         <h4>Data via JSON File</h4>
         <div id="table-json-file" class="plastic-js" style="height: 400px; width: 100%;">
