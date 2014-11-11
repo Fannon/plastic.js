@@ -218,7 +218,7 @@ plastic.Element.prototype = {
                 try {
                     $.get(this.attr.data.url, function(data){
 
-                        self.attr.data.raw = new String(data);
+                        self.attr.data.raw = String(data);
 
                         self.benchmarkDataLoaded = (new Date()).getTime();
                         self.attr.raw = data;

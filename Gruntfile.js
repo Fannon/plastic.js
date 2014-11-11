@@ -292,35 +292,32 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'content:connect', 'connect',
-        'content:concat', 'concat',
-        'content:jshint', 'jshint'
+        'connect',
+        'concat',
+        'jshint'
     ]);
 
     grunt.registerTask('docs', [
-        'content:copy', 'copy:docs',
+        'copy:docs',
         'shell:schemaDocs',
-        'content:sphinx', 'shell:sphinxForce',
-        'content:done'
+        'shell:sphinxForce'
     ]);
 
     grunt.registerTask('devdocs', [
-        'content:copy', 'copy:docs', 'copy:site',
-        'content:jsdoc', 'jsdoc',
-        'content:done'
+        'copy:docs', 'copy:site',
+        'jsdoc'
     ]);
 
     grunt.registerTask('build', [
         'test',
-        'content:clean', 'clean:dist',
-        'content:concat', 'concat',
-        'content:uglify', 'uglify',
-        'content:cssmin', 'cssmin',
-        'content:sizediff', 'sizediff',
-        'content:copy', 'copy',
-        'content:zip', 'compress',
+        'clean:dist',
+        'concat',
+        'uglify',
+        'cssmin',
+        'sizediff',
+        'copy',
+        'compress',
         'docs',
-        'devdocs',
-        'content:done'
+        'devdocs'
     ]);
 };

@@ -1,4 +1,4 @@
-/*! plastic - v0.1.0 - 2014-08-21
+/*! plastic - v0.1.0 - 2014-10-03
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 (function (global, factory) {
@@ -2178,7 +2178,7 @@ plastic.Element.prototype = {
                 try {
                     $.get(this.attr.data.url, function(data){
 
-                        self.attr.data.raw = new String(data);
+                        self.attr.data.raw = String(data);
 
                         self.benchmarkDataLoaded = (new Date()).getTime();
                         self.attr.raw = data;
@@ -4022,6 +4022,22 @@ plastic.modules.data.Default = function(dataObj) {
             }
         },
         "required": ["data"]
+    };
+
+    this.example = {
+        data: [
+            {
+                "column1": ["cell1"],
+                "column2": ["cell2"]
+            }
+
+        ],
+        schema: {
+
+        },
+        description: {
+
+        }
     };
 
 };

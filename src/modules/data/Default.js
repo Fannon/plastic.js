@@ -53,6 +53,22 @@ plastic.modules.data.Default = function(dataObj) {
         "required": ["data"]
     };
 
+    this.example = {
+        data: [
+            {
+                "column1": ["cell1"],
+                "column2": ["cell2"]
+            }
+
+        ],
+        schema: {
+
+        },
+        description: {
+
+        }
+    };
+
 };
 
 plastic.modules.data.Default.prototype = {
