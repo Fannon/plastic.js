@@ -1,4 +1,4 @@
-/*! plastic - v0.1.0 - 2014-10-03
+/*! plastic - v0.1.0 - 2014-11-13
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 (function (global, factory) {
@@ -1793,7 +1793,6 @@ var plastic = {
      *
      * This includes module and depencency handling and of course all available modules
      *
-     *
      * @namespace
      */
     modules: {
@@ -1848,7 +1847,7 @@ var plastic = {
 plastic.execute = function() {
     "use strict";
 
-    if (this.options.debug) {
+    if (plastic.options.debug) {
         plastic.msg.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
     }
 
@@ -1911,11 +1910,6 @@ plastic.execute = function() {
     });
 
 };
-
-// Execute plastic.js on DOM Ready
-$(document).ready(function() {
-    plastic.execute();
-});
 
 plastic.options = {
 
@@ -3227,9 +3221,8 @@ plastic.helper.Events.prototype = {
     }
 };
 
-
 /**
- * Helper Function which acts as a facade wrapper around the Schema Validation Library
+ * Helper Function which acts as a facade wrapper around a JSON Schema validation library
  *
  * The Validation Objects should follow the JSON-Schema Standard: (http://json-schema.org/)
  * Currently it uses tv4 (https://github.com/geraintluff/tv4)
@@ -5362,3 +5355,8 @@ plastic.modules.query.Sparql.prototype = {
     }
 
 };
+
+// Execute plastic.js on DOM Ready
+$(document).ready(function() {
+    plastic.execute();
+});

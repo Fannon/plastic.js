@@ -1,7 +1,7 @@
 /* global tv4 */
 
 /**
- * Helper Function which acts as a facade wrapper around the Schema Validation Library
+ * Helper Function which acts as a facade wrapper around a JSON Schema validation library
  *
  * The Validation Objects should follow the JSON-Schema Standard: (http://json-schema.org/)
  * Currently it uses tv4 (https://github.com/geraintluff/tv4)

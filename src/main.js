@@ -1,13 +1,11 @@
 /*
- * plastic.js
- *
  * plastic.js is a JavaScript library that lets you make your data visible!
  * OpenSource at GitHub: https://github.com/Fannon/plastic.js
  * Documentation: https://github.com/Fannon/plastic.js/wiki
  *
  * This is work in progress - and not production ready!
  *
- * Copyright (c) 2014 Simon Heimler
+ * @autor Simon Heimler
  * Licensed under the MIT license.
  */
 
@@ -37,7 +35,6 @@ var plastic = {
      * Module Namespace
      *
      * This includes module and depencency handling and of course all available modules
-     *
      *
      * @namespace
      */
@@ -93,7 +90,7 @@ var plastic = {
 plastic.execute = function() {
     "use strict";
 
-    if (this.options.debug) {
+    if (plastic.options.debug) {
         plastic.msg.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
     }
 
@@ -156,8 +153,3 @@ plastic.execute = function() {
     });
 
 };
-
-// Execute plastic.js on DOM Ready
-$(document).ready(function() {
-    plastic.execute();
-});

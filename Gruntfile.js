@@ -52,7 +52,8 @@ module.exports = function (grunt) {
                     'src/modules/*.js',
                     'src/modules/data/*.js',
                     'src/modules/display/*.js',
-                    'src/modules/query/*.js'
+                    'src/modules/query/*.js',
+                    'src/execute.js'
                 ],
                 dest: 'dist/plastic.js'
             },
