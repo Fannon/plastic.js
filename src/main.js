@@ -1,86 +1,68 @@
-/*
- * plastic.js is a JavaScript library that lets you make your data visible!
- * OpenSource at GitHub: https://github.com/Fannon/plastic.js
- * Documentation: https://github.com/Fannon/plastic.js/wiki
- *
- * This is work in progress - and not production ready!
- *
- * @autor Simon Heimler
- * Licensed under the MIT license.
+/**
+ * Version Number
+ * @type String
  */
-
-/* jshint -W079 */ /* Ignores Redefinition of plastic */
+plastic.version = '0.1.1';
 
 /**
- * plastic.js Namespace
+ * Array which holds all the plastic.js Elements
+ *
+ * @type Array
+ */
+plastic.elements = [];
+
+/**
+ * Module Namespace
+ *
+ * This includes module and depencency handling and of course all available modules
  *
  * @namespace
  */
-var plastic = {
+plastic.modules = {
 
     /**
-     * Version Number
-     * @type String
-     */
-    version: '0.1.0',
-
-    /**
-     * Array which holds all the plastic.js Elements
-     *
-     * @type Array
-     */
-    elements: [],
-
-    /**
-     * Module Namespace
-     *
-     * This includes module and depencency handling and of course all available modules
-     *
-     * @namespace
-     */
-    modules: {
-
-        /**
-         * Query Parser Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        query: {},
-
-        /**
-         * API Parser Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        api: {},
-
-        /**
-         * Data Parser Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        data: {},
-
-        /**
-         * Display Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        display: {}
-
-    },
-
-    /**
-     * Namespace for helper functions
+     * Query Parser Modules Namespace
      * @namespace
      * @ignore
      */
-    helper: {},
+    query: {},
 
+    /**
+     * API Parser Modules Namespace
+     * @namespace
+     * @ignore
+     */
+    api: {},
 
-    errors: []
+    /**
+     * Data Parser Modules Namespace
+     * @namespace
+     * @ignore
+     */
+    data: {},
+
+    /**
+     * Display Modules Namespace
+     * @namespace
+     * @ignore
+     */
+    display: {}
 
 };
+
+/**
+ * Namespace for helper functions
+ * @namespace
+ * @ignore
+ */
+plastic.helper = {};
+
+/**
+ * History of all plastic.js errors
+ *
+ * @type {Array}
+ */
+plastic.errors = [];
 
 /**
  * Executes plastic.js
@@ -93,7 +75,6 @@ plastic.execute = function() {
     if (plastic.options.debug) {
         plastic.msg.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
     }
-
 
     /**
      * Global plastic events

@@ -43,17 +43,20 @@ module.exports = function (grunt) {
             },
             js: {
                 src: [
+                    'src/_wrap_in.js',
+
                     'bower_components/tv4/tv4.js',
                     'bower_components/rgrove-lazyload/lazyload.js',
-                    'src/main.js',
+
                     'src/options.js',
+                    'src/main.js',
                     'src/core/*.js',
                     'src/helper/*.js',
                     'src/modules/*.js',
                     'src/modules/data/*.js',
                     'src/modules/display/*.js',
                     'src/modules/query/*.js',
-                    'src/execute.js'
+                    'src/_wrap_out.js'
                 ],
                 dest: 'dist/plastic.js'
             },
