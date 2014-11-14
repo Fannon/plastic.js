@@ -49,7 +49,6 @@ plastic.modules.data.CSV.prototype = {
      */
     execute: function() {
 
-        console.info(this.dataObj.raw);
         var separator = ';';
 
         if (this.dataObj.module === 'tsv') {
@@ -84,11 +83,9 @@ plastic.modules.data.CSV.prototype = {
 
             if (i === 0) {
                 headers = line.split(seperator || ';');
-                console.log(headers);
             } else {
                 if (line.length > 0) {
                     processedData[i] = {};
-                    console.info(line);
 
                     var csvCells = line.split(seperator || ';');
 
@@ -103,9 +100,6 @@ plastic.modules.data.CSV.prototype = {
 
 
         }
-
-        console.dir(processedData);
-
 
         return processedData;
     }

@@ -53,7 +53,7 @@ plastic.modules.query.Ask.prototype = {
 
         // Set Data Parser Module
         var dataObj = {
-            module: 'ask-json'
+            dataFormat: 'ask-json'
         };
 
         var url = this.queryObj.url;

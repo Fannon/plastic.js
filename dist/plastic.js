@@ -2145,7 +2145,7 @@ plastic.Element.prototype = {
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
-            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.datatype);
+            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.dataType);
         }
 
 
@@ -2155,10 +2155,17 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
-            var textFormats = ['csv', 'tsv', 'text/comma-separated-values'];
-            var dataType = 'jsonp';
 
-            if (textFormats.indexOf(this.attr.data.datatype) > -1) {
+
+            var textFormats = ['csv', 'tsv', 'text/comma-separated-values'];
+            var dataType = 'json';
+
+            // If an external URL is given, try jsonp
+            if (this.attr.data.url.indexOf("://") > -1) {
+                dataType = 'jsonp';
+            }
+
+            if (textFormats.indexOf(this.attr.data.dataFormat) > -1) {
                 dataType = 'text';
             }
 
@@ -2189,74 +2196,13 @@ plastic.Element.prototype = {
                 self.cancelProgress();
                 plastic.msg.error(error, self.$el);
                 throw new Error('Data Request failed');
+                // TODO: Error is not handled!
             });
 
             req.always(function() {
                 self.updateProgress();
                 self.benchmarkDataLoaded = (new Date()).getTime();
             });
-
-            //// TODO: Catch Timeout Error
-            //
-            //// If data is in some text format, load it via $.get
-            //if (isTextRequest) {
-            //
-            //    var req = $.get(this.attr.data.url, function(data) {});
-            //
-            //    req.done(function(data) {
-            //        self.attr.data.raw = String(data);
-            //        self.attr.raw = data;
-            //        self.events.pub('data-sucess');
-            //    });
-            //
-            //    req.fail(function(error) {
-            //        plastic.msg.error(error, self.$el);
-            //        throw new Error('Data Request failed');
-            //        self.cancelProgress();
-            //    });
-            //
-            //    req.always(function() {
-            //        self.updateProgress();
-            //        self.benchmarkDataLoaded = (new Date()).getTime();
-            //
-            //    });
-            //
-            //// Assume file is in JSON format and load it via $.ajax
-            //} else {
-            //
-            //    /** jQuery AJAX Request Object */
-            //    try {
-            //        $.ajax({
-            //            url: this.attr.data.url,
-            //            dataType: 'json',
-            //            timeout: this.options.timeout,
-            //            success: function(data) {
-            //                "use strict";
-            //
-            //                if (data !== null && typeof data === 'object') {
-            //                    self.attr.data.raw = data;
-            //                } else {
-            //                    self.attr.data.raw = $.parseJSON(data);
-            //                }
-            //
-            //                self.benchmarkDataLoaded = (new Date()).getTime();
-            //                self.attr.raw = data;
-            //                self.updateProgress();
-            //
-            //                self.events.pub('data-sucess');
-            //            },
-            //            error: function() {
-            //                plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
-            //                self.cancelProgress();
-            //            }
-            //        });
-            //    } catch(e) {
-            //        plastic.msg.error(e, self.$el);
-            //        throw new Error('Data Request failed');
-            //    }
-            //}
-            //
-
 
         } else {
             // Data is already there, continue:
@@ -2349,7 +2295,8 @@ plastic.Element.prototype = {
         "use strict";
 
         // Instanciate new Data Module
-        this.dataModule = new plastic.modules.Module(this, 'data', this.attr.data.module);
+        var moduleType = this.attr.data.dataFormat || this.attr.data.dataType;
+        this.dataModule = new plastic.modules.Module(this, 'data', moduleType);
 
         if (!this.attr.data.description) {
             this.attr.data.description = plastic.helper.duckTyping(this.attr.data.processed);
@@ -2615,10 +2562,10 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "datatype": {"type": ["string", "boolean"]},
+                    "dataType": {"type": ["string", "boolean"]},
                     "url": {"type": "string"}
                 },
-                "required": ["datatype", "text", "url"]
+                "required": ["dataType", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
@@ -2767,7 +2714,8 @@ plastic.ElementAttributes.prototype = {
 
             // Get the module type if available
             data.module = tag.attr('data-module') || false;
-            data.datatype = tag.attr('type') || tag.attr('data-type') || false;
+            data.dataType = tag.attr('type') || tag.attr('data-type') || false;
+            data.dataFormat = tag.attr('data-format') || false;
             data.url = tag.attr('data-url') || false;
             data.text = tag[0].text || tag[0].innerHTML || false;
             data.allAttr = {};
@@ -3870,7 +3818,6 @@ plastic.modules.data.CSV.prototype = {
      */
     execute: function() {
 
-        console.info(this.dataObj.raw);
         var separator = ';';
 
         if (this.dataObj.module === 'tsv') {
@@ -3905,11 +3852,9 @@ plastic.modules.data.CSV.prototype = {
 
             if (i === 0) {
                 headers = line.split(seperator || ';');
-                console.log(headers);
             } else {
                 if (line.length > 0) {
                     processedData[i] = {};
-                    console.info(line);
 
                     var csvCells = line.split(seperator || ';');
 
@@ -3924,9 +3869,6 @@ plastic.modules.data.CSV.prototype = {
 
 
         }
-
-        console.dir(processedData);
-
 
         return processedData;
     }
@@ -5235,7 +5177,7 @@ plastic.modules.query.Ask.prototype = {
 
         // Set Data Parser Module
         var dataObj = {
-            module: 'ask-json'
+            dataFormat: 'ask-json'
         };
 
         var url = this.queryObj.url;
@@ -5307,7 +5249,7 @@ plastic.modules.query.Sparql.prototype = {
 
         // Set Data Parser Module
         var dataObj = {
-            module: 'sparql-json'
+            dataFormat: 'sparql-json'
         };
 
         var url = this.queryObj.url;

@@ -29,7 +29,8 @@ h1, h2 {
 }
 
 h3, h4, h5 {
-    margin-top: 16px;
+    margin-top: 32px;
+    margin-bottom: 16px;
     font-weight: bold;
 }
 
@@ -43,8 +44,9 @@ h3 {
 
 h4 {
     font-size: 1.2em;
-    padding-bottom: 2px;
-    border-bottom: 1px solid #DDD;
+    line-height: 1.2em;
+    padding: 2px 8px;
+    background: #DDD;
 }
 
 h5 {

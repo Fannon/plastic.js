@@ -108,10 +108,10 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "datatype": {"type": ["string", "boolean"]},
+                    "dataType": {"type": ["string", "boolean"]},
                     "url": {"type": "string"}
                 },
-                "required": ["datatype", "text", "url"]
+                "required": ["dataType", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
@@ -260,7 +260,8 @@ plastic.ElementAttributes.prototype = {
 
             // Get the module type if available
             data.module = tag.attr('data-module') || false;
-            data.datatype = tag.attr('type') || tag.attr('data-type') || false;
+            data.dataType = tag.attr('type') || tag.attr('data-type') || false;
+            data.dataFormat = tag.attr('data-format') || false;
             data.url = tag.attr('data-url') || false;
             data.text = tag[0].text || tag[0].innerHTML || false;
             data.allAttr = {};
