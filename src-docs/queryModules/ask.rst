@@ -34,5 +34,5 @@ data-query-url
 ..............
 States the API URL of the targeted Semantic MediaWiki Installation::
 
-    data-query-url="http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php"
+    data-url="http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php"
 

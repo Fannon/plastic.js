@@ -8,3 +8,4 @@ If data is given in this format, no parsing has to be done.
 
 Example
 -------
+.. literalinclude:: ../_static/default.json

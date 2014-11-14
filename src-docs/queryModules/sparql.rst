@@ -37,5 +37,5 @@ data-query-url
 ..............
 URL to SPARQL endpoint::
 
-    data-query-url="http://dbpedia.org/sparql"
+    data-url="http://dbpedia.org/sparql"
 
