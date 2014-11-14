@@ -55,7 +55,7 @@ var generateDisplayDocumentation = function(schema, moduleInfos, title) {
 
     rst += 'This example snippet contains all available options with their default values:\n\n';
     rst += '.. code-block:: html\n\n';
-    rst += '    <script class="plastic-display" data-display-module="' + moduleInfos.apiName + '" type="application/json> \n';
+    rst += '    <script class="plastic-display" data-module="' + moduleInfos.apiName + '" type="application/json> \n';
     rst += '        {\n';
 
     for (var propertyName in schema.properties) {

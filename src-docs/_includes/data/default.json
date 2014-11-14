@@ -1,0 +1,41 @@
+{
+    "data": [
+        {
+            "Vorname": [
+                "Arthur"
+            ],
+            "Nachname": [
+                "Chesterton"
+            ],
+            "Mail": [
+                "mailto:Arthur.Chesterton@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+49142703493186",
+                "tel:+49142703493183"
+            ],
+            "Handy": [
+                "tel:+49133540893285"
+            ]
+        },
+        {
+            "Vorname": [
+                "Arthur"
+            ],
+            "Nachname": [
+                "Simmons"
+            ],
+            "Mail": [
+                "mailto:Arthur.Simmons@gmail.com"
+            ],
+            "Festnetz": [
+                "tel:+4995787231498"
+            ],
+            "Handy": [
+                "tel:+49121946131296"
+            ]
+        }
+    ]
+
+}
+
