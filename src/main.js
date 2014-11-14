@@ -2,7 +2,7 @@
  * Version Number
  * @type String
  */
-plastic.version = '0.1.1';
+plastic.version = '0.2.0';
 
 /**
  * Array which holds all the plastic.js Elements

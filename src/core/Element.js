@@ -204,17 +204,17 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
-
-
             var textFormats = ['csv', 'tsv', 'text/comma-separated-values'];
             var dataType = 'json';
+            var dataModuleType = this.attr.data.dataFormat || this.attr.data.dataType;
+
 
             // If an external URL is given, try jsonp
             if (this.attr.data.url.indexOf("://") > -1) {
                 dataType = 'jsonp';
             }
 
-            if (textFormats.indexOf(this.attr.data.dataFormat) > -1) {
+            if (textFormats.indexOf(dataModuleType) > -1) {
                 dataType = 'text';
             }
 
@@ -242,10 +242,8 @@ plastic.Element.prototype = {
             });
 
             req.fail(function(error) {
-                self.cancelProgress();
+                self.cancelProgress(error);
                 plastic.msg.error(error, self.$el);
-                throw new Error('Data Request failed');
-                // TODO: Error is not handled!
             });
 
             req.always(function() {
@@ -330,9 +328,10 @@ plastic.Element.prototype = {
     /**
      * Cancels the processing of the element and displays the info to the user
      */
-    cancelProgress: function() {
+    cancelProgress: function(error) {
         "use strict";
-        plastic.msg.error('plastic.js processing aborted.', this.$el);
+        plastic.msg.error('plastic.js processing aborted - ' + error.message, this.$el);
+
         // Clear all Element Events
         this.events = new plastic.helper.Events();
     },

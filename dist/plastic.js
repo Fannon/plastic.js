@@ -1828,7 +1828,7 @@ plastic.options = {
     showInfoBox: false
 };
 
-plastic.version = '0.1.1';
+plastic.version = '0.2.0';
 
 /**
  * Array which holds all the plastic.js Elements
@@ -2155,17 +2155,17 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
-
-
             var textFormats = ['csv', 'tsv', 'text/comma-separated-values'];
             var dataType = 'json';
+            var dataModuleType = this.attr.data.dataFormat || this.attr.data.dataType;
+
 
             // If an external URL is given, try jsonp
             if (this.attr.data.url.indexOf("://") > -1) {
                 dataType = 'jsonp';
             }
 
-            if (textFormats.indexOf(this.attr.data.dataFormat) > -1) {
+            if (textFormats.indexOf(dataModuleType) > -1) {
                 dataType = 'text';
             }
 
@@ -2193,10 +2193,8 @@ plastic.Element.prototype = {
             });
 
             req.fail(function(error) {
-                self.cancelProgress();
+                self.cancelProgress(error);
                 plastic.msg.error(error, self.$el);
-                throw new Error('Data Request failed');
-                // TODO: Error is not handled!
             });
 
             req.always(function() {
@@ -2281,9 +2279,10 @@ plastic.Element.prototype = {
     /**
      * Cancels the processing of the element and displays the info to the user
      */
-    cancelProgress: function() {
+    cancelProgress: function(error) {
         "use strict";
-        plastic.msg.error('plastic.js processing aborted.', this.$el);
+        plastic.msg.error('plastic.js processing aborted - ' + error.message, this.$el);
+
         // Clear all Element Events
         this.events = new plastic.helper.Events();
     },
@@ -2520,7 +2519,6 @@ plastic.ElementAttributes = function(pEl) {
 
 
     try {
-
         // Parse all Attributes of the current plastic.element
         this.parse();
 
@@ -2650,11 +2648,11 @@ plastic.ElementAttributes.prototype = {
     parseHTMLAPI: function() {
         "use strict";
 
-        this.query       = this.getDataFromTag('plastic-query', false, true);
-        this.data        = this.getDataFromTag('plastic-data', false, false);
-        this.description = this.getDataFromTag('plastic-description', false, false);
-        this.options     = this.getDataFromTag('plastic-options', false, false) || {}; // Or empty object
-        this.display     = this.getDataFromTag('plastic-display', true, false);
+        this.query       = this.getDataFromElement('plastic-query', false, true);
+        this.data        = this.getDataFromElement('plastic-data', false, false);
+        this.description = this.getDataFromElement('plastic-description', false, false);
+        this.options     = this.getDataFromElement('plastic-options', false, false) || {}; // Or empty object
+        this.display     = this.getDataFromElement('plastic-display', true, false);
     },
 
     /**
@@ -2699,15 +2697,20 @@ plastic.ElementAttributes.prototype = {
     },
 
     /**
-     * Gets all Option Attributes
+     * Gets all attributes and data from a plastic sub-element
+     *
+     * @param {String}  className       class name of element
+     * @param {Boolean} required        if element is required
+     * @param {Boolean} isPlainText     if content of element is plain text instead of JSON
+     * @returns {*}
      */
-    getDataFromTag: function(tagName, required, isPlainText) {
+    getDataFromElement: function(className, required, isPlainText) {
         "use strict";
 
         /** Element data */
         var data = {};
 
-        var tag = this.$el.find('.' + tagName) || false;
+        var tag = this.$el.find('.' + className) || false;
 
         // If that tag exists
         if (tag[0]) {

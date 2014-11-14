@@ -66,7 +66,6 @@ plastic.ElementAttributes = function(pEl) {
 
 
     try {
-
         // Parse all Attributes of the current plastic.element
         this.parse();
 
@@ -196,11 +195,11 @@ plastic.ElementAttributes.prototype = {
     parseHTMLAPI: function() {
         "use strict";
 
-        this.query       = this.getDataFromTag('plastic-query', false, true);
-        this.data        = this.getDataFromTag('plastic-data', false, false);
-        this.description = this.getDataFromTag('plastic-description', false, false);
-        this.options     = this.getDataFromTag('plastic-options', false, false) || {}; // Or empty object
-        this.display     = this.getDataFromTag('plastic-display', true, false);
+        this.query       = this.getDataFromElement('plastic-query', false, true);
+        this.data        = this.getDataFromElement('plastic-data', false, false);
+        this.description = this.getDataFromElement('plastic-description', false, false);
+        this.options     = this.getDataFromElement('plastic-options', false, false) || {}; // Or empty object
+        this.display     = this.getDataFromElement('plastic-display', true, false);
     },
 
     /**
@@ -245,15 +244,20 @@ plastic.ElementAttributes.prototype = {
     },
 
     /**
-     * Gets all Option Attributes
+     * Gets all attributes and data from a plastic sub-element
+     *
+     * @param {String}  className       class name of element
+     * @param {Boolean} required        if element is required
+     * @param {Boolean} isPlainText     if content of element is plain text instead of JSON
+     * @returns {*}
      */
-    getDataFromTag: function(tagName, required, isPlainText) {
+    getDataFromElement: function(className, required, isPlainText) {
         "use strict";
 
         /** Element data */
         var data = {};
 
-        var tag = this.$el.find('.' + tagName) || false;
+        var tag = this.$el.find('.' + className) || false;
 
         // If that tag exists
         if (tag[0]) {
