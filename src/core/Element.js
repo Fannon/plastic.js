@@ -307,8 +307,8 @@ plastic.Element.prototype = {
     createDisplayContainer: function($el) {
         "use strict";
 
-        $el.append('<div class="plastic-js-display"></div>');
-        var displayEl = $el.find('.plastic-js-display');
+        $el.append('<div class="plastic-js-output"></div>');
+        var displayEl = $el.find('.plastic-js-output');
 
         if ($el.height() > 0) {
             displayEl.height($el.height());

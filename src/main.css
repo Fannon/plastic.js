@@ -2,23 +2,25 @@
     position: relative;
 }
 
-.plastic-js-display {
-    overflow: auto;
-}
-
-/* hide plastic data elements */
-.plastic-js .plastic-display,
-.plastic-js .plastic-query,
-.plastic-js .plastic-options {
+/* hide all children elements of plastic.js */
+.plastic-js > * {
     display: none;
 }
 
+.plastic-js-output {
+    overflow: auto;
+    display: block;
+}
+
 .plastic-js-messages {
+    display: block;
     position: absolute;
     z-index: 8888;
     background: rgba(255, 255, 255, 0.8);
     top: 0;
     left: 0;
+    margin: 5px;
+    max-width: 98%;
 }
 .plastic-js-messages .plastic-js-msg {
     display: block;

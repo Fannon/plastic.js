@@ -136,6 +136,7 @@ plastic.msg = {
         if (el && el.find) {
             var msgBox = el.find('.plastic-js-messages');
             msgBox.append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
+            $('.plastic-js-messages').show();
         }
 
     },

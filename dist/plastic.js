@@ -2258,8 +2258,8 @@ plastic.Element.prototype = {
     createDisplayContainer: function($el) {
         "use strict";
 
-        $el.append('<div class="plastic-js-display"></div>');
-        var displayEl = $el.find('.plastic-js-display');
+        $el.append('<div class="plastic-js-output"></div>');
+        var displayEl = $el.find('.plastic-js-output');
 
         if ($el.height() > 0) {
             displayEl.height($el.height());
@@ -2530,11 +2530,22 @@ plastic.ElementAttributes = function(pEl) {
      */
     this.data = false;
 
-    // Parse all Attributes of the current plastic.element
-    this.parse();
 
-    // Validate the final Attributes Object
-    this.validate();
+    try {
+
+        // Parse all Attributes of the current plastic.element
+        this.parse();
+
+        // Validate the final Attributes Object
+        this.validate();
+
+    } catch (e) {
+        console.log('plastic.js accident');
+        console.error(e);
+    }
+
+
+
 
 };
 
@@ -2568,10 +2579,10 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "module": {"type": ["object", "boolean"]},
+                    "type": {"type": ["string", "boolean"]},
                     "url": {"type": "string"}
                 },
-                "required": ["module", "text", "url"]
+                "required": ["type", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
@@ -2632,7 +2643,13 @@ plastic.ElementAttributes.prototype = {
     parse: function() {
         "use strict";
 
-        this.parseHTMLAPI();
+        plastic.g = this.$el;
+
+        if (this.$el.attr('type') || this.$el.attr('data-type')) {
+            this.parseJSONAPI();
+        } else {
+            this.parseHTMLAPI();
+        }
 
         if (this.pEl.options.debug) {
             plastic.msg.dir(this.getAttrObj());
@@ -2643,19 +2660,41 @@ plastic.ElementAttributes.prototype = {
     parseHTMLAPI: function() {
         "use strict";
 
-        this.style = this.getStyle();
+        this.style       = this.getStyle();
+        this.query       = this.getDataFromTag('plastic-query', false, true);
+        this.data        = this.getDataFromTag('plastic-data', false, false);
+        this.description = this.getDataFromTag('plastic-description', false, false);
+        this.options     = this.getDataFromTag('plastic-options', false, false) || {}; // Or empty object
+        this.display     = this.getDataFromTag('plastic-display', true, false);
+    },
 
-        this.query          = this.getDataFromTag('plastic-query', false, true);
-        this.data           = this.getDataFromTag('plastic-data', false, false);
-        this.description    = this.getDataFromTag('plastic-description', false, false);
-        this.options        = this.getDataFromTag('plastic-options', false, false) || {};
-        this.display        = this.getDataFromTag('plastic-display', true, false);
+    parseJSONAPI: function() {
+        "use strict";
 
-        //this.getOptions();
-        //this.getQuery();
-        //this.getData();
-        //this.getDataDescription();
-        //this.getDisplay();
+        var jsonString = this.$el.text();
+        var data = {};
+
+        // Remove
+        this.$el.text('');
+
+        try {
+            data = JSON.parse(jsonString);
+        } catch (e) {
+            console.error(e);
+        }
+
+        this.style       = this.getStyle();
+        this.query       = data.query;
+        this.data        = data.data;
+        this.description = data.description;
+        this.options     = data.options || {}; // Or empty object
+        this.display.module  = data.display.module;
+        this.display.options     = data.display;
+
+        delete this.display.options.module;
+
+        console.dir(this);
+
     },
 
     /**
@@ -2669,7 +2708,6 @@ plastic.ElementAttributes.prototype = {
             width: this.$el.width()
         };
     },
-
 
     /**
      * Gets all Option Attributes
@@ -2728,186 +2766,7 @@ plastic.ElementAttributes.prototype = {
                 plastic.msg.error('No Display Module set!', this.$el);
                 throw new Error('No Display Module set!');
             }
-
             return false;
-        }
-
-
-
-    },
-
-
-    /**
-     * Gets all Option Attributes
-     */
-    getOptions: function() {
-        "use strict";
-
-        /** Element Options */
-        var options = {}; // mandatory!
-
-        var optionsObject = this.$el.find(".plastic-options");
-
-        if (optionsObject.length > 0) {
-
-            var optionsString = optionsObject[0].text || optionsObject[0].innerHTML;
-
-            if (optionsString && optionsString !== '') {
-
-                try {
-
-                    // If JSON is escaped, unescape it
-                    optionsString = optionsString.replace(/&quot;/g, '"');
-
-                    options = $.parseJSON(optionsString);
-                    this.options = options;
-
-                } catch(e) {
-                    console.dir(e);
-                    plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
-                    throw new Error(e);
-                }
-
-            } else {
-                plastic.msg.error('Empty options element!', this.$el);
-                throw new Error('Empty options element!');
-            }
-
-        }
-    },
-
-    /**
-     * Gets all Option Attributes
-     */
-    getDisplay: function() {
-        "use strict";
-
-        /** Element Options */
-        var options = {}; // mandatory!
-
-        var displayObject = this.$el.find(".plastic-display");
-
-        if (displayObject.length > 0) {
-
-            this.display.module = displayObject.attr('data-display-module');
-
-            var displayString = displayObject[0].text  || displayObject[0].innerHTML;
-
-            if (displayString && displayString !== '') {
-
-                try {
-
-                    // If JSON is escaped, unescape it
-                    displayString = displayString.replace(/&quot;/g, '"');
-
-                    options = $.parseJSON(displayString);
-                    this.display.options = options;
-
-                } catch(e) {
-                    console.dir(e);
-                    plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
-                    throw new Error(e);
-                }
-
-            } else {
-                this.display.options = {};
-            }
-
-        } else {
-            plastic.msg.error('No Display Module set!', this.$el);
-            throw new Error('No Display Module set!');
-        }
-
-    },
-
-    /**
-     * Gets all Query Attributes and stores them into this.query
-     */
-    getQuery: function() {
-        "use strict";
-        var queryElement = this.$el.find(".plastic-query");
-
-        if (queryElement.length > 0)  {
-
-            /** Element Query Data */
-            var query = {};
-
-            query.url = queryElement.attr('data-query-url');
-            query.module = queryElement.attr('type');
-
-            var queryString = queryElement[0].text || queryElement[0].innerHTML;
-
-            if (queryString && queryString !== '') {
-                query.text = queryString;
-
-                // SUCCESS
-                this.query = query;
-
-            } else {
-                plastic.msg.error('Empty Query Element!', this.$el);
-                throw new Error('Empty Query Element!');
-            }
-
-        }
-    },
-
-    /**
-     * Gets all Schema Attributes
-     */
-    getDataDescription: function() {
-        "use strict";
-        // Get Data-URL
-        var schemaElement = this.$el.find(".plastic-schema");
-
-        if (schemaElement.length > 0)  {
-
-            var schemaString = schemaElement[0].text || schemaElement[0].innerHTML;
-
-            if (schemaString && schemaString !== '') {
-                // If JSON is escaped, unescape it
-                schemaString = schemaString.replace(/&quot;/g, '"');
-                this.data.description =  $.parseJSON(schemaString);
-            } else {
-                plastic.msg.error('Data Description Element provided, but empty!', this.$el);
-            }
-
-        }
-    },
-
-    /**
-     * Gets all Data Attributes
-     */
-    getData: function() {
-        "use strict";
-
-        /** Element Data */
-        var data = {};
-
-        // Get Data-URL
-        var dataElement = this.$el.find(".plastic-data");
-
-        if (dataElement.length > 0) {
-
-            data.url = dataElement.attr('data-url');
-            data.module = dataElement.attr('data-format');
-
-            // If no Data URL given, read Data Object
-            if (!data.url) {
-
-                var dataString = dataElement[0].text || dataElement[0].innerHTML;
-
-                if (dataString && dataString !== '') {
-                    // If JSON is escaped, unescape it
-                    dataString = dataString.replace(/&quot;/g, '"');
-                    data.raw = $.parseJSON(dataString);
-                } else {
-                    plastic.msg.error('Empty Data Element!', this.$el);
-                }
-            }
-
-            // SUCCESS
-            this.data = data;
-
         }
     },
 
@@ -3050,6 +2909,7 @@ plastic.msg = {
         if (el && el.find) {
             var msgBox = el.find('.plastic-js-messages');
             msgBox.append('<div class="plastic-js-msg plastic-js-msg-error"><strong>' + type.toUpperCase() + ':</strong> ' + msg + '</div>');
+            $('.plastic-js-messages').show();
         }
 
     },
@@ -3375,7 +3235,7 @@ plastic.modules.Module = function(pEl, type, name) {
 
     // Specific case handling for each module-type
     if (type === 'display') {
-        var $el = $(pEl.$el.find('.plastic-js-display')[0]);
+        var $el = $(pEl.$el.find('.plastic-js-output')[0]);
         $el.html('');
         this.module = new Module($el, pEl.attr);
         this.execute();
