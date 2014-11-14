@@ -1,4 +1,4 @@
-/*! plastic - v0.1.0 - 2014-11-13
+/*! plastic - v0.1.0 - 2014-11-14
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
 .plastic-js {
@@ -7,6 +7,13 @@
 
 .plastic-js-display {
     overflow: auto;
+}
+
+/* hide plastic data elements */
+.plastic-js .plastic-display,
+.plastic-js .plastic-query,
+.plastic-js .plastic-options {
+    display: none;
 }
 
 .plastic-js-messages {

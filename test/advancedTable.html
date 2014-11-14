@@ -22,6 +22,7 @@
     <script src="../bower_components/tv4/tv4.js"></script>
 
     <!-- App JavaScript -->
+    <script src="../src/_wrap_in.js"></script>
     <script src="../src/main.js"></script>
     <script src="../src/options.js"></script>
 
@@ -31,7 +32,7 @@
     <script src="../src/core/msg.js"></script>
 
     <!-- Helper Modules -->
-    <script src="../src/helper/Events.js"></script>
+    <script src="../src/helper/events.js"></script>
     <script src="../src/helper/schemaValidation.js"></script>
     <script src="../src/helper/duckTyping.js"></script>
 
@@ -64,30 +65,33 @@
     <script type="text/javascript" src="spec/main.spec.js"></script>
     <script type="text/javascript" src="spec/table.spec.js"></script>
 
+    <script src="../src/_wrap_out.js"></script>
+
 
     <div class="container">
 
         <h1><a href="index.html">Test</a> > AdvancedTable Display Module</h1>
 
+
         <h4>Data via ASK Query</h4>
         <div id="table-ask-query" class="plastic-js" style="height: auto; width: 100%;">
 
-            <script class="plastic-query" type="application/ask-query" data-query-url="http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php">
+            <div class="plastic-query" data-type="application/ask-query" data-url="http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php">
                 [[Kategorie:Mitarbeiter]]
                 | ?Vorname=Vorname
                 | ?Nachname=Nachname
                 | ?Mail=Mail
                 | ?Festnetz=Festnetz
                 | ?Handy=Handy
-            </script>
+            </div>
 
-            <script class="plastic-options" type="application/json">
+            <div class="plastic-options" data-type="application/json">
                 {
                     "benchmark": true
                 }
-            </script>
+            </div>
 
-            <script class="plastic-display" data-display-module="advanced-table" type="application/json">
+            <div class="plastic-display" data-module="advanced-table" data-type="application/json">
                 {
                     "tableClasses": "table table-condensed smaller-font",
                     "paging": true,
@@ -95,9 +99,28 @@
                     "ordering": true,
                     "orderMulti": true
                 }
-            </script>
+            </div>
 
         </div>
+
+        <h4>JSON Notation</h4>
+        <!--<script id="table-ask-query-json" class="plastic-js" type="application/json" style="height: auto; width: 100%;">-->
+            <!--{-->
+                <!--"query": {-->
+                    <!--"url": "http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php",-->
+                    <!--"module": "application/ask-query",-->
+                    <!--"text": "[[Kategorie:Mitarbeiter]] | ?Vorname=Vorname  | ?Nachname=Nachname | ?Mail=Mail | ?Festnetz=Festnetz | ?Handy=Handy\n            "-->
+                <!--},-->
+                <!--"options": {-->
+                    <!--"benchmark":true-->
+                <!--},-->
+                <!--"display": {-->
+                    <!--"module": "advanced-table",-->
+                    <!--"tableClasses": "table table-condensed smaller-font",-->
+                    <!--"paging": true-->
+                <!--}-->
+            <!--}-->
+        <!--</script>-->
 
     </div>
 

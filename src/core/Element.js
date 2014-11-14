@@ -194,7 +194,7 @@ plastic.Element.prototype = {
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
-            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.module);
+            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.type);
         }
 
 

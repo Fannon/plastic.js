@@ -6,6 +6,13 @@
     overflow: auto;
 }
 
+/* hide plastic data elements */
+.plastic-js .plastic-display,
+.plastic-js .plastic-query,
+.plastic-js .plastic-options {
+    display: none;
+}
+
 .plastic-js-messages {
     position: absolute;
     z-index: 8888;

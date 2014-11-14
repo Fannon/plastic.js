@@ -1,6 +1,15 @@
-/*! plastic - v0.1.0 - 2014-11-13
+/*! plastic - v0.1.0 - 2014-11-14
 * https://github.com/Fannon/plasticjs
 * Copyright (c) 2014 Simon Heimler; Licensed MIT */
+/* jshint -W079 */ /* Ignores Redefinition of plastic */
+
+/**
+ * plastic.js Namespace
+ *
+ * @namespace
+ */
+var plastic = {};
+
 (function (global, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -1766,78 +1775,120 @@ LazyLoad = (function (doc) {
   };
 })(this.document);
 
-/* jshint -W079 */ /* Ignores Redefinition of plastic */
+plastic.options = {
+
+    /**
+     * Debug Mode
+     *
+     * This enables logging of some informations to the console
+     * This also ignores Exception handiling. If an error occurs it will crash hard and precice.
+     *
+     * @type {boolean}
+     */
+    debug: false,
+
+    /**
+     * If true, plastic.js will keep a log object
+     * It is stored in plastic.msg._logs and can be JSON Dumped via plastic.msg.dumpLog();
+     *
+     * @type {boolean}
+     */
+    log: true,
+
+    /**
+     * Logs Benchmark Infos to the console
+     *
+     * @type {boolean}
+     */
+    benchmark: false,
+
+    /**
+     * Width of Canvas, if not given
+     * @type {string}
+     */
+    width: '100%',
+
+    /**
+     * Height of Canvas, if not given
+     * @type {string}
+     */
+    height: 'auto',
+
+    /**
+     * Default AJAX Timeout (in ms)
+     * @type {number}
+     */
+    timeout: 12000,
+
+    /**
+     * If true, an additional info box is shown below the plastic element
+     * This displays additional infos like execution time
+     * @type {boolean}
+     */
+    showInfoBox: false
+};
+
+plastic.version = '0.1.1';
 
 /**
- * plastic.js Namespace
+ * Array which holds all the plastic.js Elements
+ *
+ * @type Array
+ */
+plastic.elements = [];
+
+/**
+ * Module Namespace
+ *
+ * This includes module and depencency handling and of course all available modules
  *
  * @namespace
  */
-var plastic = {
+plastic.modules = {
 
     /**
-     * Version Number
-     * @type String
-     */
-    version: '0.1.0',
-
-    /**
-     * Array which holds all the plastic.js Elements
-     *
-     * @type Array
-     */
-    elements: [],
-
-    /**
-     * Module Namespace
-     *
-     * This includes module and depencency handling and of course all available modules
-     *
-     * @namespace
-     */
-    modules: {
-
-        /**
-         * Query Parser Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        query: {},
-
-        /**
-         * API Parser Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        api: {},
-
-        /**
-         * Data Parser Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        data: {},
-
-        /**
-         * Display Modules Namespace
-         * @namespace
-         * @ignore
-         */
-        display: {}
-
-    },
-
-    /**
-     * Namespace for helper functions
+     * Query Parser Modules Namespace
      * @namespace
      * @ignore
      */
-    helper: {},
+    query: {},
 
+    /**
+     * API Parser Modules Namespace
+     * @namespace
+     * @ignore
+     */
+    api: {},
 
-    errors: []
+    /**
+     * Data Parser Modules Namespace
+     * @namespace
+     * @ignore
+     */
+    data: {},
+
+    /**
+     * Display Modules Namespace
+     * @namespace
+     * @ignore
+     */
+    display: {}
 
 };
+
+/**
+ * Namespace for helper functions
+ * @namespace
+ * @ignore
+ */
+plastic.helper = {};
+
+/**
+ * History of all plastic.js errors
+ *
+ * @type {Array}
+ */
+plastic.errors = [];
 
 /**
  * Executes plastic.js
@@ -1850,7 +1901,6 @@ plastic.execute = function() {
     if (plastic.options.debug) {
         plastic.msg.log('[MAIN] plastic.js version v' + plastic.version + ' INIT');
     }
-
 
     /**
      * Global plastic events
@@ -1909,59 +1959,6 @@ plastic.execute = function() {
 
     });
 
-};
-
-plastic.options = {
-
-    /**
-     * Debug Mode
-     *
-     * This enables logging of some informations to the console
-     * This also ignores Exception handiling. If an error occurs it will crash hard and precice.
-     *
-     * @type {boolean}
-     */
-    debug: false,
-
-    /**
-     * If true, plastic.js will keep a log object
-     * It is stored in plastic.msg._logs and can be JSON Dumped via plastic.msg.dumpLog();
-     *
-     * @type {boolean}
-     */
-    log: true,
-
-    /**
-     * Logs Benchmark Infos to the console
-     *
-     * @type {boolean}
-     */
-    benchmark: false,
-
-    /**
-     * Width of Canvas, if not given
-     * @type {string}
-     */
-    width: '100%',
-
-    /**
-     * Height of Canvas, if not given
-     * @type {string}
-     */
-    height: 'auto',
-
-    /**
-     * Default AJAX Timeout (in ms)
-     * @type {number}
-     */
-    timeout: 12000,
-
-    /**
-     * If true, an additional info box is shown below the plastic element
-     * This displays additional infos like execution time
-     * @type {boolean}
-     */
-    showInfoBox: false
 };
 
 plastic.Element = function($el) {
@@ -2148,7 +2145,7 @@ plastic.Element.prototype = {
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
-            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.module);
+            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.type);
         }
 
 
@@ -2546,6 +2543,8 @@ plastic.ElementAttributes.prototype = {
     /**
      * JSON Schema for validation
      *
+     * // TODO: Split this to the seperate module types?
+     *
      * @link http://json-schema.org/|JSON-Schema Site
      * @type {{}}
      */
@@ -2554,17 +2553,6 @@ plastic.ElementAttributes.prototype = {
         "type": "object",
 
         "properties": {
-            "style": {
-                "type": "object",
-                "properties": {
-                    "width": {
-                        "type": "number"
-                    },
-                    "height": {
-                        "type": "number"
-                    }
-                }
-            },
             "options": {
                 "type": "object"
             },
@@ -2580,7 +2568,7 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "module": {"type": "string"},
+                    "module": {"type": ["object", "boolean"]},
                     "url": {"type": "string"}
                 },
                 "required": ["module", "text", "url"]
@@ -2588,7 +2576,7 @@ plastic.ElementAttributes.prototype = {
             "data": {
                 "type": ["object", "boolean"],
                 "properties": {
-                    "module": {"type": "string"},
+                    "module": {"type": ["object", "boolean"]},
                     "raw": {"type": ["object", "array", "string"]},
                     "processed": {
                         "type": "array",
@@ -2644,12 +2632,7 @@ plastic.ElementAttributes.prototype = {
     parse: function() {
         "use strict";
 
-        this.getStyle();
-        this.getOptions();
-        this.getQuery();
-        this.getData();
-        this.getDataDescription();
-        this.getDisplay();
+        this.parseHTMLAPI();
 
         if (this.pEl.options.debug) {
             plastic.msg.dir(this.getAttrObj());
@@ -2657,19 +2640,102 @@ plastic.ElementAttributes.prototype = {
 
     },
 
+    parseHTMLAPI: function() {
+        "use strict";
+
+        this.style = this.getStyle();
+
+        this.query          = this.getDataFromTag('plastic-query', false, true);
+        this.data           = this.getDataFromTag('plastic-data', false, false);
+        this.description    = this.getDataFromTag('plastic-description', false, false);
+        this.options        = this.getDataFromTag('plastic-options', false, false) || {};
+        this.display        = this.getDataFromTag('plastic-display', true, false);
+
+        //this.getOptions();
+        //this.getQuery();
+        //this.getData();
+        //this.getDataDescription();
+        //this.getDisplay();
+    },
+
     /**
-     * Gets all Style Attributes
+     * Gets width and height of the element
      * They are calculated directly from the DOM Element style
      */
     getStyle: function() {
         "use strict";
-
-        /** Element CSS Style (Contains Width and Height) */
-        this.style = {};
-
-        this.style.height = this.$el.height();
-        this.style.width = this.$el.width();
+        return {
+            height: this.$el.height(),
+            width: this.$el.width()
+        };
     },
+
+
+    /**
+     * Gets all Option Attributes
+     */
+    getDataFromTag: function(tagName, required, isPlainText) {
+        "use strict";
+
+        /** Element data */
+        var data = {};
+
+        var tag = this.$el.find('.' + tagName) || false;
+
+        // If that tag exists
+        if (tag[0]) {
+
+            // Get the module type if available
+            data.module = tag.attr('data-module') || false;
+            data.type = tag.attr('type') || tag.attr('data-type') || false;
+            data.url = tag.attr('data-url') || false;
+            data.text = tag[0].text || tag[0].innerHTML || false;
+
+            data.allAttr = {};
+
+            $(tag[0].attributes).each(function() {
+                data.allAttr[this.nodeName] = this.value;
+            });
+
+            // If tag content is JSON: Parse it and put it into options
+            if (!isPlainText) {
+
+                if (data.text && data.text !== '') {
+
+                    try {
+                        // If JSON is escaped, unescape it
+                        data.options = data.text.replace(/&quot;/g, '"');
+                        data.options = $.parseJSON(data.options);
+
+                    } catch(e) {
+                        console.dir(e);
+                        plastic.msg.error('Invalid JSON in the Options Object!', this.$el);
+                        throw new Error(e);
+                    }
+
+                } else {
+                    data.options = {}; // If no options are given, return an empty object
+                }
+            }
+
+            console.log('PARSED: ' + tagName);
+            console.dir(data);
+
+            return data;
+
+        } else {
+            if (required) {
+                plastic.msg.error('No Display Module set!', this.$el);
+                throw new Error('No Display Module set!');
+            }
+
+            return false;
+        }
+
+
+
+    },
+
 
     /**
      * Gets all Option Attributes
@@ -2684,7 +2750,7 @@ plastic.ElementAttributes.prototype = {
 
         if (optionsObject.length > 0) {
 
-            var optionsString = optionsObject[0].text;
+            var optionsString = optionsObject[0].text || optionsObject[0].innerHTML;
 
             if (optionsString && optionsString !== '') {
 
@@ -2703,8 +2769,8 @@ plastic.ElementAttributes.prototype = {
                 }
 
             } else {
-                plastic.msg.error('Empty Obptions Element!', this.$el);
-                throw new Error('Empty Obptions Element!');
+                plastic.msg.error('Empty options element!', this.$el);
+                throw new Error('Empty options element!');
             }
 
         }
@@ -2725,16 +2791,16 @@ plastic.ElementAttributes.prototype = {
 
             this.display.module = displayObject.attr('data-display-module');
 
-            var optionsString = displayObject[0].text;
+            var displayString = displayObject[0].text  || displayObject[0].innerHTML;
 
-            if (optionsString && optionsString !== '') {
+            if (displayString && displayString !== '') {
 
                 try {
 
                     // If JSON is escaped, unescape it
-                    optionsString = optionsString.replace(/&quot;/g, '"');
+                    displayString = displayString.replace(/&quot;/g, '"');
 
-                    options = $.parseJSON(optionsString);
+                    options = $.parseJSON(displayString);
                     this.display.options = options;
 
                 } catch(e) {
@@ -2769,7 +2835,7 @@ plastic.ElementAttributes.prototype = {
             query.url = queryElement.attr('data-query-url');
             query.module = queryElement.attr('type');
 
-            var queryString = queryElement[0].text;
+            var queryString = queryElement[0].text || queryElement[0].innerHTML;
 
             if (queryString && queryString !== '') {
                 query.text = queryString;
@@ -2795,7 +2861,7 @@ plastic.ElementAttributes.prototype = {
 
         if (schemaElement.length > 0)  {
 
-            var schemaString = schemaElement[0].text;
+            var schemaString = schemaElement[0].text || schemaElement[0].innerHTML;
 
             if (schemaString && schemaString !== '') {
                 // If JSON is escaped, unescape it
@@ -2828,7 +2894,7 @@ plastic.ElementAttributes.prototype = {
             // If no Data URL given, read Data Object
             if (!data.url) {
 
-                var dataString = dataElement[0].text;
+                var dataString = dataElement[0].text || dataElement[0].innerHTML;
 
                 if (dataString && dataString !== '') {
                     // If JSON is escaped, unescape it
@@ -3046,7 +3112,9 @@ plastic.helper.duckTyping = function(data) {
 
     var dataDescription = {};
 
+    // Regular Expressions
     var emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 
     for (var attrName in data[0]) {
 

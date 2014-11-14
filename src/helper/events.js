@@ -1,7 +1,7 @@
 /**
  * plastic.js Events (PubSub Pattern)
  *
- * Adapted from {@link http://amplifyjs.com Amplify.js} into a commented OO implementation
+ * Adapted from {@link http://amplifyjs.com Amplify.js} into a commented prototype-oriented implementation
  *
  * @link https://github.com/appendto/amplify/blob/master/src/core.js|Link to Source
  *
