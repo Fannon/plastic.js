@@ -1,14 +1,7 @@
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'data',
-    apiName: 'csv',
-    className: 'CSV',
-    dependencies: []
-});
-
-plastic.modules.moduleManager.register({
-    moduleType: 'data',
-    apiName: 'tsv',
+    apiName: ['csv', 'tsv', 'text/comma-separated-values'],
     className: 'CSV',
     dependencies: []
 });

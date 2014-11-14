@@ -26,13 +26,17 @@ plastic.modules.moduleManager = {
         query: {}
     },
 
+    /**
+     * Parameters Schema
+     * TODO: Remove this?
+     */
     parametersSchema: {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 
         "properties": {
             "moduleType": {"type": "string"},
-            "apiName": {"type": "string"},
+            "apiName": {"type": ["string", "array"]},
             "className": {"type": "string"},
             "dependencies": {"type": "array"}
         },
@@ -52,7 +56,15 @@ plastic.modules.moduleManager = {
         plastic.helper.schemaValidation(this.parametersSchema, paramsObj);
 
         try {
-            this.modules[paramsObj.moduleType][paramsObj.apiName] = paramsObj;
+
+            if ($.isArray(paramsObj.apiName)) {
+                for (var i = 0; i < paramsObj.apiName.length; i++) {
+                    this.modules[paramsObj.moduleType][paramsObj.apiName[i]] = paramsObj;
+                }
+            } else {
+                this.modules[paramsObj.moduleType][paramsObj.apiName] = paramsObj;
+            }
+
         } catch(e) {
             console.log(e);
             console.error('Wrong usage of Module Registry!');

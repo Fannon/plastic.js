@@ -159,7 +159,6 @@ plastic.modules.Module.prototype = {
             }
 
         } catch (e) {
-//            console.error(e);
             plastic.msg.error(e, this.pEl);
             // TODO: Stop Display Processing
             // TODO: Message to the User

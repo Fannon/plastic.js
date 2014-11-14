@@ -29,9 +29,9 @@ plastic.ElementAttributes = function(pEl) {
 
     /**
      * Element Style Attributes
-     * @type {Object|boolean}
+     * @type {Object}
      */
-    this.style = false;
+    this.style = {};
 
     /**
      * Element Options Attributes
@@ -57,6 +57,13 @@ plastic.ElementAttributes = function(pEl) {
      */
     this.data = false;
 
+    /**
+     * Element Data Description
+     *
+     * @type {{}}
+     */
+    this.description = {};
+
 
     try {
 
@@ -71,17 +78,12 @@ plastic.ElementAttributes = function(pEl) {
         console.error(e);
     }
 
-
-
-
 };
 
 plastic.ElementAttributes.prototype = {
 
     /**
      * JSON Schema for validation
-     *
-     * // TODO: Split this to the seperate module types?
      *
      * @link http://json-schema.org/|JSON-Schema Site
      * @type {{}}
@@ -106,10 +108,10 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "type": {"type": ["string", "boolean"]},
+                    "datatype": {"type": ["string", "boolean"]},
                     "url": {"type": "string"}
                 },
-                "required": ["type", "text", "url"]
+                "required": ["datatype", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
@@ -170,10 +172,14 @@ plastic.ElementAttributes.prototype = {
     parse: function() {
         "use strict";
 
-        plastic.g = this.$el;
+        // Calculate height and width
+        this.style = this.getStyle();
 
+        // If the plastic tag has a type or data-type attribute, it is assumed to use the JSON API
         if (this.$el.attr('type') || this.$el.attr('data-type')) {
             this.parseJSONAPI();
+
+        // If not, asume the HTML API
         } else {
             this.parseHTMLAPI();
         }
@@ -184,10 +190,12 @@ plastic.ElementAttributes.prototype = {
 
     },
 
+    /**
+     * Parses a plastic.js tag that uses HTML as its API
+     */
     parseHTMLAPI: function() {
         "use strict";
 
-        this.style       = this.getStyle();
         this.query       = this.getDataFromTag('plastic-query', false, true);
         this.data        = this.getDataFromTag('plastic-data', false, false);
         this.description = this.getDataFromTag('plastic-description', false, false);
@@ -195,13 +203,16 @@ plastic.ElementAttributes.prototype = {
         this.display     = this.getDataFromTag('plastic-display', true, false);
     },
 
+    /**
+     * Parses a plastic.js tag that uses pure JSON as API
+     */
     parseJSONAPI: function() {
         "use strict";
 
         var jsonString = this.$el.text();
         var data = {};
 
-        // Remove
+        // Remove the JSON text from the element
         this.$el.text('');
 
         try {
@@ -210,17 +221,14 @@ plastic.ElementAttributes.prototype = {
             console.error(e);
         }
 
-        this.style       = this.getStyle();
-        this.query       = data.query;
-        this.data        = data.data;
-        this.description = data.description;
-        this.options     = data.options || {}; // Or empty object
-        this.display.module  = data.display.module;
+        this.query               = data.query;
+        this.data                = data.data;
+        this.description.options = data.description;
+        this.options.options     = data.options || {}; // Or empty object
+        this.display.module      = data.display.module;
         this.display.options     = data.display;
 
         delete this.display.options.module;
-
-        console.dir(this);
 
     },
 
@@ -252,10 +260,9 @@ plastic.ElementAttributes.prototype = {
 
             // Get the module type if available
             data.module = tag.attr('data-module') || false;
-            data.type = tag.attr('type') || tag.attr('data-type') || false;
+            data.datatype = tag.attr('type') || tag.attr('data-type') || false;
             data.url = tag.attr('data-url') || false;
             data.text = tag[0].text || tag[0].innerHTML || false;
-
             data.allAttr = {};
 
             $(tag[0].attributes).each(function() {
@@ -282,9 +289,6 @@ plastic.ElementAttributes.prototype = {
                     data.options = {}; // If no options are given, return an empty object
                 }
             }
-
-            console.log('PARSED: ' + tagName);
-            console.dir(data);
 
             return data;
 

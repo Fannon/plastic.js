@@ -2145,7 +2145,7 @@ plastic.Element.prototype = {
         //////////////////////////////////////////
 
         if (this.attr.query) { // OPTIONAL
-            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.type);
+            this.queryModule = new plastic.modules.Module(this, 'query', this.attr.query.datatype);
         }
 
 
@@ -2155,73 +2155,107 @@ plastic.Element.prototype = {
 
         if (this.attr.data && this.attr.data.url) {
 
-            var dataType = 'json';
+            var textFormats = ['csv', 'tsv', 'text/comma-separated-values'];
+            var dataType = 'jsonp';
+
+            if (textFormats.indexOf(this.attr.data.datatype) > -1) {
+                dataType = 'text';
+            }
 
             if (this.options.debug) {
                 plastic.msg.log('[#' + this.id + '] Data-URL: ' + this.attr.data.url);
             }
 
-            // TODO: Catch Timeout Error
+            var req = $.ajax({
+                url: this.attr.data.url,
+                dataType: dataType,
+                timeout: this.options.timeout
+            });
 
-            // If data is in text format, load it via $.get
-            if (this.attr.data.module === ('csv' || 'tsv')) {
+            req.done(function(data) {
 
-                try {
-                    $.get(this.attr.data.url, function(data){
+                self.events.pub('data-sucess');
 
-                        self.attr.data.raw = String(data);
-
-                        self.benchmarkDataLoaded = (new Date()).getTime();
-                        self.attr.raw = data;
-                        self.updateProgress();
-
-                        self.events.pub('data-sucess');
-
-                    });
-
-
-                } catch(e) {
-                    plastic.msg.error(e, self.$el);
-                    throw new Error('Data Request failed');
+                if (dataType === 'text') {
+                    self.attr.data.raw = String(data);
+                } else if (data !== null && typeof data === 'object') {
+                    self.attr.data.raw = data;
+                } else {
+                    self.attr.data.raw = $.parseJSON(data);
                 }
+            });
 
+            req.fail(function(error) {
+                self.cancelProgress();
+                plastic.msg.error(error, self.$el);
+                throw new Error('Data Request failed');
+            });
 
+            req.always(function() {
+                self.updateProgress();
+                self.benchmarkDataLoaded = (new Date()).getTime();
+            });
 
-            // Assume file is in JSON format and load it via $.ajax
-            } else {
-
-                /** jQuery AJAX Request Object */
-                try {
-                    $.ajax({
-                        url: this.attr.data.url,
-                        dataType: 'json',
-                        timeout: this.options.timeout,
-                        success: function(data) {
-                            "use strict";
-
-                            if (data !== null && typeof data === 'object') {
-                                self.attr.data.raw = data;
-                            } else {
-                                self.attr.data.raw = $.parseJSON(data);
-                            }
-
-                            self.benchmarkDataLoaded = (new Date()).getTime();
-                            self.attr.raw = data;
-                            self.updateProgress();
-
-                            self.events.pub('data-sucess');
-                        },
-                        error: function() {
-                            plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
-                            self.cancelProgress();
-                        }
-                    });
-                } catch(e) {
-                    plastic.msg.error(e, self.$el);
-                    throw new Error('Data Request failed');
-                }
-            }
-
+            //// TODO: Catch Timeout Error
+            //
+            //// If data is in some text format, load it via $.get
+            //if (isTextRequest) {
+            //
+            //    var req = $.get(this.attr.data.url, function(data) {});
+            //
+            //    req.done(function(data) {
+            //        self.attr.data.raw = String(data);
+            //        self.attr.raw = data;
+            //        self.events.pub('data-sucess');
+            //    });
+            //
+            //    req.fail(function(error) {
+            //        plastic.msg.error(error, self.$el);
+            //        throw new Error('Data Request failed');
+            //        self.cancelProgress();
+            //    });
+            //
+            //    req.always(function() {
+            //        self.updateProgress();
+            //        self.benchmarkDataLoaded = (new Date()).getTime();
+            //
+            //    });
+            //
+            //// Assume file is in JSON format and load it via $.ajax
+            //} else {
+            //
+            //    /** jQuery AJAX Request Object */
+            //    try {
+            //        $.ajax({
+            //            url: this.attr.data.url,
+            //            dataType: 'json',
+            //            timeout: this.options.timeout,
+            //            success: function(data) {
+            //                "use strict";
+            //
+            //                if (data !== null && typeof data === 'object') {
+            //                    self.attr.data.raw = data;
+            //                } else {
+            //                    self.attr.data.raw = $.parseJSON(data);
+            //                }
+            //
+            //                self.benchmarkDataLoaded = (new Date()).getTime();
+            //                self.attr.raw = data;
+            //                self.updateProgress();
+            //
+            //                self.events.pub('data-sucess');
+            //            },
+            //            error: function() {
+            //                plastic.msg.error('Could not get Data from URL <a href="' + self.attr.data.url + '">' + self.attr.data.url + '</a>', "error", self.$el );
+            //                self.cancelProgress();
+            //            }
+            //        });
+            //    } catch(e) {
+            //        plastic.msg.error(e, self.$el);
+            //        throw new Error('Data Request failed');
+            //    }
+            //}
+            //
 
 
         } else {
@@ -2375,7 +2409,7 @@ plastic.Element.prototype = {
      */
     mergeOptions: function() {
         "use strict";
-        this.options = $.extend(true, {}, plastic.options, this.attr.options);
+        this.options = $.extend(true, {}, plastic.options, this.attr.options.options);
     },
 
     /**
@@ -2502,9 +2536,9 @@ plastic.ElementAttributes = function(pEl) {
 
     /**
      * Element Style Attributes
-     * @type {Object|boolean}
+     * @type {Object}
      */
-    this.style = false;
+    this.style = {};
 
     /**
      * Element Options Attributes
@@ -2530,6 +2564,13 @@ plastic.ElementAttributes = function(pEl) {
      */
     this.data = false;
 
+    /**
+     * Element Data Description
+     *
+     * @type {{}}
+     */
+    this.description = {};
+
 
     try {
 
@@ -2544,17 +2585,12 @@ plastic.ElementAttributes = function(pEl) {
         console.error(e);
     }
 
-
-
-
 };
 
 plastic.ElementAttributes.prototype = {
 
     /**
      * JSON Schema for validation
-     *
-     * // TODO: Split this to the seperate module types?
      *
      * @link http://json-schema.org/|JSON-Schema Site
      * @type {{}}
@@ -2579,10 +2615,10 @@ plastic.ElementAttributes.prototype = {
                 "type": ["object", "boolean"],
                 "properties": {
                     "text": {"type": "string"},
-                    "type": {"type": ["string", "boolean"]},
+                    "datatype": {"type": ["string", "boolean"]},
                     "url": {"type": "string"}
                 },
-                "required": ["type", "text", "url"]
+                "required": ["datatype", "text", "url"]
             },
             "data": {
                 "type": ["object", "boolean"],
@@ -2643,10 +2679,14 @@ plastic.ElementAttributes.prototype = {
     parse: function() {
         "use strict";
 
-        plastic.g = this.$el;
+        // Calculate height and width
+        this.style = this.getStyle();
 
+        // If the plastic tag has a type or data-type attribute, it is assumed to use the JSON API
         if (this.$el.attr('type') || this.$el.attr('data-type')) {
             this.parseJSONAPI();
+
+        // If not, asume the HTML API
         } else {
             this.parseHTMLAPI();
         }
@@ -2657,10 +2697,12 @@ plastic.ElementAttributes.prototype = {
 
     },
 
+    /**
+     * Parses a plastic.js tag that uses HTML as its API
+     */
     parseHTMLAPI: function() {
         "use strict";
 
-        this.style       = this.getStyle();
         this.query       = this.getDataFromTag('plastic-query', false, true);
         this.data        = this.getDataFromTag('plastic-data', false, false);
         this.description = this.getDataFromTag('plastic-description', false, false);
@@ -2668,13 +2710,16 @@ plastic.ElementAttributes.prototype = {
         this.display     = this.getDataFromTag('plastic-display', true, false);
     },
 
+    /**
+     * Parses a plastic.js tag that uses pure JSON as API
+     */
     parseJSONAPI: function() {
         "use strict";
 
         var jsonString = this.$el.text();
         var data = {};
 
-        // Remove
+        // Remove the JSON text from the element
         this.$el.text('');
 
         try {
@@ -2683,17 +2728,14 @@ plastic.ElementAttributes.prototype = {
             console.error(e);
         }
 
-        this.style       = this.getStyle();
-        this.query       = data.query;
-        this.data        = data.data;
-        this.description = data.description;
-        this.options     = data.options || {}; // Or empty object
-        this.display.module  = data.display.module;
+        this.query               = data.query;
+        this.data                = data.data;
+        this.description.options = data.description;
+        this.options.options     = data.options || {}; // Or empty object
+        this.display.module      = data.display.module;
         this.display.options     = data.display;
 
         delete this.display.options.module;
-
-        console.dir(this);
 
     },
 
@@ -2725,10 +2767,9 @@ plastic.ElementAttributes.prototype = {
 
             // Get the module type if available
             data.module = tag.attr('data-module') || false;
-            data.type = tag.attr('type') || tag.attr('data-type') || false;
+            data.datatype = tag.attr('type') || tag.attr('data-type') || false;
             data.url = tag.attr('data-url') || false;
             data.text = tag[0].text || tag[0].innerHTML || false;
-
             data.allAttr = {};
 
             $(tag[0].attributes).each(function() {
@@ -2755,9 +2796,6 @@ plastic.ElementAttributes.prototype = {
                     data.options = {}; // If no options are given, return an empty object
                 }
             }
-
-            console.log('PARSED: ' + tagName);
-            console.dir(data);
 
             return data;
 
@@ -3338,7 +3376,6 @@ plastic.modules.Module.prototype = {
             }
 
         } catch (e) {
-//            console.error(e);
             plastic.msg.error(e, this.pEl);
             // TODO: Stop Display Processing
             // TODO: Message to the User
@@ -3570,13 +3607,17 @@ plastic.modules.moduleManager = {
         query: {}
     },
 
+    /**
+     * Parameters Schema
+     * TODO: Remove this?
+     */
     parametersSchema: {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
 
         "properties": {
             "moduleType": {"type": "string"},
-            "apiName": {"type": "string"},
+            "apiName": {"type": ["string", "array"]},
             "className": {"type": "string"},
             "dependencies": {"type": "array"}
         },
@@ -3596,7 +3637,15 @@ plastic.modules.moduleManager = {
         plastic.helper.schemaValidation(this.parametersSchema, paramsObj);
 
         try {
-            this.modules[paramsObj.moduleType][paramsObj.apiName] = paramsObj;
+
+            if ($.isArray(paramsObj.apiName)) {
+                for (var i = 0; i < paramsObj.apiName.length; i++) {
+                    this.modules[paramsObj.moduleType][paramsObj.apiName[i]] = paramsObj;
+                }
+            } else {
+                this.modules[paramsObj.moduleType][paramsObj.apiName] = paramsObj;
+            }
+
         } catch(e) {
             console.log(e);
             console.error('Wrong usage of Module Registry!');
@@ -3773,14 +3822,7 @@ plastic.modules.data.AskJson.prototype = {
 // Register Module and define dependencies:
 plastic.modules.moduleManager.register({
     moduleType: 'data',
-    apiName: 'csv',
-    className: 'CSV',
-    dependencies: []
-});
-
-plastic.modules.moduleManager.register({
-    moduleType: 'data',
-    apiName: 'tsv',
+    apiName: ['csv', 'tsv', 'text/comma-separated-values'],
     className: 'CSV',
     dependencies: []
 });
