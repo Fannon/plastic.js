@@ -1,0 +1,91 @@
+This example snippet contains all available options with their default values:
+
+.. code-block:: html
+
+    <script class="plastic-display" data-display-module="advanced-table" type="application/json> 
+        {
+            "tableClasses": ""
+            "paging": false
+            "lengthMenu": [[10,25,50,100,-1],[10,25,50,100,"All"]]
+            "searching": true
+            "ordering": true
+            "orderMulti": true
+        }
+    </script>
+
+Properties in detail:
+---------------------
+<div class="property-description"><h4>Table Classes</h4>
+<table class="table">
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>tableClasses</td></tr>
+   <tr class="description"><td><strong>Description</strong></td><td>Table CSS Classes</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>string</td></tr>
+</table>
+
+<pre class="highlight">{
+    "tableClasses": ""
+}</pre></div><div class="property-description"><h4>Paging</h4>
+<table class="table">
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>paging</td></tr>
+   <tr class="description"><td><strong>Description</strong></td><td>Enable Pagination of Table Elements</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>boolean</td></tr>
+</table>
+
+<pre class="highlight">{
+    "paging": false
+}</pre></div><div class="property-description"><h4>Menu Length</h4>
+<table class="table">
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>lengthMenu</td></tr>
+   <tr class="description"><td><strong>Description</strong></td><td>Sets the available number of entries in the dropdown menu. Takes an 2dim array.</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>array</td></tr>
+   <tr class="defaul"><td><strong>Default</strong></td><td>[[10,25,50,100,-1],[10,25,50,100,"All"]]</td></tr>
+</table>
+
+<pre class="highlight">{
+    "lengthMenu": [
+        [
+            10,
+            25,
+            50,
+            100,
+            -1
+        ],
+        [
+            10,
+            25,
+            50,
+            100,
+            "All"
+        ]
+    ]
+}</pre></div><div class="property-description"><h4>Searching</h4>
+<table class="table">
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>searching</td></tr>
+   <tr class="description"><td><strong>Description</strong></td><td>Enable Searching of Table Elements</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>boolean</td></tr>
+   <tr class="defaul"><td><strong>Default</strong></td><td>true</td></tr>
+</table>
+
+<pre class="highlight">{
+    "searching": true
+}</pre></div><div class="property-description"><h4>Ordering</h4>
+<table class="table">
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>ordering</td></tr>
+   <tr class="description"><td><strong>Description</strong></td><td>Feature control ordering (sorting) abilities in DataTables.</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>boolean</td></tr>
+   <tr class="defaul"><td><strong>Default</strong></td><td>true</td></tr>
+</table>
+
+<pre class="highlight">{
+    "ordering": true
+}</pre></div><div class="property-description"><h4>Multiple Ordering</h4>
+<table class="table">
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>orderMulti</td></tr>
+   <tr class="description"><td><strong>Description</strong></td><td>Multiple column ordering ability control.</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>boolean</td></tr>
+   <tr class="defaul"><td><strong>Default</strong></td><td>true</td></tr>
+</table>
+
+<pre class="highlight">{
+    "orderMulti": true
+}</pre></div>

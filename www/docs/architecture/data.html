@@ -1,0 +1,303 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Internal Data Format &mdash; plastic.js 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <!-- <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'> -->
+  <link href='http://fonts.googleapis.com/css?family=Titillium+Web:300, 600' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/plastic.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="plastic.js 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Architecture" href="index.html"/>
+        <link rel="next" title="Schema &amp; Data Description" href="schema.html"/>
+        <link rel="prev" title="Application Architecture" href="application.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div id="plasticjs-header">
+
+      <a href="http://www.plasticjs.org"><img src="http://www.plasticjs.org/img/plasticjs-120.png" id="plasticjs-header-logo" alt="plastic.js logo"></a>
+
+    <div class="description">
+      <a href="http://www.plasticjs.org/">Home</a>
+      <a href="http://www.plasticjs.org/docs/" class="active">User Documentation</a>
+      <a href="http://www.plasticjs.org/devdocs/">Developer Documentation</a>
+      <a href="https://github.com/Fannon/plastic.js">GitHub</a>
+    </div>
+
+  </div>
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <a href="../index.html"> Overview</a>
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/advanced.html">Advanced Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/wrapper.html">Wrapper / Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/index.html#download-plastic-js">Download plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/index.html#include-plastic-js-in-your-site">Include plastic.js in your site</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/index.html#write-an-embed-code">Write an embed code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../displayModules/index.html">Display Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../displayModules/simpleTable.html">Simple Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../displayModules/advancedTable.html">Advanced Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../displayModules/barChart.html">Bar Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../displayModules/pieChart.html">Pie Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../displayModules/lineChart.html">Line Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../displayModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dataModules/index.html">Data Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/default.html">Default format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/simpleDefault.html">Simple Default</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/sparqlJson.html">SPARQL JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/askJson.html">ASK JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../queryModules/index.html">Query Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../queryModules/sparql.html">SPARQL Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../queryModules/ask.html">ASK Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../queryModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="general.html">General Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="application.html">Application Architecture</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Internal Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schema.html">Schema &amp; Data Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../extend/index.html">Extend plastic.js</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extend/architecture.html">Architecture of plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/display.html">Display Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/data.html">Data Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/query.html">Query Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/index.html#contributing-to-plastic-js">Contributing to plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/index.html#extending-plastic-js">Extending plastic.js</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">plastic.js</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Architecture</a> &raquo;</li>
+      
+    <li>Internal Data Format</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="internal-data-format">
+<h1>Internal Data Format<a class="headerlink" href="#internal-data-format" title="Permalink to this headline">¶</a></h1>
+<p>plastic.js has an internal data format that every incoming data is reduced/expanded to.
+This ensures the cross compatibility of the display modules and other internal functions.</p>
+<p>The internal data format is has also a corresponding <a class="reference external" href="../dataModules/default.html">Default Data Module</a></p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="schema">
+<h2>Schema<a class="headerlink" href="#schema" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>One of the big challenges in developing this framework was to decide on an internal data format,
+which has to work with every incoming data type and also the “outgoing” display modules.
+This proves especially difficult since the incoming data could be in tabular structure,
+but also in a tree or even graph structure.</p>
+<p>Since the graph structure is the most flexible one and can contain every other structure within,
+this seems to be a good choice for an all-purpose data structure.
+However this leads to choosing the most complex structure as the common denominator and complicates
+originally simple data structures significantly. The alternative would be to choose the simplest common data storage type
+which can be a simple table. RDF has demonstrated that a complex graph can be stored as triples in a simple three column table.</p>
+<p>The decision was made to go with the simplest possible data format that still allows for some flexibility.
+It consists of a table where each table cell is an array of zero or more Strings, Numbers or in some cases Objects.
+Objects provide further flexibility since they can represent more complex Entities like GeoCoordinates.
+But with the use of schemas – which will be described below - even a simple type like a string can be declared to be a date for example.</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="schema.html" class="btn btn-neutral float-right" title="Schema &amp; Data Description">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="application.html" class="btn btn-neutral" title="Application Architecture"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div class="contentinfo" role="contentinfo">
+         2014, Simon Heimler, Sebastian Huber.
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+      <script type="text/javascript" src="../_static/js/plastic.js"></script>
+      <script type="text/javascript" src="../_static/js/custom.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-3720145-17', 'auto');
+      ga('send', 'pageview');
+
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Simple Table &mdash; plastic.js 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <!-- <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'> -->
+  <link href='http://fonts.googleapis.com/css?family=Titillium+Web:300, 600' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/plastic.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="plastic.js 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Display Modules" href="index.html"/>
+        <link rel="next" title="Advanced Table" href="advancedTable.html"/>
+        <link rel="prev" title="Display Modules" href="index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div id="plasticjs-header">
+
+      <a href="http://www.plasticjs.org"><img src="http://www.plasticjs.org/img/plasticjs-120.png" id="plasticjs-header-logo" alt="plastic.js logo"></a>
+
+    <div class="description">
+      <a href="http://www.plasticjs.org/">Home</a>
+      <a href="http://www.plasticjs.org/docs/" class="active">User Documentation</a>
+      <a href="http://www.plasticjs.org/devdocs/">Developer Documentation</a>
+      <a href="https://github.com/Fannon/plastic.js">GitHub</a>
+    </div>
+
+  </div>
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <a href="../index.html"> Overview</a>
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/advanced.html">Advanced Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/wrapper.html">Wrapper / Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/index.html#download-plastic-js">Download plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/index.html#include-plastic-js-in-your-site">Include plastic.js in your site</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/index.html#write-an-embed-code">Write an embed code</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Display Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Simple Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedTable.html">Advanced Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="barChart.html">Bar Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pieChart.html">Pie Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lineChart.html">Line Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dataModules/index.html">Data Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/default.html">Default format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/simpleDefault.html">Simple Default</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/sparqlJson.html">SPARQL JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/askJson.html">ASK JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../queryModules/index.html">Query Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../queryModules/sparql.html">SPARQL Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../queryModules/ask.html">ASK Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../queryModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/general.html">General Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/application.html">Application Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/data.html">Internal Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/schema.html">Schema &amp; Data Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../extend/index.html">Extend plastic.js</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extend/architecture.html">Architecture of plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/display.html">Display Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/data.html">Data Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/query.html">Query Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/index.html#contributing-to-plastic-js">Contributing to plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extend/index.html#extending-plastic-js">Extending plastic.js</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">plastic.js</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Display Modules</a> &raquo;</li>
+      
+    <li>Simple Table</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="simple-table">
+<h1>Simple Table<a class="headerlink" href="#simple-table" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="short-description">
+<h2>Short Description<a class="headerlink" href="#short-description" title="Permalink to this headline">¶</a></h2>
+<p>Creates a basic HTML Table without additional functionality or dependencies.</p>
+</div>
+<div class="section" id="example-code">
+<h2>Example Code<a class="headerlink" href="#example-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;table-json-file&quot;</span> <span class="na">class=</span><span class="s">&quot;plastic-js&quot;</span> <span class="na">style=</span><span class="s">&quot;height: 100px; width: 100%;&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;script </span><span class="na">class=</span><span class="s">&quot;plastic-data&quot;</span> <span class="na">type=</span><span class="s">&quot;application/json&quot;</span> <span class="na">data-url=</span><span class="s">&quot;/docs/_static/data/simple-default.json&quot;</span> <span class="na">data-format=</span><span class="s">&quot;simple-default&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+    <span class="nt">&lt;script </span><span class="na">class=</span><span class="s">&quot;plastic-display&quot;</span> <span class="na">data-module=</span><span class="s">&quot;simple-table&quot;</span> <span class="na">type=</span><span class="s">&quot;application/json&quot;</span><span class="nt">&gt;</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;tableClasses&quot;</span><span class="o">:</span> <span class="s2">&quot;table table-condensed&quot;</span>
+        <span class="p">}</span>
+    <span class="nt">&lt;/script&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="live-example">
+<h2>Live Example<a class="headerlink" href="#live-example" title="Permalink to this headline">¶</a></h2>
+<div id="table-json-file" class="plastic-js" style="height: 100px; width: 100%;">
+
+    <script class="plastic-data" type="application/json" data-url="/docs/_static/data/simple-default.json" data-format="simple-default"></script>
+
+    <script class="plastic-display" data-module="simple-table" type="application/json">
+        {
+            "tableClasses": "table table-condensed"
+        }
+    </script>
+
+</div>
+</div>
+<div class="section" id="example-data">
+<h2>Example Data<a class="headerlink" href="#example-data" title="Permalink to this headline">¶</a></h2>
+<p>Link to the JSON file - <a class="reference external" href="http://www.plasticjs.org/docs/_static/data/simple-default.json">click here.</a></p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">plastic.js manages the dependencies automatically. There is no need to include them manually, but you can do so if you want.</p>
+</div>
+</div>
+<div class="section" id="available-options">
+<h2>Available Options<a class="headerlink" href="#available-options" title="Permalink to this headline">¶</a></h2>
+<p>This example snippet contains all available options with their default values:</p>
+<div class="highlight-html"><div class="highlight"><pre>&lt;script class=&quot;plastic-display&quot; data-module=&quot;simple-table&quot; type=&quot;application/json&gt;
+    {
+        &quot;tableClasses&quot;: &quot;&quot;
+    }
+&lt;/script&gt;
+</pre></div>
+</div>
+<h4>Properties details:</h4>
+<div class="property-description"><h4>Table Classes</h4>
+<table class="table">
+   <tr class="description"><td><strong>Description</strong></td><td>Table CSS Classes</td></tr>
+   <tr class="keyword"><td><strong>Keyword</strong></td><td>tableClasses</td></tr>
+   <tr class="type"><td><strong>Type</strong></td><td>string</td></tr>
+</table>
+
+<pre class="highlight">"tableClasses": ""</pre></div></div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="advancedTable.html" class="btn btn-neutral float-right" title="Advanced Table">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Display Modules"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div class="contentinfo" role="contentinfo">
+         2014, Simon Heimler, Sebastian Huber.
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+      <script type="text/javascript" src="../_static/js/plastic.js"></script>
+      <script type="text/javascript" src="../_static/js/custom.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-3720145-17', 'auto');
+      ga('send', 'pageview');
+
+  </script> 
+
+</body>
+</html>

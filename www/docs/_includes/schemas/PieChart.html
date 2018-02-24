@@ -1,0 +1,229 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Properties in detail: &mdash; plastic.js 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <!-- <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'> -->
+  <link href='http://fonts.googleapis.com/css?family=Titillium+Web:300, 600' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/plastic.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="plastic.js 1.0 documentation" href="../../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div id="plasticjs-header">
+
+      <a href="http://www.plasticjs.org"><img src="http://www.plasticjs.org/img/plasticjs-120.png" id="plasticjs-header-logo" alt="plastic.js logo"></a>
+
+    <div class="description">
+      <a href="http://www.plasticjs.org/">Home</a>
+      <a href="http://www.plasticjs.org/docs/" class="active">User Documentation</a>
+      <a href="http://www.plasticjs.org/devdocs/">Developer Documentation</a>
+      <a href="https://github.com/Fannon/plastic.js">GitHub</a>
+    </div>
+
+  </div>
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <a href="../../index.html"> Overview</a>
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../introduction/what.html">What is plastic.js?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introduction/use.html">Use of plastic.js?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introduction/advanced.html">Advanced Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../introduction/wrapper.html">plastic.js Wrapper / Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../queryModules/index.html">Query Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../queryModules/sparql.html">SPARQL Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../queryModules/ask.html">ASK Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../queryModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../dataModules/index.html">Data Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataModules/default.html">Simple default format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataModules/simpleDefault.html">Simple Default</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataModules/sparqlJson.html">SPARQL JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataModules/askJson.html">ASK JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../displayModules/index.html">Display Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../displayModules/simpleTable.html">Simple Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../displayModules/advancedTable.html">Advanced Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../displayModules/barChart.html">Bar Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../displayModules/pieChart.html">Pie Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../displayModules/lineChart.html">Line Chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../displayModules/index.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../extend/index.html">Extend plastic.js</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/architecture.html">Architecture of plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/query.html">Query Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/data.html">Data Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/display.html">Display Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/index.html#contributing-to-plastic-js">Contributing to plastic.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/index.html#extending-plastic-js">Extending plastic.js</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../link/index.html">Link to API Docs (external)</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">plastic.js</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+    <li>Properties in detail:</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <p>This example snippet contains all available options with their default values:</p>
+<div class="highlight-html"><div class="highlight"><pre>
+</pre></div>
+</div>
+<p>&lt;script class=&#8221;plastic-display&#8221; data-display-module=&#8221;pie-chart&#8221; type=&#8221;application/json&gt;
+{</p>
+<blockquote>
+<div>&#8220;showLabels&#8221;: true,
+&#8220;tooltips&#8221;: true,
+&#8220;transitionDuration&#8221;: 350</div></blockquote>
+<p>}&lt;/script&gt;</p>
+<div class="section" id="properties-in-detail">
+<h1>Properties in detail:<a class="headerlink" href="#properties-in-detail" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div class="contentinfo" role="contentinfo">
+         2014, Simon Heimler, Sebastian Huber.
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/js/jquery.min.js"></script>
+      <script type="text/javascript" src="../../_static/js/plastic.js"></script>
+      <script type="text/javascript" src="../../_static/js/custom.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
