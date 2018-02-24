@@ -1,0 +1,140 @@
+<!-- This is an example plastic tag with ALL its different options used at once -->
+
+<!-- First: Set up a new <plastic> Tag -->
+<!-- If you want to pre-define the height and width, do this via the style attribute -->
+<!-- If there's no support for custom HTML Tags, its possible to use a <div class="plastic-js"> instead of <plastic> -->
+<!--<plastic id="table-example" style="height: 400px; width: 100%;" ></plastic>-->
+<div class="plastic-js" id="table-example" style="height: 400px; width: 100%;" >
+
+    <!-- Set data via URL (plastic.js will get it asynchronally -->
+    <script class="plastic-data" type="application/json" data-url="data/musicians.json" data-format="ask-basic-json"></script>
+
+    <!-- Alternative: Set data as a JSON Object for synchronous use -->
+    <script class="plastic-data" type="application/json" data-format="ask-basic-json">
+        // TODO: There is no default (recommended) data format yet.
+        // This is JSON Example Data coming from the ASK API
+        {
+            "Arthur Chesterton": {
+                "label": "Arthur Chesterton",
+                "Vorname": [
+                    "Arthur"
+                ],
+                "Nachname": [
+                    "Chesterton"
+                ],
+                "Mail": [
+                    "mailto:Arthur.Chesterton@gmail.com"
+                ]
+            },
+            "Arthur Simmons": {
+                "label": "Arthur Simmons",
+                "Vorname": [
+                    "Arthur"
+                ],
+                "Nachname": [
+                    "Simmons"
+                ],
+                "Mail": [
+                    "mailto:Arthur.Simmons@gmail.com"
+                ]
+            },
+        }
+    </script>
+
+    <!-- If the data itself contains no schema, you can specify it here manually -->
+    <!-- This is optional for some display modes, and mandatory for some others -->
+    <script class="plastic-schema" type="application/json" data-schema-format="ask">
+        // TODO: There is no default (recommended) schema format yet.
+        // This is schema data coming from the ASK API
+        {
+            "":{
+                "label":"",
+                "typeid":"_wpg"
+            },
+            "Vorname":{
+                "label":"Vorname",
+                "typeid":"_txt"
+            },
+            "Nachname":{
+                "label":"Nachname",
+                "typeid":"_txt"
+            },
+            "Mail":{
+                "label":"Mail",
+                "typeid":"_ema"
+            }
+        }
+    </script>
+
+    <!-- As an alternative to specifiing the data you can write a query with an url to the endpoint-->
+    <!-- The type of query is defined via the MIME Type (type="application/sparql-query) -->
+    <script class="plastic-query" type="application/sparql-query" data-query-url="http://dbpedia.org/sparql">
+        PREFIX dbo: <http://dbpedia.org/ontology/>
+
+        SELECT ?name ?birth ?description ?person WHERE {
+             ?person dbo:birthPlace :Berlin .
+             ?person <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:German_musicians> .
+             ?person dbo:birthDate ?birth .
+             ?person foaf:name ?name .
+             ?person rdfs:comment ?description .
+             FILTER (LANG(?description) = 'en') .
+        }
+        ORDER BY ?name
+    </script>
+
+    <!-- Define your options, especially which display module -->
+    <!-- There will be global options and options tied to the display or parser module -->
+    <!-- Those specific options will depend on which module/parser is used -->
+    <script class="plastic-options" type="application/json">
+        // TODO: We need to define a naming convention for the attributes
+        {
+            "general": {
+                "width": "100%",
+                "height": "400px",
+                "horizontal-scrollbar": true,
+                "vertical-scrollbar": true
+            },
+            "display": {
+                "module": 'table',
+                "table-options": {
+                    "table-head": true
+                }
+            },
+            "dataParser": {
+                module: 'sparql-json'
+            }
+        }
+    </script>
+
+</div>
+
+
+<!-- Usually you need only a few of those options. Here is a real-life example: -->
+
+<!-- This gets the data from an url to a json file, and displays is as a table. -->
+<plastic id="table-example" style="height: 400px; width: 100%;" >
+
+    <script class="plastic-data" type="application/json" data-url="data/musicians.json" data-format="sparql-json"></script>
+
+    <script class="plastic-options" type="application/json">
+        // TODO: We need to define a naming convention for the attributes
+        {
+            "general": {
+                "width": "100%",
+                "height": "400px",
+                "horizontal-scrollbar": true,
+                "vertical-scrollbar": true
+            },
+            "display": {
+                "module": 'table',
+                "table-options": {
+                    "table-head": true
+                }
+            },
+            "dataParser": {
+                module: 'sparql-json'
+            }
+        }
+    </script>
+
+</plastic>

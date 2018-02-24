@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>plastic.js Table Demo</title>
+
+    <link href="lib/bootstrap/bootstrap.css" type="text/css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="lib/jasmine/jasmine.css">
+
+    <link href="css/test.css" type="text/css" rel="stylesheet" />
+    <link href="../dist/plastic.css" type="text/css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <!-- 3rd Party Dependencies -->
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+
+    <!-- App JavaScript -->
+    <script src="../dist/plastic.min.js"></script>
+
+
+    <!-- Jasmine Unit Testing -->
+    <script type="text/javascript" src="lib/jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="lib/jasmine/jasmine-html.js"></script>
+    <script type="text/javascript" src="lib/jasmine/boot.js"></script>
+
+    <!-- include spec files here... -->
+    <script type="text/javascript" src="spec/main.spec.js"></script>
+    <script type="text/javascript" src="spec/table.spec.js"></script>
+
+    <div class="container">
+
+        <h1><a href="index.html">Test</a> > Distribution Build</h1>
+
+        <h4>Data via ASK Query</h4>
+        <div id="table-ask-query" class="plastic-js" style="height: auto; width: 100%;">
+
+            <script class="plastic-query" type="application/ask-query" data-query-url="http://semwiki-exp01.multimedia.hs-augsburg.de/ba-wiki/api.php">
+                [[Kategorie:Mitarbeiter]]
+                | ?Vorname=Vorname
+                | ?Nachname=Nachname
+                | ?Mail=Mail
+                | ?Festnetz=Festnetz
+                | ?Handy=Handy
+            </script>
+
+            <script class="plastic-options" type="application/json">
+                {
+                    "benchmark": true
+                }
+            </script>
+
+            <script class="plastic-display" data-display-module="advanced-table" type="application/json">
+                {
+                    "tableClasses": "table table-condensed smaller-font",
+                    "paging": true,
+                    "searching": true,
+                    "ordering": true,
+                    "orderMulti": true
+                }
+            </script>
+
+        </div>
+
+    </div>
+
+
+</body>
+</html>
